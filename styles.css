@@ -142,42 +142,53 @@ button {
 .menu-toggle {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    width: 28px;
-    height: 28px;
+    gap: 6px;
+    width: 44px;
+    height: 44px;
     justify-content: center;
+    align-items: center;
     z-index: 110;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .menu-bar {
     display: block;
-    width: 24px;
-    height: 1.5px;
+    width: 28px;
+    height: 2px;
     background-color: var(--color-text);
     transition: all var(--duration-fast) var(--ease-out);
     transform-origin: center;
 }
 
 .menu-toggle.active .menu-bar:first-child {
-    transform: rotate(45deg) translateY(3.25px);
+    transform: rotate(45deg) translateY(4px);
 }
 
 .menu-toggle.active .menu-bar:last-child {
-    transform: rotate(-45deg) translateY(-3.25px);
+    transform: rotate(-45deg) translateY(-4px);
 }
 
 .header-icons {
     display: flex;
-    gap: var(--space-sm);
+    gap: 4px;
     align-items: center;
 }
 
 .header-icon {
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
     color: var(--color-text);
     opacity: 0.7;
     transition: opacity var(--duration-fast) ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.header-icon svg {
+    width: 22px;
+    height: 22px;
 }
 
 .header-icon:hover {
@@ -218,13 +229,17 @@ button {
 
 .nav-link {
     font-family: var(--font-serif);
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2.4rem, 8vw, 3.5rem);
     font-weight: 400;
     color: var(--color-text);
     position: relative;
     overflow: hidden;
     opacity: 0;
     transform: translateY(30px);
+    padding: 8px 0;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
     transition: opacity var(--duration-normal) var(--ease-out),
         transform var(--duration-normal) var(--ease-out);
 }
@@ -816,7 +831,7 @@ button {
     }
 
     .hero-image img {
-        max-width: 420px;
+        max-width: 90%;
     }
 
     .section-grid {
@@ -831,12 +846,20 @@ button {
 /* ---------- Mobile (< 768px) ---------- */
 @media (max-width: 768px) {
     .header {
-        padding: 0 var(--space-md);
+        padding: 0 var(--space-sm);
+    }
+
+    .logo-img {
+        height: 48px;
     }
 
     .announcement-bar {
         font-size: 0.65rem;
         letter-spacing: 0.1em;
+    }
+
+    .nav-content {
+        gap: 2rem;
     }
 
     .section {
@@ -849,7 +872,8 @@ button {
     }
 
     .hero-image img {
-        max-width: 300px;
+        max-width: 100%;
+        width: 100%;
     }
 
     .section-grid {
@@ -859,6 +883,11 @@ button {
 
     .section-image {
         order: -1;
+    }
+
+    .section-image img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
     }
 
     .story-card {
@@ -872,7 +901,8 @@ button {
     }
 
     .story-image img {
-        aspect-ratio: 16 / 10;
+        aspect-ratio: 4 / 3;
+        width: 100%;
     }
 
     .products-grid {
@@ -921,6 +951,19 @@ button {
 
     .logo {
         font-size: 1.25rem;
+    }
+
+    .logo-img {
+        height: 44px;
+    }
+
+    .nav-link {
+        font-size: 2.2rem;
+    }
+
+    .header-icon svg {
+        width: 24px;
+        height: 24px;
     }
 }
 
