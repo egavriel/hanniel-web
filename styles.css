@@ -437,34 +437,33 @@ button {
     font-weight: 400;
 }
 
-/* CTA Link — animated underline like Apartment Coffee */
+/* CTA Button — Playful Pill */
 .cta-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-sans);
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-text);
-    padding-bottom: 4px;
-    position: relative;
-    font-weight: 500;
-}
-
-.cta-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
+    color: #fff;
     background-color: var(--color-accent);
-    transform: scaleX(0.3);
-    transform-origin: left;
-    transition: transform var(--duration-fast) var(--ease-out);
+    padding: 18px 42px;
+    border-radius: 50px; /* Playful pill shape */
+    font-weight: 600;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+    box-shadow: 0 4px 14px rgba(166, 124, 82, 0.25);
 }
 
-.cta-link:hover::after {
-    transform: scaleX(1);
+.cta-link:hover {
+    color: #fff;
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 14px 28px rgba(166, 124, 82, 0.4);
+}
+
+.cta-link:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 4px 8px rgba(166, 124, 82, 0.25);
 }
 
 /* ---------- Section Base ---------- */
