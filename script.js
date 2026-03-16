@@ -131,12 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* ---------- Active Timeline Tracking ---------- */
     const sections = [
         { id: 'hero', el: document.getElementById('hero') },
-        { id: 'story-christmas', el: document.getElementById('story-christmas') },
-        { id: 'story-oats', el: document.getElementById('story-oats') },
         { id: 'story-beginning', el: document.getElementById('story-beginning') },
+        { id: 'story-oats', el: document.getElementById('story-oats') },
+        { id: 'story-christmas', el: document.getElementById('story-christmas') },
     ];
 
     const timelineObserver = new IntersectionObserver(
