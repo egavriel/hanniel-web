@@ -795,12 +795,70 @@ button {
         --sidebar-width: 0px;
     }
 
+    /* --- Horizontal Timeline Bar --- */
     .timeline-sidebar {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        gap: 0;
+        padding: 0;
+        z-index: 90;
+        background-color: rgba(250, 247, 243, 0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .timeline-line {
         display: none;
     }
 
+    .timeline-item {
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 10px 12px;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .timeline-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .timeline-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .timeline-label {
+        font-size: 0.55rem;
+        letter-spacing: 0.04em;
+        text-align: center;
+        opacity: 0.4;
+        transition: opacity var(--duration-fast) ease,
+            color var(--duration-fast) ease;
+        white-space: nowrap;
+    }
+
+    .timeline-item.active .timeline-label {
+        opacity: 1;
+    }
+
+    .timeline-item.active .timeline-dot {
+        box-shadow: 0 0 0 2px rgba(166, 124, 82, 0.2);
+    }
+
+    /* Push main content below the bar */
     .main-content {
         margin-left: 0;
+        padding-top: calc(var(--header-height) + 58px);
     }
 
     .hero-inner {
