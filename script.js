@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'hero', el: document.getElementById('hero') },
         { id: 'story-beginning', el: document.getElementById('story-beginning') },
         { id: 'story-oats', el: document.getElementById('story-oats') },
-        { id: 'story-christmas', el: document.getElementById('story-christmas') },
+        // { id: 'story-christmas', el: document.getElementById('story-christmas') },
         { id: 'products', el: document.getElementById('products') },
     ];
 
