@@ -34,6 +34,7 @@
 
     /* Layout */
     --sidebar-width: 220px;
+    --announcement-height: 36px;
     --header-height: 64px;
     --max-width: 1200px;
 
@@ -90,6 +91,11 @@ button {
 
 /* ---------- Announcement Bar ---------- */
 .announcement-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 101;
     background-color: var(--color-accent);
     color: #fff;
     text-align: center;
@@ -108,7 +114,7 @@ button {
 /* ---------- Header ---------- */
 .header {
     position: fixed;
-    top: 0;
+    top: var(--announcement-height);
     left: 0;
     right: 0;
     z-index: 100;
@@ -290,7 +296,7 @@ button {
     left: 0;
     width: var(--sidebar-width);
     height: 100vh;
-    padding: calc(var(--header-height) + var(--space-xl)) var(--space-md) var(--space-lg);
+    padding: calc(var(--header-height) + var(--announcement-height) + var(--space-xl)) var(--space-md) var(--space-lg);
     z-index: 50;
     display: flex;
     flex-direction: column;
@@ -299,7 +305,7 @@ button {
 
 .timeline-line {
     position: absolute;
-    top: calc(var(--header-height) + var(--space-xl) + 10px);
+    top: calc(var(--header-height) + var(--announcement-height) + var(--space-xl) + 10px);
     left: 48px;
     width: 1.5px;
     bottom: var(--space-lg);
@@ -366,7 +372,7 @@ button {
 /* ---------- Main Content ---------- */
 .main-content {
     margin-left: var(--sidebar-width);
-    padding-top: var(--header-height);
+    padding-top: calc(var(--header-height) + var(--announcement-height));
 }
 
 /* ---------- Reveal Animations (Apartment Coffee Style) ---------- */
@@ -802,7 +808,7 @@ button {
     /* --- Horizontal Timeline Bar --- */
     .timeline-sidebar {
         position: fixed;
-        top: var(--header-height);
+        top: calc(var(--header-height) + var(--announcement-height));
         left: 0;
         right: 0;
         width: 100%;
@@ -862,7 +868,7 @@ button {
     /* Push main content below the bar */
     .main-content {
         margin-left: 0;
-        padding-top: calc(var(--header-height) + 58px);
+        padding-top: calc(var(--header-height) + var(--announcement-height) + 58px);
     }
 
     .hero-inner {
