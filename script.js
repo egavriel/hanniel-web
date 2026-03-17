@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'story-beginning', el: document.getElementById('story-beginning') },
         { id: 'story-oats', el: document.getElementById('story-oats') },
         { id: 'story-christmas', el: document.getElementById('story-christmas') },
+        { id: 'products', el: document.getElementById('products') },
     ];
 
     const timelineObserver = new IntersectionObserver(
@@ -155,8 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         },
         {
-            threshold: 0.3,
-            rootMargin: '-20% 0px -50% 0px'
+            threshold: 0.15,
+            rootMargin: '-10% 0px -20% 0px'
         }
     );
 

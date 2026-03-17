@@ -871,7 +871,10 @@ button {
     }
 
     .story-image img {
-        aspect-ratio: 16 / 10;
+        aspect-ratio: auto;
+        object-fit: contain;
+        width: 100%;
+        height: auto;
     }
 
     .products-grid {
