@@ -101,6 +101,10 @@ button {
     font-weight: 500;
 }
 
+.announcement-bar.hidden {
+    display: none;
+}
+
 /* ---------- Header ---------- */
 .header {
     position: fixed;
