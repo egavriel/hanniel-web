@@ -14,7 +14,7 @@
         rel="stylesheet">
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="styles.css?v=10">
+    <link rel="stylesheet" href="styles.css?v=11">
 </head>
 
 <body>
@@ -26,18 +26,8 @@
     <header class="header" id="header">
         <div class="header__inner">
             <a href="#hero" class="logo"><img src="assets/logo.png" alt="Little Hanniel"></a>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
         </div>
     </header>
-
-    <!-- Slide-out mobile nav -->
-    <nav class="nav-overlay" id="navOverlay">
-        <a href="#journal"><span>01</span>Journal</a>
-        <a href="#menu"><span>02</span>Menu</a>
-        <a href="#contact"><span>03</span>Contact</a>
-    </nav>
 
     <main>
         <!-- Hero -->
@@ -50,10 +40,10 @@
                     <p class="hero__lead">Little Hanniel began with a simple craving and a recipe scribbled on a napkin.
                         Today, mum, dad and the little ones make guilt-free treats to share — comfort and goodness in
                         every jar.</p>
-                    <div class="hero__ctas">
-                        <a href="#menu" class="btn btn--primary">Our Menu</a>
-                        <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener" class="btn btn--secondary">WhatsApp Us</a>
-                        <a href="#journal" class="btn btn--ghost">Our Story</a>
+                    <div class="hero__ctas hero__ctas--modu">
+                        <a href="#journal" class="hero-btn">Our Story</a>
+                        <a href="#menu" class="hero-btn">Our Menu</a>
+                        <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener" class="hero-btn">WhatsApp Us</a>
                     </div>
                 </div>
                 <div class="hero__strip reveal reveal-d1">
@@ -259,7 +249,7 @@
         </svg>
     </a>
 
-    <script src="script.js?v=10"></script>
+    <script src="script.js?v=11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
     <script src="splide-init.js"></script>
 </body>

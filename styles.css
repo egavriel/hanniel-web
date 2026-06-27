@@ -164,24 +164,7 @@ p { margin: 0; }
 .logo img { height: 96px; width: auto; }           /* new square illustration+wordmark logo, sized so the wordmark reads */
 .nav { display: none; }            /* top-nav links moved to slide-out overlay */
 
-/* hamburger — always visible (modu-style: nav accessed via overlay on every size) */
-.menu-toggle {
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  width: 30px;
-  height: 30px;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
+/* (hamburger removed — modu-style header is logo only) */
 .nav__link {
   font-family: var(--font-sans);
   font-size: 0.74rem;
@@ -206,42 +189,8 @@ p { margin: 0; }
 }
 .nav__order:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-/* hamburger — rules defined above near .header__inner */
-.menu-toggle span {
-  display: block;
-  width: 22px;
-  height: 1.5px;
-  background: var(--text-body);
-  transition: transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
-}
-body.nav-open .menu-toggle span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-body.nav-open .menu-toggle span:nth-child(2) { opacity: 0; }
-body.nav-open .menu-toggle span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-/* slide-out nav */
-.nav-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  background: var(--bg-page);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.4s var(--ease-out), visibility 0.4s var(--ease-out);
-}
-body.nav-open .nav-overlay { opacity: 1; visibility: visible; }
-.nav-overlay a {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 2.4rem;
-  color: var(--text-body);
-  padding: 10px 0;
-}
-.nav-overlay a span { font-family: var(--font-sans); font-style: normal; font-size: 0.8rem; color: var(--accent); margin-right: 12px; letter-spacing: 0.1em; }
+/* (hamburger + slide-out overlay removed — modu-style header is logo only,
+   navigation lives in the hero CTA row + footer nav) */
 
 /* ---------- Section base ---------- */
 .section { padding: 96px 0; }
@@ -281,6 +230,50 @@ em { font-style: italic; }
   margin: 0 auto 32px;
 }
 .hero__ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+/* ---------- Modu-style hero CTA row ----------
+   Source: modu.sg hero — 3 equal-width bordered buttons, sentence case,
+   hover inverts to dark fill. Replaces the pill-style .btn--primary/
+   secondary/ghost trio for the hero only; .btn stays for menu + contact. */
+.hero__ctas--modu {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 16px;
+  margin-top: 36px;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero-btn {
+  flex: 1 1 0;
+  min-width: 200px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 24px;
+  background: transparent;
+  color: var(--text-strong);
+  border: 1.5px solid var(--text-strong);
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: none;            /* sentence case, not UPPERCASE */
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.25s var(--ease-out), color 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
+}
+.hero-btn:hover {
+  background: var(--text-strong);
+  color: #fff;
+  border-color: var(--text-strong);
+}
+.hero-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 .hero__strip {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -458,8 +451,6 @@ html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY
 
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
-  .nav { display: none; }
-  .menu-toggle { display: flex; }
   .section { padding: 72px 0; }
   .hero__hand { display: none; }
   .ingredients__grid { flex-wrap: wrap; gap: 28px 12px; }
@@ -467,6 +458,8 @@ html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY
   .story { grid-template-columns: 1fr; gap: 28px; }
   .story--reverse .story__media { order: 0; }
   .fullbleed { height: 360px; }
+  .hero__ctas--modu { flex-direction: column; }
+  .hero-btn { min-width: 0; width: 100%; }
 }
 @media (max-width: 560px) {
   .hero__strip { grid-template-columns: 1fr; }
