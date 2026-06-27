@@ -161,7 +161,7 @@ p { margin: 0; }
   justify-content: center;        /* modu-style: logo centered */
   position: relative;             /* allows hamburger to sit on right edge */
 }
-.logo img { height: 96px; width: auto; }           /* new square illustration+wordmark logo, sized so the wordmark reads */
+.logo img { height: 104px; width: auto; }          /* new refined illustration+wordmark logo (1563x2137, aspect 0.73) */
 .nav { display: none; }            /* top-nav links moved to slide-out overlay */
 
 /* (hamburger removed — modu-style header is logo only) */
