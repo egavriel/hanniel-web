@@ -288,6 +288,8 @@ em { font-style: italic; }
 .ingredients { background: var(--bg-subtle); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .ingredients__grid { display: flex; gap: 16px; max-width: 980px; margin: 0 auto; }
 .ingredient { flex: 1; text-align: center; padding: 0 6px; }
+.ingredient__icon { width: 64px; height: 64px; margin: 0 auto 18px; display: block; }
+.ingredient__icon img { width: 64px; height: 64px; display: block; }
 .ingredient__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); margin: 0 auto 18px; }
 .ingredient__name { font-family: var(--font-display); font-style: italic; font-size: 1.25rem; color: var(--text-body); line-height: 1.25; }
 .ingredient__note { font-family: var(--font-sans); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-top: 8px; }
@@ -471,4 +473,32 @@ html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY
   * { scroll-behavior: auto !important; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
   .btn, .floating-wa { transition: none !important; }
+}
+
+/* =====================================================================
+   modu.sg shake-bottom animation (verbatim from modu.sg pagetify CSS)
+   Source: https://modu.sg/cdn/shop/t/1/assets/pagetify-page-index.css
+   Triggered on the .modu-shake class instead of modu's
+   [data-element-animation=element-shake-bottom] attribute selector.
+   Applied to the Rolled Oats ingredient icon.
+   ===================================================================== */
+
+.modu-shake {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  animation: element-shake-bottom 3s infinite !important;
+}
+.modu-shake:hover { animation-play-state: paused; }
+
+@keyframes element-shake-bottom {
+  0%, 50% { transform: rotate(0); transform-origin: 50% 100%; }
+  5%      { transform: rotate(3deg); }
+  10%, 25%{ transform: rotate(-5deg); }
+  17.5%, 32.5% { transform: rotate(5deg); }
+  40%     { transform: rotate(-3deg); }
+  45%     { transform: rotate(3deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modu-shake { animation: none !important; transform: none !important; }
 }
