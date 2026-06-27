@@ -10,7 +10,7 @@ The public-facing website for **Little Hanniel** — a family home baking busine
 
 A single-page marketing and ordering site for two home-made food products — Almond Choco Cookies and Overnight Oats — told through a family story. The site uses a timeline-driven narrative structure to walk visitors through the origin of the business before presenting the menu.
 
-**Live at:** [little.hanniel](https://instagram.com/little.hanniel) *(Instagram)*  
+**Live at:** [littlehanniel](https://instagram.com/littlehanniel) *(Instagram)*  
 **Orders via:** WhatsApp
 
 ---

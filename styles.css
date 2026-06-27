@@ -61,7 +61,7 @@
 
   /* layout */
   --max-width: 1180px;
-  --header-height: 120px;            /* taller header to host the full illustration+wordmark logo (modu-style) */
+  --header-height: 140px;            /* taller focal band for the larger logo */
 }
 
 /* ---------- Reset ---------- */
@@ -161,7 +161,7 @@ p { margin: 0; }
   justify-content: center;        /* modu-style: logo centered */
   position: relative;             /* allows hamburger to sit on right edge */
 }
-.logo img { height: 104px; width: auto; }          /* new refined illustration+wordmark logo (1563x2137, aspect 0.73) */
+.logo img { height: 124px; width: auto; }          /* new refined illustration+wordmark logo (1563x2137, aspect 0.73) — bumped larger */
 .nav { display: none; }            /* top-nav links moved to slide-out overlay */
 
 /* (hamburger removed — modu-style header is logo only) */
