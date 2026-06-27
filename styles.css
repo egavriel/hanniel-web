@@ -158,10 +158,30 @@ p { margin: 0; }
   padding: 0 24px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;        /* modu-style: logo centered */
+  position: relative;             /* allows hamburger to sit on right edge */
 }
 .logo img { height: 44px; width: auto; }
-.nav { display: flex; align-items: center; gap: 34px; }
+.nav { display: none; }            /* top-nav links moved to slide-out overlay */
+
+/* hamburger — always visible (modu-style: nav accessed via overlay on every size) */
+.menu-toggle {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
 .nav__link {
   font-family: var(--font-sans);
   font-size: 0.74rem;
@@ -186,20 +206,7 @@ p { margin: 0; }
 }
 .nav__order:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-/* hamburger */
-.menu-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  width: 30px;
-  height: 30px;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
+/* hamburger — rules defined above near .header__inner */
 .menu-toggle span {
   display: block;
   width: 22px;
