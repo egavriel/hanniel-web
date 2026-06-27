@@ -502,3 +502,112 @@ html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY
 @media (prefers-reduced-motion: reduce) {
   .modu-shake { animation: none !important; transform: none !important; }
 }
+
+/* =====================================================================
+   Splide 4 — Hanniel theme overrides (hero overnight-oats carousel)
+   Pattern source: modu.sg pagetify CSS uses Splide v2.4.21 from
+   jsDelivr. We use Splide v4 (modern API) loaded from the same CDN.
+   ===================================================================== */
+
+/* The .hero__strip wrapper still uses display:grid by default; disable
+   that when it contains a Splide so the carousel controls the layout. */
+.hero__strip:has(.splide) {
+  display: block;
+  margin-top: 56px;
+}
+
+.hanniel-splide {
+  position: relative;
+  background: var(--bg-page);
+}
+
+.hanniel-splide .splide__track {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.hanniel-splide .splide__list {
+  align-items: center;
+}
+
+.hanniel-splide .splide__slide {
+  display: flex;
+  justify-content: center;
+}
+
+.hanniel-splide .hero__strip-figure {
+  margin: 0;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  background: var(--bg-subtle);
+}
+
+.hanniel-splide .hero__strip-figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.hanniel-splide .hero__strip-figure:hover img {
+  transform: scale(1.04);
+}
+
+/* Arrows — Hanniel round buttons */
+.hanniel-splide .splide__arrow {
+  width: 44px;
+  height: 44px;
+  background: var(--accent-soft);
+  opacity: 0.95;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  transition: background 0.25s var(--ease-out), opacity 0.25s var(--ease-out);
+}
+.hanniel-splide .splide__arrow:hover {
+  background: var(--accent);
+  opacity: 1;
+}
+.hanniel-splide .splide__arrow svg {
+  fill: var(--text-strong);
+  width: 18px;
+  height: 18px;
+  transition: fill 0.25s var(--ease-out);
+}
+.hanniel-splide .splide__arrow:hover svg { fill: #fff; }
+.hanniel-splide .splide__arrow--prev { left: 0.5rem; }
+.hanniel-splide .splide__arrow--next { right: 0.5rem; }
+
+/* Dots — caramel pips */
+.hanniel-splide .splide__pagination {
+  bottom: -2.2rem;
+  gap: 8px;
+}
+.hanniel-splide .splide__pagination__page {
+  width: 8px;
+  height: 8px;
+  background: var(--border-strong);
+  border: none;
+  border-radius: 50%;
+  opacity: 1;
+  transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+.hanniel-splide .splide__pagination__page.is-active {
+  background: var(--accent);
+  transform: scaleX(1.6);
+  border-radius: 4px;
+}
+
+/* Mobile: tighter */
+@media (max-width: 720px) {
+  .hanniel-splide .splide__arrow { width: 38px; height: 38px; }
+  .hanniel-splide .hero__strip-figure { max-width: 360px; aspect-ratio: 4 / 5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hanniel-splide .splide__track { overflow: visible; }
+}

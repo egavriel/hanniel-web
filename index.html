@@ -13,7 +13,8 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Gochi+Hand&display=swap"
         rel="stylesheet">
     <link rel="icon" href="assets/logo.png" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
+    <link rel="stylesheet" href="styles.css?v=6">
 </head>
 
 <body>
@@ -61,9 +62,27 @@
                     </div>
                 </div>
                 <div class="hero__strip reveal reveal-d1">
-                    <figure><img src="assets/oats-tiramisu.jpg" alt="Tiramisu overnight oats" loading="eager"></figure>
-                    <figure><img src="assets/oats-strawberry.jpg" alt="Strawberry overnight oats" loading="eager"></figure>
-                    <figure><img src="assets/oats-doublechoco.jpg" alt="Double chocolate overnight oats" loading="eager"></figure>
+                    <section class="splide hanniel-splide" aria-label="Overnight oats carousel">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <li class="splide__slide">
+                                    <figure class="hero__strip-figure">
+                                        <img src="assets/oats-tiramisu.jpg" alt="Tiramisu overnight oats" loading="eager">
+                                    </figure>
+                                </li>
+                                <li class="splide__slide">
+                                    <figure class="hero__strip-figure">
+                                        <img src="assets/oats-strawberry.jpg" alt="Strawberry overnight oats" loading="eager">
+                                    </figure>
+                                </li>
+                                <li class="splide__slide">
+                                    <figure class="hero__strip-figure">
+                                        <img src="assets/oats-doublechoco.jpg" alt="Double chocolate overnight oats" loading="eager">
+                                    </figure>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
                 </div>
             </div>
         </section>
@@ -245,7 +264,9 @@
         </svg>
     </a>
 
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
+    <script src="splide-init.js"></script>
 </body>
 
 </html>
