@@ -431,7 +431,11 @@ em { font-style: italic; }
 
 /* ---------- Reveal animation (progressive enhancement) ---------- */
 /* Only hide reveals once JS has confirmed it can reveal them again. */
-html.reveal-enabled .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
+/* Only hide reveals that JS hasn't marked visible yet.
+   The :not(.is-visible) keeps specificity equal to the visible rule so the
+   state transition actually wins — without it the (0,2,1) hidden selector
+   would beat the (0,2,0) .reveal.is-visible selector and the page stays blank. */
+html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY(32px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
 .reveal-d1 { transition-delay: 0.12s; }
 .reveal-d2 { transition-delay: 0.24s; }
