@@ -161,7 +161,7 @@ p { margin: 0; }
   justify-content: center;        /* modu-style: logo centered */
   position: relative;             /* allows hamburger to sit on right edge */
 }
-.logo img { height: 96px; width: auto; }           /* full logo (illustration + wordmark) — sized so the wordmark reads at typical screen widths */
+.logo img { height: 96px; width: auto; }           /* new square illustration+wordmark logo, sized so the wordmark reads */
 .nav { display: none; }            /* top-nav links moved to slide-out overlay */
 
 /* hamburger — always visible (modu-style: nav accessed via overlay on every size) */
@@ -415,16 +415,7 @@ em { font-style: italic; }
 /* ---------- Footer ---------- */
 .footer { border-top: 1px solid var(--border); padding: 40px 0; }
 .footer__inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; }
-/* Footer wordmark — styled HTML text matching the logo's hand-lettered feel. */
-.footer__logo {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.5rem;
-  color: var(--text-body);
-  letter-spacing: 0.01em;
-  line-height: 1.1;
-}
-.footer__logo img { display: none; }    /* hide the rasterized logo — footer uses text wordmark */
+.footer__logo img { height: 34px; }
 .footer__nav { display: flex; gap: 28px; }
 .footer__nav a { font-family: var(--font-sans); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); transition: color 0.25s var(--ease-out); }
 .footer__nav a:hover { color: var(--accent); }
