@@ -30,15 +30,6 @@
     if (e.key === 'Escape') closeNav();
   });
 
-  /* ---- Header shadow on scroll ---- */
-  var header = document.getElementById('header');
-  function onScroll() {
-    if (!header) return;
-    header.classList.toggle('is-scrolled', window.scrollY > 8);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
   /* ---- Menu tabs ---- */
   var tabs = document.querySelectorAll('.menu__tab');
   var panels = document.querySelectorAll('.menu__panel');
