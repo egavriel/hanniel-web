@@ -194,7 +194,7 @@ p { margin: 0; }
 em { font-style: italic; }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; padding: 80px 0 64px; }
+.hero { position: relative; padding: 24px 0 56px; }     /* tight top padding so the 3-button CTA row sits clearly above the fold */
 .hero__hand {
   position: absolute;
   top: 48px; right: 24px;
@@ -220,7 +220,7 @@ em { font-style: italic; }
   line-height: 1.8;
   color: var(--text-secondary);
   max-width: 600px;
-  margin: 0 auto 32px;
+  margin: 0 auto 24px;             /* tightened from 32px to pull buttons up */
 }
 .hero__ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
