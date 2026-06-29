@@ -16,6 +16,7 @@
   --text-body: #3A3028;
   --text-secondary: #5C5046;
   --text-muted: #A89E94;
+  --text-accent: #8B6540;
 
   /* caramel accent */
   --accent: #A67C52;
@@ -287,65 +288,76 @@ em { font-style: italic; }
 .ingredient__name { font-family: var(--font-display); font-style: italic; font-size: 1.25rem; color: var(--text-body); line-height: 1.25; }
 .ingredient__note { font-family: var(--font-sans); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-top: 8px; }
 
-/* ---------- Menu ---------- */
-.menu__tabs { display: flex; gap: 12px; justify-content: center; margin: 0 0 44px; }
-.menu__tab {
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 11px 28px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  border: 1.5px solid var(--accent);
-  background: transparent;
-  color: var(--accent-hover);
-  transition: all 0.3s var(--ease-out);
-}
-.menu__tab.is-active { background: var(--accent); color: #fff; box-shadow: var(--shadow-accent); }
-.menu__list { max-width: 720px; margin: 0 auto; }
-.menu__panel { display: block; padding: 0; margin: 0; }
-.menu__category { padding: 28px 0; }
-.menu__category + .menu__category { border-top: 1px solid var(--border); padding-top: 36px; }
-.menu__category-head {
-  font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+/* ---------- Menu (sheet + 2-col grid, Menu_Section reference) ---------- */
+#menu .menu__intro { max-width: 660px; margin-left: auto; margin-right: auto; }
+.menu__hand {
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
   color: var(--accent);
-  margin: 0 0 18px;
+  margin-top: 14px;
+  transform: rotate(-2deg);
 }
-.menu__item {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 22px 0;
-  border-bottom: 1px solid var(--border);
+.menu__image-wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: clamp(12px, 2vw, 20px);
+  overflow: hidden;
 }
-.menu__item-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.menu__item-name { font-family: var(--font-display); font-style: italic; font-size: 1.5rem; color: var(--text-body); }
-.menu__badge {
+.menu__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--radius-lg) - 4px);
+}
+.menu__note { text-align: center; margin-top: 26px; font-family: var(--font-sans); font-size: 0.76rem; letter-spacing: 0.04em; color: var(--text-muted); }
+.menu__order {
+  margin-top: 56px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: clamp(36px, 5vw, 52px) 40px;
+  text-align: center;
+}
+.menu__order-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--text-body);
+  margin: 12px 0 14px;
+}
+.menu__order-lead {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin: 0 auto 28px;
+  max-width: 480px;
+}
+.menu__order-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--whatsapp);
+  color: #fff;
   font-family: var(--font-sans);
-  font-size: 0.6rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--caramel-700);
-  background: var(--accent-soft);
-  padding: 4px 11px;
+  padding: 15px 30px;
   border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
 }
-.menu__badge--fresh { color: #4F5C38; background: var(--sage-soft); }
-.menu__item-desc { font-family: var(--font-body); font-size: 0.97rem; line-height: 1.6; color: var(--text-secondary); margin-top: 7px; }
-.menu__price { display: flex; align-items: baseline; gap: 7px; white-space: nowrap; flex-shrink: 0; }
-.menu__amount { font-family: var(--font-display); font-size: 1.35rem; color: var(--accent-hover); }
-.menu__unit { font-family: var(--font-sans); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
-.menu__unit::before { content: "/ "; }
-.menu__note { text-align: center; margin-top: 36px; font-family: var(--font-sans); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--text-muted); }
-.menu__note a { color: var(--accent); border-bottom: 1px solid var(--accent-300); padding-bottom: 1px; }
+.menu__order-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 
 /* ---------- Journal ---------- */
 .story {
@@ -468,7 +480,6 @@ html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY
   .hero__strip { grid-template-columns: 1fr; }
   .hero__strip figure { aspect-ratio: 16 / 11; }
   .ingredient { flex: 0 0 45%; }
-  .menu__item { gap: 16px; }
   .footer__inner { flex-direction: column; text-align: center; }
 }
 

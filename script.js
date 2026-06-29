@@ -30,19 +30,6 @@
     if (e.key === 'Escape') closeNav();
   });
 
-  /* ---- Menu tabs ---- */
-  var tabs = document.querySelectorAll('.menu__tab');
-  var panels = document.querySelectorAll('.menu__panel');
-  tabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      var name = tab.getAttribute('data-tab');
-      tabs.forEach(function (t) { t.classList.toggle('is-active', t === tab); });
-      panels.forEach(function (p) {
-        p.classList.toggle('is-active', p.getAttribute('data-panel') === name);
-      });
-    });
-  });
-
   /* ---- Scroll reveals (progressive enhancement + guaranteed fallback) ---- */
   var docEl = document.documentElement;
   docEl.classList.add('reveal-enabled'); // CSS only hides reveals once we can restore them
