@@ -14,7 +14,7 @@
         rel="stylesheet">
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="styles.css?v=16">
+    <link rel="stylesheet" href="styles.css?v=17">
 </head>
 
 <body>
@@ -118,42 +118,109 @@
                     <p>Freshly made and kept cold — grab a jar, shake, and enjoy.</p>
                 </div>
 
-                <div class="menu__tabs reveal" role="tablist">
-                    <button class="menu__tab is-active" data-tab="oats" role="tab">Overnight Oats</button>
-                    <button class="menu__tab" data-tab="cookies" role="tab">Cookies</button>
-                </div>
-
+                <!-- Flat single-page menu: all categories visible, no tabs -->
                 <div class="menu__list reveal reveal-d1">
-                    <!-- Overnight Oats -->
-                    <div class="menu__panel is-active" data-panel="oats">
-                        <div class="menu__item">
-                            <h3 class="menu__item-name">Tiramisu</h3>
-                            <div class="menu__price"><span class="menu__amount">42k</span><span class="menu__unit">jar</span></div>
+                    <section class="menu__category" aria-label="Overnight oats">
+                        <h3 class="menu__category-head">Overnight Oats</h3>
+                        <div class="menu__panel">
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Tiramisu</h4>
+                                    <div class="menu__price"><span class="menu__amount">42k</span><span class="menu__unit">jar</span></div>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Strawberry</h4>
+                                    <div class="menu__price"><span class="menu__amount">42k</span><span class="menu__unit">jar</span></div>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Double Chocolate</h4>
+                                    <div class="menu__price"><span class="menu__amount">42k</span><span class="menu__unit">jar</span></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="menu__item">
-                            <h3 class="menu__item-name">Strawberry</h3>
-                            <div class="menu__price"><span class="menu__amount">42k</span><span class="menu__unit">jar</span></div>
+                    </section>
+
+                    <section class="menu__category" aria-label="Cookies">
+                        <h3 class="menu__category-head">Cookies</h3>
+                        <div class="menu__panel">
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Almond Choco</h4>
+                                    <div class="menu__price"><span class="menu__amount">70k</span><span class="menu__unit">pouch</span></div>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Double Choco</h4>
+                                    <div class="menu__price"><span class="menu__amount">70k</span><span class="menu__unit">pouch</span></div>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Raisin Oats</h4>
+                                    <div class="menu__price"><span class="menu__amount">70k</span><span class="menu__unit">pouch</span></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="menu__item">
-                            <h3 class="menu__item-name">Double Chocolate</h3>
-                            <div class="menu__price"><span class="menu__amount">42k</span><span class="menu__unit">jar</span></div>
+                    </section>
+
+                    <section class="menu__category" aria-label="Loaves">
+                        <h3 class="menu__category-head">Loaves</h3>
+                        <div class="menu__panel">
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Banana Loaf</h4>
+                                    <div class="menu__price"><span class="menu__amount">38k</span><span class="menu__unit">loaf</span></div>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Carrot Cake</h4>
+                                    <div class="menu__price"><span class="menu__amount">48k</span><span class="menu__unit">loaf</span></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Cookies -->
-                    <div class="menu__panel" data-panel="cookies">
-                        <div class="menu__item">
-                            <h3 class="menu__item-name">Almond Choco</h3>
-                            <div class="menu__price"><span class="menu__amount">70k</span><span class="menu__unit">pouch</span></div>
+                    </section>
+
+                    <section class="menu__category" aria-label="Gimbap">
+                        <h3 class="menu__category-head">Gimbap</h3>
+                        <div class="menu__panel">
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Bulgogi Gimbap</h4>
+                                    <div class="menu__price"><span class="menu__amount">78k</span><span class="menu__unit">roll</span></div>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Egg &amp; Veggies Gimbap</h4>
+                                    <div class="menu__price"><span class="menu__amount">70k</span><span class="menu__unit">roll</span></div>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Chicken Gimbap</h4>
+                                    <div class="menu__price"><span class="menu__amount">73k</span><span class="menu__unit">roll</span></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="menu__item">
-                            <h3 class="menu__item-name">Double Choco</h3>
-                            <div class="menu__price"><span class="menu__amount">70k</span><span class="menu__unit">pouch</span></div>
+                    </section>
+
+                    <section class="menu__category" aria-label="Sides">
+                        <h3 class="menu__category-head">Sides</h3>
+                        <div class="menu__panel">
+                            <div class="menu__item">
+                                <div class="menu__item-head">
+                                    <h4 class="menu__item-name">Japchae</h4>
+                                    <div class="menu__price"><span class="menu__amount">55k</span><span class="menu__unit">portion</span></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="menu__item">
-                            <h3 class="menu__item-name">Raisin Oats</h3>
-                            <div class="menu__price"><span class="menu__amount">70k</span><span class="menu__unit">pouch</span></div>
-                        </div>
-                    </div>
+                    </section>
                 </div>
 
                 <p class="menu__note reveal">Prices in IDR &nbsp;·&nbsp; <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener">Order on WhatsApp</a></p>
@@ -249,7 +316,7 @@
         </svg>
     </a>
 
-    <script src="script.js?v=16"></script>
+    <script src="script.js?v=17"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
     <script src="splide-init.js"></script>
 </body>
