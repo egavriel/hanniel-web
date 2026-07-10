@@ -106,10 +106,37 @@
     revealAll();
   }
 
+  /* ---- Content surface (Tier 2b) ----
+     Edit content.json to change promo copy without touching index.html.
+     HTML keeps the same strings as fallbacks if fetch fails. */
+  function applyContent(data) {
+    if (!data || typeof data !== 'object') return;
+    var bar = document.getElementById('announcement-bar');
+    if (bar && data.announcement) bar.textContent = data.announcement;
+    var heroWa = document.querySelector('#hero a[href*="wa.me"]');
+    if (heroWa && data.hero && data.hero.waCtaLabel) heroWa.textContent = data.hero.waCtaLabel;
+    var orderTitle = document.querySelector('.menu__order-title');
+    if (orderTitle && data.menu && data.menu.orderTitle) orderTitle.textContent = data.menu.orderTitle;
+    var orderLead = document.querySelector('.menu__order-lead');
+    if (orderLead && data.menu && data.menu.orderLead) orderLead.textContent = data.menu.orderLead;
+  }
+
+  function loadContentThenInit() {
+    fetch('/content.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        applyContent(data);
+        tagWaLinks();
+      })
+      .catch(function () {
+        tagWaLinks();
+      });
+  }
+
   /* ---- Bind CTA tracking once DOM is ready ---- */
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', tagWaLinks);
+    document.addEventListener('DOMContentLoaded', loadContentThenInit);
   } else {
-    tagWaLinks();
+    loadContentThenInit();
   }
 })();
