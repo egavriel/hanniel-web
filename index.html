@@ -40,15 +40,16 @@
     <link rel="stylesheet" href="styles.css?v=19">
 
     <!--
-        Cloudflare Web Analytics — zero-cookie, free pageview analytics.
-        TODO before deploy:
-          1. Cloudflare Dashboard → your zone (or sign up at https://www.cloudflare.com/)
-          2. Analytics & Logs → Web Analytics → Add a site
-          3. Copy the resulting "data-cf-beacon" token below (replace REPLACE-WITH-CF-BEACON-TOKEN)
-          4. Re-deploy.
-        Until then this tag is a no-op; pageviews are not collected.
+        Cloudflare Web Analytics is auto-injected by the CF edge for the
+        hanniel.co zone (dash.cloudflare.com → Analytics & Logs → Web
+        Analytics → hanniel.co → "Auto-inject JS: ON"). No manual beacon
+        snippet required — CF attaches it to every response at the edge,
+        including prod and *.hanniel.co subdomains.
+
+        No token to manage. No env var to wire. Keep this comment as a
+        breadcrumb in case the auto-inject toggle gets turned off — at
+        that point, fall back to the manual snippet this comment replaced.
     -->
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "REPLACE-WITH-CF-BEACON-TOKEN"}'></script>
 </head>
 
 <body>
