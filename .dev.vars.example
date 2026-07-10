@@ -1,0 +1,5 @@
+# Local-only secret used to gate /api/event GET and /api/stats.
+# Generate one with: openssl rand -hex 24
+# After local development, set in production with the SET-TOKEN scratch script
+# or via the CF dashboard (Pages project → Settings → Environment variables).
+EVENTS_TOKEN=replace_me
