@@ -9,15 +9,15 @@
         content="Little Hanniel — a family baking journey. Freshly made Overnight Oats (Tiramisu, Strawberry, Double Chocolate) and Almond Choco Cookies, made with love. From our kitchen to yours.">
 
     <!-- Canonical — TODO: replace with your final domain before going public. -->
-    <link rel="canonical" href="https://littlehanniel.pages.dev/">
+    <link rel="canonical" href="https://little.hanniel.co/">
 
     <!-- Open Graph — improves link previews in WhatsApp, Instagram, Facebook. -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Little Hanniel">
     <meta property="og:title" content="Little Hanniel — From Our Kitchen to Yours">
     <meta property="og:description" content="A family home bakery in Batam, Indonesia. Freshly made Overnight Oats (Tiramisu, Strawberry, Double Chocolate) and Almond Choco Cookies, baked to order.">
-    <meta property="og:url" content="https://littlehanniel.pages.dev/">
-    <meta property="og:image" content="https://littlehanniel.pages.dev/assets/og-default.png">
+    <meta property="og:url" content="https://little.hanniel.co/">
+    <meta property="og:image" content="https://little.hanniel.co/assets/og-default.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Little Hanniel — from our kitchen to yours. Overnight Oats and Almond Choco Cookies.">
@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Little Hanniel — From Our Kitchen to Yours">
     <meta name="twitter:description" content="Freshly made Overnight Oats and Almond Choco Cookies, baked to order in Batam.">
-    <meta name="twitter:image" content="https://littlehanniel.pages.dev/assets/og-default.png">
+    <meta name="twitter:image" content="https://little.hanniel.co/assets/og-default.png">
     <meta name="twitter:image:alt" content="Little Hanniel — overnight oats and almond choco cookies.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,15 +40,16 @@
     <link rel="stylesheet" href="styles.css?v=19">
 
     <!--
-        Cloudflare Web Analytics — zero-cookie, free pageview analytics.
-        TODO before deploy:
-          1. Cloudflare Dashboard → your zone (or sign up at https://www.cloudflare.com/)
-          2. Analytics & Logs → Web Analytics → Add a site
-          3. Copy the resulting "data-cf-beacon" token below (replace REPLACE-WITH-CF-BEACON-TOKEN)
-          4. Re-deploy.
-        Until then this tag is a no-op; pageviews are not collected.
+        Cloudflare Web Analytics is auto-injected by the CF edge for the
+        hanniel.co zone (dash.cloudflare.com → Analytics & Logs → Web
+        Analytics → hanniel.co → "Auto-inject JS: ON"). No manual beacon
+        snippet required — CF attaches it to every response at the edge,
+        including prod and *.hanniel.co subdomains.
+
+        No token to manage. No env var to wire. Keep this comment as a
+        breadcrumb in case the auto-inject toggle gets turned off — at
+        that point, fall back to the manual snippet this comment replaced.
     -->
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "REPLACE-WITH-CF-BEACON-TOKEN"}'></script>
 </head>
 
 <body>
@@ -278,17 +279,17 @@
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://littlehanniel.pages.dev/#org",
+          "@id": "https://little.hanniel.co/#org",
           "name": "Little Hanniel",
-          "url": "https://littlehanniel.pages.dev/",
-          "logo": "https://littlehanniel.pages.dev/assets/logo.png",
+          "url": "https://little.hanniel.co/",
+          "logo": "https://little.hanniel.co/assets/logo.png",
           "description": "Family home bakery in Batam, Indonesia. Freshly made Overnight Oats and Almond Choco Cookies, baked to order.",
           "sameAs": ["https://instagram.com/littlehanniel"]
         },
         {
           "@type": "Product",
           "name": "Tiramisu Overnight Oats",
-          "image": "https://littlehanniel.pages.dev/assets/oats-tiramisu.jpg",
+          "image": "https://little.hanniel.co/assets/oats-tiramisu.jpg",
           "description": "Tiramisu-inspired overnight oats with cocoa, espresso and mascarpone cream. Made with rolled oats, chia seeds and roasted almonds.",
           "brand": {"@type": "Brand", "name": "Little Hanniel"},
           "category": "Food & Beverages > Breakfast"
@@ -296,7 +297,7 @@
         {
           "@type": "Product",
           "name": "Strawberry Overnight Oats",
-          "image": "https://littlehanniel.pages.dev/assets/oats-strawberry.jpg",
+          "image": "https://little.hanniel.co/assets/oats-strawberry.jpg",
           "description": "Strawberry overnight oats with fresh fruit, chia seeds and a touch of local honey.",
           "brand": {"@type": "Brand", "name": "Little Hanniel"},
           "category": "Food & Beverages > Breakfast"
@@ -304,7 +305,7 @@
         {
           "@type": "Product",
           "name": "Double Chocolate Overnight Oats",
-          "image": "https://littlehanniel.pages.dev/assets/oats-doublechoco.jpg",
+          "image": "https://little.hanniel.co/assets/oats-doublechoco.jpg",
           "description": "Double chocolate overnight oats with cocoa and dark chocolate.",
           "brand": {"@type": "Brand", "name": "Little Hanniel"},
           "category": "Food & Beverages > Breakfast"
@@ -312,7 +313,7 @@
         {
           "@type": "Product",
           "name": "Almond Choco Cookies",
-          "image": "https://littlehanniel.pages.dev/assets/almond_choco_cookies.png",
+          "image": "https://little.hanniel.co/assets/almond_choco_cookies.png",
           "description": "Almond chocolate cookies with roasted almonds and dark chocolate chunks.",
           "brand": {"@type": "Brand", "name": "Little Hanniel"},
           "category": "Food & Beverages > Bakery"
