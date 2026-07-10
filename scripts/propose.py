@@ -59,9 +59,19 @@ LLM_MODEL = os.environ.get("HANNIEL_LLM_MODEL", "MiniMax-M3")
 
 
 def fetch_stats():
-    req = urllib.request.Request(STAT_URL, headers={"accept": "application/json"})
-    with urllib.request.urlopen(req, timeout=20) as r:
-        return json.loads(r.read())
+    req = urllib.request.Request(
+        STAT_URL,
+        headers={
+            "accept": "application/json",
+            "user-agent": "hanniel-web-cron/1.0 (+propose.py)",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        print(f"stats fetch http_err {e.code}: {e.read().decode()[:300]}", file=sys.stderr)
+        return {"totals": {"count": 0}, "by_name_variant": [], "by_day": []}
 
 
 def read_content(path):
@@ -120,8 +130,16 @@ def call_llm(stats, current):
             "anthropic-version": "2023-06-01",
         },
     )
-    with urllib.request.urlopen(req, timeout=60) as r:
-        out = json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            out = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()[:300]
+        print(f"LLM call failed: {e.code} {body}", file=sys.stderr)
+        return json.dumps({"skip": True, "reason": "llm_unavailable"})
+    except Exception as e:
+        print(f"LLM call error: {e}", file=sys.stderr)
+        return json.dumps({"skip": True, "reason": "llm_error"})
     # Anthropic-style content extraction
     parts = out.get("content") or []
     text = "".join(p.get("text", "") for p in parts if p.get("type") == "text")
