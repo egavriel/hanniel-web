@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "announcement": "Monday–Saturday · Order on WhatsApp",
+  "hero": {
+    "waCtaLabel": "WhatsApp Us"
+  },
+  "menu": {
+    "orderTitle": "Order is just a message away",
+    "orderLead": "We bake to order and take everything over WhatsApp — tell us what you'd love, and we'll have it freshly made."
+  }
+}
