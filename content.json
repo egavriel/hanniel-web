@@ -1,5 +1,21 @@
 {
-  "version": 1,
+  "version": 2,
+  "_experimental_test": {
+    "enabled": false,
+    "buckets": {
+      "control": 0.5,
+      "variant_b": 0.5
+    },
+    "arm": {
+      "control": {
+        "announcement": "Monday–Saturday · Order on WhatsApp"
+      },
+      "variant_b": {
+        "announcement": "Baked this morning · Order on WhatsApp"
+      }
+    },
+    "expires_on": "2026-08-01"
+  },
   "announcement": "Monday–Saturday · Order on WhatsApp",
   "hero": {
     "waCtaLabel": "WhatsApp Us"
