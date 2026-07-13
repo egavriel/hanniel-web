@@ -1102,11 +1102,11 @@ html.reveal-enabled .section-head.is-visible .section-heading__accent {
 }
 
 .reveal-d1 {
-  transition-delay: 100ms;
+  transition-delay: 0.12s;
 }
 
 .reveal-d2 {
-  transition-delay: 200ms;
+  transition-delay: 0.24s;
 }
 
 /* reveal stagger list items delays */
@@ -1167,6 +1167,34 @@ html.reveal-enabled .section-head.is-visible .section-heading__accent {
   .parallax-media {
     transform: none !important;
   }
+}
+
+/* =====================================================================
+   modu.sg shake-bottom animation (verbatim from modu.sg pagetify CSS)
+   Source: https://modu.sg/cdn/shop/t/1/assets/pagetify-page-index.css
+   Triggered on the .modu-shake class instead of modu's
+   [data-element-animation=element-shake-bottom] attribute selector.
+   Applied to the ingredient icons in the Wholesome by Nature section.
+   ===================================================================== */
+
+.modu-shake {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  animation: element-shake-bottom 3s infinite !important;
+}
+.modu-shake:hover { animation-play-state: paused; }
+
+@keyframes element-shake-bottom {
+  0%, 50% { transform: rotate(0); transform-origin: 50% 100%; }
+  5%      { transform: rotate(3deg); }
+  10%, 25%{ transform: rotate(-5deg); }
+  17.5%, 32.5% { transform: rotate(5deg); }
+  40%     { transform: rotate(-3deg); }
+  45%     { transform: rotate(3deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modu-shake { animation: none !important; transform: none !important; }
 }
 
 /* Parallax: desktop only — max 15% offset is enforced in JS, mobile gets transform: none */
