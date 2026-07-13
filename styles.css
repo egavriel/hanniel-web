@@ -1088,10 +1088,10 @@ html.reveal-enabled .reveal-wipe:not(.is-visible) {
 }
 
 /* Hero load-time cascade — NOT scroll-triggered, runs once on DOMContentLoaded */
-html.reveal-enabled .hero__intro {
+html.reveal-enabled .hero__intro:not(.is-visible) {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 700ms var(--transition-smooth), transform 700ms var(--transition-smooth);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hero__intro.is-visible {
   opacity: 1;
@@ -1181,7 +1181,7 @@ html.reveal-enabled .section-head.is-visible .section-heading__accent {
   .reveal:not(.is-visible),
   .reveal-media:not(.is-visible),
   .reveal-wipe:not(.is-visible),
-  .hero__intro {
+  .hero__intro:not(.is-visible) {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
