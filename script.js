@@ -1,9 +1,9 @@
 /* =====================================================================
    Little Hanniel — Marketing Site interactions
-   Nav toggle · menu tabs · scroll reveals · header state · CTA tracking
+   Nav toggle · menu tabs · scroll reveals · CTA tracking
    Tier 2b content.json · Tier 4 experimental arm (opt-in, default off)
    Interactive FAQ accordion logic
-   Modern animations: Sticky glassmorphism header & scroll progress bar
+   Top scroll progress bar
    ===================================================================== */
 (function () {
   'use strict';
@@ -174,29 +174,18 @@
     });
   }
 
-  /* ---- Scroll Progress & Sticky Header Animation ---- */
+  /* ---- Scroll Progress bar ----
+     Header is no longer sticky (matches main branch behavior), so the
+     only scroll-driven visual left is the top progress indicator. */
   function initScrollEffects() {
-    var header = document.getElementById('header');
     var progress = document.getElementById('scroll-progress');
+    if (!progress) return;
 
     window.addEventListener('scroll', function () {
       var scrollTop = window.scrollY || document.documentElement.scrollTop;
-      
-      // Sticky header toggle
-      if (header) {
-        if (scrollTop > 24) {
-          header.classList.add('is-scrolled');
-        } else {
-          header.classList.remove('is-scrolled');
-        }
-      }
-
-      // Scroll progress percentage
-      if (progress) {
-        var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        var scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        progress.style.width = scrolled + '%';
-      }
+      var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progress.style.width = scrolled + '%';
     }, { passive: true });
   }
 
