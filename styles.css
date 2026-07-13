@@ -67,9 +67,9 @@
   --shadow-accent: 0 4px 14px rgba(154, 107, 67, 0.12);
 
   /* Motion & Transitions */
-  --transition-smooth: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --header-height: 120px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ---------- Global Reset ---------- */
@@ -84,6 +84,7 @@ html {
 
 body {
   margin: 0;
+  padding-top: 90px;        /* Offset sticky header */
   background: var(--bg-page);
   color: var(--text-body);
   font-family: var(--font-body);
@@ -160,6 +161,18 @@ em {
   border: 0;
 }
 
+/* ---------- Scroll Progress Bar ---------- */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: var(--accent);
+  z-index: 1000;
+  transition: width 80ms ease-out;
+}
+
 /* ---------- Announcement Bar ---------- */
 .announcement {
   background: var(--text-strong);
@@ -173,13 +186,28 @@ em {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header (Sticky Glassmorphic) ---------- */
 .header {
-  height: var(--header-height);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
   display: flex;
   align-items: center;
   background: transparent;
-  z-index: 100;
+  border-bottom: 1px solid transparent;
+  transition: var(--transition-smooth);
+  z-index: 500;
+}
+
+.header.is-scrolled {
+  height: 72px;
+  background: rgba(253, 252, 247, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .header__inner {
@@ -195,7 +223,11 @@ em {
 .logo img {
   height: 96px;
   width: auto;
-  transition: transform var(--transition-smooth);
+  transition: var(--transition-smooth);
+}
+
+.header.is-scrolled .logo img {
+  height: 64px;
 }
 
 .logo:hover img {
@@ -613,6 +645,10 @@ em {
   padding-bottom: 0;
 }
 
+.menu-item:hover {
+  border-bottom-color: var(--text-accent);
+}
+
 .menu-item__top {
   display: flex;
   justify-content: space-between;
@@ -819,11 +855,21 @@ em {
   color: var(--accent);
 }
 
+/* Modern grid-template-rows animation trick for height auto transitions */
+.faq-item__content-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 280ms var(--ease-out);
+}
+
+.faq-item.is-active .faq-item__content-wrapper {
+  grid-template-rows: 1fr;
+}
+
 .faq-item__content {
-  padding: 0 var(--space-lg);
-  max-height: 0;
   overflow: hidden;
-  transition: max-height 300ms ease, padding 300ms ease;
+  padding: 0 var(--space-lg);
+  transition: padding 280ms var(--ease-out);
   color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.6;
@@ -831,7 +877,6 @@ em {
 
 .faq-item.is-active .faq-item__content {
   padding: 0 var(--space-lg) var(--space-lg);
-  max-height: 300px; /* Safe upper bound for text */
 }
 
 /* ---------- Contact Section ---------- */
@@ -1028,6 +1073,13 @@ html.reveal-enabled .reveal:not(.is-visible) {
   transition-delay: 200ms;
 }
 
+/* reveal stagger list items delays */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 40ms; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 120ms; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 160ms; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 200ms; }
+
 /* ---------- Responsive Adjustments ---------- */
 @media (max-width: 860px) {
   .ingredients__grid {
@@ -1036,6 +1088,9 @@ html.reveal-enabled .reveal:not(.is-visible) {
 }
 
 @media (max-width: 560px) {
+  body {
+    padding-top: 72px; /* slimmer top gap for header on small viewports */
+  }
   .ingredients__grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-sm);

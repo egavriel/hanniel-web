@@ -3,6 +3,7 @@
    Nav toggle · menu tabs · scroll reveals · header state · CTA tracking
    Tier 2b content.json · Tier 4 experimental arm (opt-in, default off)
    Interactive FAQ accordion logic
+   Modern animations: Sticky glassmorphism header & scroll progress bar
    ===================================================================== */
 (function () {
   'use strict';
@@ -170,6 +171,32 @@
     });
   }
 
+  /* ---- Scroll Progress & Sticky Header Animation ---- */
+  function initScrollEffects() {
+    var header = document.getElementById('header');
+    var progress = document.getElementById('scroll-progress');
+
+    window.addEventListener('scroll', function () {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      
+      // Sticky header toggle
+      if (header) {
+        if (scrollTop > 24) {
+          header.classList.add('is-scrolled');
+        } else {
+          header.classList.remove('is-scrolled');
+        }
+      }
+
+      // Scroll progress percentage
+      if (progress) {
+        var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progress.style.width = scrolled + '%';
+      }
+    }, { passive: true });
+  }
+
   /* ---- Content surface (Tier 2b) ----
      Edit content.json to change promo copy without touching index.html. */
   function applyContent(data) {
@@ -192,11 +219,13 @@
         applyContent(data);
         tagWaLinks();
         initFaq();
+        initScrollEffects();
         if (CURRENT_ARM) trackEvent('exposure', { arm: CURRENT_ARM });
       })
       .catch(function () {
         tagWaLinks();
         initFaq();
+        initScrollEffects();
       });
   }
 

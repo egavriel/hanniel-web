@@ -37,14 +37,17 @@
     
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="styles.css?v=23">
+    <link rel="stylesheet" href="styles.css?v=24">
 </head>
 
 <body>
+    <!-- Scroll Progress Indicator -->
+    <div id="scroll-progress" aria-hidden="true"></div>
+
     <!-- Announcement Bar -->
     <div class="announcement" id="announcement-bar">Monday–Saturday · Order on WhatsApp</div>
 
-    <!-- Header -->
+    <!-- Header (Sticky Glassmorphic) -->
     <header class="header" id="header">
         <div class="header__inner">
             <a href="#hero" class="logo" aria-label="Little Hanniel Home"><img src="assets/logo.png" alt="Little Hanniel Logo"></a>
@@ -119,28 +122,28 @@
                     <span class="eyebrow">Wholesome by Nature</span>
                     <h2><em>Only what we'd</em> feed our own</h2>
                 </div>
-                <div class="ingredients__grid">
+                <div class="ingredients__grid reveal-stagger">
                     <div class="ingredient reveal">
                         <div class="ingredient__icon"><img src="assets/oats-rolled-icon.png" alt="Rolled oats" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Rolled Oats</div>
                         <div class="ingredient__note">Slow, steady energy</div>
                     </div>
-                    <div class="ingredient reveal reveal-d1">
+                    <div class="ingredient reveal">
                         <div class="ingredient__icon"><img src="assets/chia-seeds-icon.png" alt="Chia seeds" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Chia Seeds</div>
                         <div class="ingredient__note">Fibre &amp; omega-3</div>
                     </div>
-                    <div class="ingredient reveal reveal-d2">
+                    <div class="ingredient reveal">
                         <div class="ingredient__icon"><img src="assets/almonds-icon.png" alt="Roasted almonds" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Roasted Almonds</div>
                         <div class="ingredient__note">Protein &amp; good fats</div>
                     </div>
-                    <div class="ingredient reveal reveal-d1">
+                    <div class="ingredient reveal">
                         <div class="ingredient__icon"><img src="assets/fresh-fruit-icon.png" alt="Fresh fruit" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Fresh Fruit</div>
                         <div class="ingredient__note">Naturally sweet</div>
                     </div>
-                    <div class="ingredient reveal reveal-d2">
+                    <div class="ingredient reveal">
                         <div class="ingredient__icon"><img src="assets/honey-icon.png" alt="Local honey" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Local Honey</div>
                         <div class="ingredient__note">No refined sugar</div>
@@ -167,7 +170,7 @@
                         <!-- Category: Overnight Oats -->
                         <div class="menu-category">
                             <h4 class="menu-category__title">Overnight Oats <span class="menu-item__badge">Signature</span></h4>
-                            <div class="menu-category__grid">
+                            <div class="menu-category__grid reveal-stagger">
                                 <div class="menu-item">
                                     <div class="menu-item__top">
                                         <span class="menu-item__name">Tiramisu Oats</span>
@@ -195,7 +198,7 @@
                         <!-- Category: Artisanal Cookies -->
                         <div class="menu-category">
                             <h4 class="menu-category__title">Artisanal Cookies</h4>
-                            <div class="menu-category__grid">
+                            <div class="menu-category__grid reveal-stagger">
                                 <div class="menu-item">
                                     <div class="menu-item__top">
                                         <span class="menu-item__name">Almond Choco Cookies</span>
@@ -223,7 +226,7 @@
                         <!-- Category: Bakes & Loaves -->
                         <div class="menu-category">
                             <h4 class="menu-category__title">Bakes &amp; Loaves</h4>
-                            <div class="menu-category__grid">
+                            <div class="menu-category__grid reveal-stagger">
                                 <div class="menu-item">
                                     <div class="menu-item__top">
                                         <span class="menu-item__name">Banana Loaf</span>
@@ -244,7 +247,7 @@
                         <!-- Category: Korean Kitchen -->
                         <div class="menu-category">
                             <h4 class="menu-category__title">Korean Kitchen</h4>
-                            <div class="menu-category__grid">
+                            <div class="menu-category__grid reveal-stagger">
                                 <div class="menu-item">
                                     <div class="menu-item__top">
                                         <span class="menu-item__name">Bulgogi Gimbap</span>
@@ -272,7 +275,7 @@
                         <!-- Category: Sides -->
                         <div class="menu-category">
                             <h4 class="menu-category__title">Sides</h4>
-                            <div class="menu-category__grid">
+                            <div class="menu-category__grid reveal-stagger">
                                 <div class="menu-item">
                                     <div class="menu-item__top">
                                         <span class="menu-item__name">Japchae</span>
@@ -358,8 +361,10 @@ jars of their own.</p>
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                         </button>
-                        <div class="faq-item__content">
-                            <p>We take all orders exclusively through WhatsApp to ensure personal care and schedule fresh baking for you. Just click any "WhatsApp Us" button, and it will direct you to a WhatsApp chat with a pre-filled ordering format. Once we confirm your menu choice, we schedule your bakes.</p>
+                        <div class="faq-item__content-wrapper">
+                            <div class="faq-item__content">
+                                <p>We take all orders exclusively through WhatsApp to ensure personal care and schedule fresh baking for you. Just click any "WhatsApp Us" button, and it will direct you to a WhatsApp chat with a pre-filled ordering format. Once we confirm your menu choice, we schedule your bakes.</p>
+                            </div>
                         </div>
                     </div>
 
@@ -370,8 +375,10 @@ jars of their own.</p>
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                         </button>
-                        <div class="faq-item__content">
-                            <p>We are a family home bakery located in Batam, Indonesia, and we provide same-day cold-chain delivery across the island. Deliveries are made from Monday to Saturday to ensure your overnight oats and cookies arrive perfectly chilled. Shipping fees vary depending on your district in Batam.</p>
+                        <div class="faq-item__content-wrapper">
+                            <div class="faq-item__content">
+                                <p>We are a family home bakery located in Batam, Indonesia, and we provide same-day cold-chain delivery across the island. Deliveries are made from Monday to Saturday to ensure your overnight oats and cookies arrive perfectly chilled. Shipping fees vary depending on your district in Batam.</p>
+                            </div>
                         </div>
                     </div>
 
@@ -382,8 +389,10 @@ jars of their own.</p>
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                         </button>
-                        <div class="faq-item__content">
-                            <p>Our overnight oats stay fresh for up to 3 days when stored continuously in the refrigerator. We recommend keeping them cold until you are ready to shake and enjoy them. Do not freeze, as this can affect the texture of the oats and fruits.</p>
+                        <div class="faq-item__content-wrapper">
+                            <div class="faq-item__content">
+                                <p>Our overnight oats stay fresh for up to 3 days when stored continuously in the refrigerator. We recommend keeping them cold until you are ready to shake and enjoy them. Do not freeze, as this can affect the texture of the oats and fruits.</p>
+                            </div>
                         </div>
                     </div>
 
@@ -394,8 +403,10 @@ jars of their own.</p>
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                         </button>
-                        <div class="faq-item__content">
-                            <p>Yes, all of our bakes and overnight oats are made with Halal-friendly ingredients and contain no refined sugar. We sweeten our oats naturally using local honey and fresh fruit. Our cookies are also baked with dark chocolate and organic whole grains.</p>
+                        <div class="faq-item__content-wrapper">
+                            <div class="faq-item__content">
+                                <p>Yes, all of our bakes and overnight oats are made with Halal-friendly ingredients and contain no refined sugar. We sweeten our oats naturally using local honey and fresh fruit. Our cookies are also baked with dark chocolate and organic whole grains.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -601,7 +612,7 @@ jars of their own.</p>
     }
     </script>
 
-    <script src="script.js?v=22"></script>
+    <script src="script.js?v=23"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
     <script src="splide-init.js"></script>
 </body>
