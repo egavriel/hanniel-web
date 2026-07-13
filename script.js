@@ -2,6 +2,7 @@
    Little Hanniel — Marketing Site interactions
    Nav toggle · menu tabs · scroll reveals · header state · CTA tracking
    Tier 2b content.json · Tier 4 experimental arm (opt-in, default off)
+   Interactive FAQ accordion logic
    ===================================================================== */
 (function () {
   'use strict';
@@ -148,6 +149,27 @@
     revealAll();
   }
 
+  /* ---- FAQ Accordion logic ---- */
+  function initFaq() {
+    var faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(function (item) {
+      var trigger = item.querySelector('.faq-item__trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function () {
+        var active = item.classList.contains('is-active');
+        faqItems.forEach(function (otherItem) {
+          otherItem.classList.remove('is-active');
+          var otherTrigger = otherItem.querySelector('.faq-item__trigger');
+          if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
+        });
+        if (!active) {
+          item.classList.add('is-active');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
   /* ---- Content surface (Tier 2b) ----
      Edit content.json to change promo copy without touching index.html. */
   function applyContent(data) {
@@ -169,10 +191,12 @@
       .then(function (data) {
         applyContent(data);
         tagWaLinks();
+        initFaq();
         if (CURRENT_ARM) trackEvent('exposure', { arm: CURRENT_ARM });
       })
       .catch(function () {
         tagWaLinks();
+        initFaq();
       });
   }
 

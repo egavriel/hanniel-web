@@ -1,4 +1,29 @@
-User-agent: *
+# Allow AI agents to crawl
+User-agent: GPTBot
 Allow: /
 
-Sitemap: https://littlehanniel.pages.dev/sitemap.xml
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Default rules for other search engines
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+
+Sitemap: https://little.hanniel.co/sitemap.xml

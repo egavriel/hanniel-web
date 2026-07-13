@@ -1,17 +1,17 @@
 # Little Hanniel
 
-> A small family home bakery in Batam, Indonesia. We bake small batches of Overnight Oats (Tiramisu, Strawberry, Double Chocolate) and Almond Choco Cookies, made to order and delivered via WhatsApp.
+> Little Hanniel is a premium family home bakery in Batam, Indonesia, specializing in freshly made cold-chain overnight oats, artisanal cookies, bakes, and Korean kitchen items ordered via WhatsApp.
 
-## Products
+## Key Sections
 
-- [Overnight Oats](https://littlehanniel.pages.dev/#menu) — Tiramisu, Strawberry, Double Chocolate. Made with rolled oats, chia seeds, roasted almonds, fresh fruit, and local honey. No refined sugar. Bake-to-order, Monday to Saturday.
-- [Almond Choco Cookies](https://littlehanniel.pages.dev/#menu) — Almond cookies with dark chocolate chunks and roasted almonds.
+- [Menu & Offerings](https://little.hanniel.co/#menu) — Freshly made overnight oats (Tiramisu, Strawberry, Double Chocolate), cookies (Almond Choco, Double Choco, Raisin Oats), Banana/Carrot loaves, Gimbap rolls, and Japchae.
+- [Pricing](https://little.hanniel.co/#menu) — Transparent unit pricing in IDR: Overnight Oats (42k/jar), Artisanal Cookies (70k/pouch), Loaves (38k - 48k), Gimbap (70k - 78k), and Sides (55k).
+- [Location & Hours](https://little.hanniel.co/#contact) — Based in Batam, Indonesia. Operates Monday to Saturday from 09:00 to 18:00 WIB with cold-chain delivery same-day.
+- [Ordering & WhatsApp Contact](https://wa.me/message/OZUDXGIT5FJEE1) — Fast deep link to place orders directly over WhatsApp with personal response within ~1 hour.
+- [FAQ](https://little.hanniel.co/#faq) — Customer information covering freshness storage, Batam delivery areas, Halal ingredients, and ordering formats.
+- [Family Story Journal](https://little.hanniel.co/#journal) — The narrative of our family business starting in 2024.
 
-## How to order
+## Optional
 
-- WhatsApp: https://wa.me/message/OZUDXGIT5FJEE1
-- Instagram: https://instagram.com/littlehanniel
-
-## About
-
-Little Hanniel began in 2024 as a family project — mum, dad, and the little ones making treats in our home kitchen for friends and neighbours. We take orders over WhatsApp and bake-to-order.
+- [Instagram Page](https://instagram.com/littlehanniel) — Social feed showcasing baking updates and customer reviews.
+- [Sitemap](https://little.hanniel.co/sitemap.xml) — XML sitemap listing canonical page anchors.

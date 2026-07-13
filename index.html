@@ -4,98 +4,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Little Hanniel — From Our Kitchen to Yours</title>
+    <title>Little Hanniel — Fresh Overnight Oats & Home Bakes in Batam</title>
     <meta name="description"
-        content="Little Hanniel — a family baking journey. Freshly made Overnight Oats (Tiramisu, Strawberry, Double Chocolate) and Almond Choco Cookies, made with love. From our kitchen to yours.">
+        content="Little Hanniel — A family home bakery in Batam, Indonesia. Handcrafting fresh Overnight Oats, artisanal cookies, bakes, and Korean kitchen items. Made to order with love.">
 
-    <!-- Canonical — TODO: replace with your final domain before going public. -->
+    <!-- Canonical URL -->
     <link rel="canonical" href="https://little.hanniel.co/">
 
-    <!-- Open Graph — improves link previews in WhatsApp, Instagram, Facebook. -->
+    <!-- Open Graph Link Previews -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Little Hanniel">
-    <meta property="og:title" content="Little Hanniel — From Our Kitchen to Yours">
-    <meta property="og:description" content="A family home bakery in Batam, Indonesia. Freshly made Overnight Oats (Tiramisu, Strawberry, Double Chocolate) and Almond Choco Cookies, baked to order.">
+    <meta property="og:title" content="Little Hanniel — Fresh Overnight Oats & Home Bakes in Batam">
+    <meta property="og:description" content="A family home bakery in Batam, Indonesia. Freshly made Overnight Oats (Tiramisu, Strawberry, Double Chocolate), Almond Cookies, and fresh bakes. Baked to order.">
     <meta property="og:url" content="https://little.hanniel.co/">
     <meta property="og:image" content="https://little.hanniel.co/assets/og-default.png?v=2">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Little Hanniel — from our kitchen to yours. Overnight Oats and Almond Choco Cookies.">
+    <meta property="og:image:alt" content="Little Hanniel — Overnight Oats and artisanal bakes.">
     <meta property="og:locale" content="en_ID">
 
-    <!-- Twitter / X card — improves link previews in X, Telegram. -->
+    <!-- Twitter / X Card Link Previews -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Little Hanniel — From Our Kitchen to Yours">
-    <meta name="twitter:description" content="Freshly made Overnight Oats and Almond Choco Cookies, baked to order in Batam.">
+    <meta name="twitter:title" content="Little Hanniel — Fresh Overnight Oats & Home Bakes in Batam">
+    <meta name="twitter:description" content="Freshly made Overnight Oats and cookies, baked to order in Batam. Delivered same day.">
     <meta name="twitter:image" content="https://little.hanniel.co/assets/og-default.png?v=2">
-    <meta name="twitter:image:alt" content="Little Hanniel — overnight oats and almond choco cookies.">
+    <meta name="twitter:image:alt" content="Little Hanniel — overnight oats and cookies.">
 
+    <!-- Preconnect to Font Servers -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Gochi+Hand&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Plus+Jakarta+Sans:ital,wght@0,300..700;1,300..700&family=Gochi+Hand&display=swap" rel="stylesheet">
+    
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="styles.css?v=22">
-
-    <!--
-        Cloudflare Web Analytics is auto-injected by the CF edge for the
-        hanniel.co zone (dash.cloudflare.com → Analytics & Logs → Web
-        Analytics → hanniel.co → "Auto-inject JS: ON"). No manual beacon
-        snippet required — CF attaches it to every response at the edge,
-        including prod and *.hanniel.co subdomains.
-
-        No token to manage. No env var to wire. Keep this comment as a
-        breadcrumb in case the auto-inject toggle gets turned off — at
-        that point, fall back to the manual snippet this comment replaced.
-    -->
+    <link rel="stylesheet" href="styles.css?v=23">
 </head>
 
 <body>
+    <!-- Announcement Bar -->
     <div class="announcement" id="announcement-bar">Monday–Saturday · Order on WhatsApp</div>
 
     <!-- Header -->
     <header class="header" id="header">
         <div class="header__inner">
-            <a href="#hero" class="logo"><img src="assets/logo.png" alt="Little Hanniel"></a>
+            <a href="#hero" class="logo" aria-label="Little Hanniel Home"><img src="assets/logo.png" alt="Little Hanniel Logo"></a>
         </div>
     </header>
 
     <main>
-        <!-- Hero -->
+        <!-- Hero Section -->
         <section class="hero" id="hero">
-            <span class="hero__hand">baked with love</span>
+            <span class="hero__hand" aria-hidden="true">baked with love</span>
             <div class="container">
                 <div class="hero__text reveal">
-                    <span class="eyebrow">A Family Journey</span>
+                    <span class="eyebrow">A Family Baking Journey</span>
                     <h1 class="hero__title">From our kitchen<br><em>to yours</em></h1>
-                    <p class="hero__lead">Little Hanniel began with a simple craving and a recipe scribbled on a napkin.
-                        Today, mum, dad and the little ones make guilt-free treats to share — comfort and goodness in
-                        every jar.</p>
+                    <p class="hero__lead">Little Hanniel began with a simple craving and a recipe scribbled on a napkin. Today, mum, dad, and the little ones bake wholesome, guilt-free treats in small batches to share — comfort and goodness in every jar.</p>
                     <div class="hero__ctas hero__ctas--modu">
+                        <a href="#menu" class="hero-btn hero-btn--primary">View Our Menu</a>
                         <a href="#journal" class="hero-btn">Our Story</a>
-                        <a href="#menu" class="hero-btn">Our Menu</a>
                         <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener" class="hero-btn">WhatsApp Us</a>
                     </div>
                 </div>
+                
+                <!-- Product Splide Slider -->
                 <div class="hero__strip reveal reveal-d1">
-                    <section class="splide hanniel-splide" aria-label="Overnight oats carousel">
+                    <section class="splide hanniel-splide" aria-label="Overnight Oats & Treats Carousel">
                         <div class="splide__track">
                             <ul class="splide__list">
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-tiramisu.jpg" alt="Tiramisu overnight oats" loading="eager">
+                                        <img src="assets/oats-tiramisu.jpg" alt="Delicious Tiramisu Overnight Oats" loading="eager">
                                     </figure>
                                 </li>
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-strawberry.jpg" alt="Strawberry overnight oats" loading="eager">
+                                        <img src="assets/oats-strawberry.jpg" alt="Fresh Strawberry Overnight Oats" loading="eager">
                                     </figure>
                                 </li>
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-doublechoco.jpg" alt="Double chocolate overnight oats" loading="eager">
+                                        <img src="assets/oats-doublechoco.jpg" alt="Rich Double Chocolate Overnight Oats" loading="eager">
                                     </figure>
                                 </li>
                             </ul>
@@ -105,56 +94,54 @@
             </div>
         </section>
 
-        <!-- Trust strip — Tier 6 Ploy recommendation #2
-             Three micro-facts under the hero resolve the "is this real, fresh,
-             what hours?" questions visitors from WA share previews ask. -->
-        <section class="trust-strip reveal" aria-label="Why Little Hanniel">
+        <!-- Trust Strip -->
+        <section class="trust-strip reveal" aria-label="Our Guarantees">
             <div class="container trust-strip__row">
                 <div class="trust-strip__item">
                     <span class="trust-strip__icon" aria-hidden="true">🌿</span>
-                    <p class="trust-strip__text"><strong>Made Mon–Sat</strong><br>Fresh every morning</p>
+                    <p class="trust-strip__text"><strong>Made Mon–Sat</strong><br>Freshly prepared every morning</p>
                 </div>
                 <div class="trust-strip__item">
                     <span class="trust-strip__icon" aria-hidden="true">📦</span>
-                    <p class="trust-strip__text"><strong>Batam cold-chain</strong><br>Delivered same day</p>
+                    <p class="trust-strip__text"><strong>Batam Cold-Chain</strong><br>Delivered same day kept cold</p>
                 </div>
                 <div class="trust-strip__item">
                     <span class="trust-strip__icon" aria-hidden="true">💬</span>
-                    <p class="trust-strip__text"><strong>WhatsApp reply</strong><br>Within ~1 hour</p>
+                    <p class="trust-strip__text"><strong>WhatsApp Reply</strong><br>Personal response within ~1 hour</p>
                 </div>
             </div>
         </section>
 
-        <!-- Ingredients -->
-        <section class="section ingredients">
+        <!-- Ingredients Section -->
+        <section class="section ingredients" aria-label="Wholesome Ingredients">
             <div class="container">
                 <div class="section-head reveal">
-                    <span class="eyebrow">Wholesome by nature</span>
+                    <span class="eyebrow">Wholesome by Nature</span>
                     <h2><em>Only what we'd</em> feed our own</h2>
                 </div>
                 <div class="ingredients__grid">
                     <div class="ingredient reveal">
-                        <div class="ingredient__icon"><img src="assets/oats-rolled-icon.png" alt="Rolled oats" width="64" height="64" class="modu-shake" loading="lazy"></div>
+                        <div class="ingredient__icon"><img src="assets/oats-rolled-icon.png" alt="Rolled oats" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Rolled Oats</div>
                         <div class="ingredient__note">Slow, steady energy</div>
                     </div>
                     <div class="ingredient reveal reveal-d1">
-                        <div class="ingredient__icon"><img src="assets/chia-seeds-icon.png" alt="Chia seeds" width="64" height="64" class="modu-shake" loading="lazy"></div>
+                        <div class="ingredient__icon"><img src="assets/chia-seeds-icon.png" alt="Chia seeds" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Chia Seeds</div>
                         <div class="ingredient__note">Fibre &amp; omega-3</div>
                     </div>
                     <div class="ingredient reveal reveal-d2">
-                        <div class="ingredient__icon"><img src="assets/almonds-icon.png" alt="Roasted almonds" width="64" height="64" class="modu-shake" loading="lazy"></div>
+                        <div class="ingredient__icon"><img src="assets/almonds-icon.png" alt="Roasted almonds" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Roasted Almonds</div>
                         <div class="ingredient__note">Protein &amp; good fats</div>
                     </div>
                     <div class="ingredient reveal reveal-d1">
-                        <div class="ingredient__icon"><img src="assets/fresh-fruit-icon.png" alt="Fresh fruit" width="64" height="64" class="modu-shake" loading="lazy"></div>
+                        <div class="ingredient__icon"><img src="assets/fresh-fruit-icon.png" alt="Fresh fruit" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Fresh Fruit</div>
                         <div class="ingredient__note">Naturally sweet</div>
                     </div>
                     <div class="ingredient reveal reveal-d2">
-                        <div class="ingredient__icon"><img src="assets/honey-icon.png" alt="Local honey" width="64" height="64" class="modu-shake" loading="lazy"></div>
+                        <div class="ingredient__icon"><img src="assets/honey-icon.png" alt="Local honey" width="60" height="60" loading="lazy"></div>
                         <div class="ingredient__name">Local Honey</div>
                         <div class="ingredient__note">No refined sugar</div>
                     </div>
@@ -162,50 +149,164 @@
             </div>
         </section>
 
-        <!-- Menu -->
+        <!-- Menu Section (Semantic HTML Rebuild) -->
         <section class="section" id="menu">
             <div class="container">
                 <div class="section-head reveal menu__intro">
                     <span class="eyebrow">Our Menu</span>
                     <h2>Made with love, <em>shared with joy</em></h2>
-                    <p>Overnight oats, cookies, fresh bakes and our little Korean kitchen — every batch made in small numbers, the way we'd make it at home.</p>
+                    <p>Overnight oats, artisanal cookies, fresh bakes, and our little Korean kitchen items — every batch made in small numbers, exactly the way we make it at home.</p>
                 </div>
 
-                <div class="menu__image-wrap reveal reveal-d1">
-                    <img
-                        class="menu__image"
-                        src="assets/little-hanniel-menu.png"
-                        alt="Little Hanniel menu: overnight oats, cookies, bakes, and Korean kitchen items with prices in IDR"
-                        width="2000"
-                        height="1236"
-                        loading="lazy"
-                        decoding="async"
-                    >
+                <!-- Structured Semantic Menu Board -->
+                <div class="menu-card reveal reveal-d1">
+                    <div class="menu-card__header">
+                        <h3>Little Hanniel Kitchen Menu</h3>
+                    </div>
+                    <div class="menu-card__body">
+                        <!-- Category: Overnight Oats -->
+                        <div class="menu-category">
+                            <h4 class="menu-category__title">Overnight Oats <span class="menu-item__badge">Signature</span></h4>
+                            <div class="menu-category__grid">
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Tiramisu Oats</span>
+                                        <span class="menu-item__price">IDR 42k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Tiramisu-inspired overnight oats with premium cocoa, espresso, and organic mascarpone cream. Rolled oats base with chia seeds and roasted almonds.</p>
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Strawberry Oats</span>
+                                        <span class="menu-item__price">IDR 42k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Strawberry-sweetened overnight oats prepared with fresh fruit compote, chia seeds, rolled oats, and a touch of pure local honey.</p>
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Double Chocolate Oats</span>
+                                        <span class="menu-item__price">IDR 42k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Indulgent chocolate overnight oats blended with dark cocoa powder, chocolate chunks, rolled oats, chia seeds, and slow-roasted almonds.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category: Artisanal Cookies -->
+                        <div class="menu-category">
+                            <h4 class="menu-category__title">Artisanal Cookies</h4>
+                            <div class="menu-category__grid">
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Almond Choco Cookies</span>
+                                        <span class="menu-item__price">IDR 70k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Freshly baked cookies packed with dark chocolate chunks and topped with crunchy, slow-roasted almond slices. (Pouch)</p>
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Double Choco Cookies</span>
+                                        <span class="menu-item__price">IDR 70k</span>
+                                    </div>
+                                    <p class="menu-item__desc">For chocolate purists: a rich cocoa cookie dough loaded with double dark chocolate chips. (Pouch)</p>
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Raisin Oats Cookies</span>
+                                        <span class="menu-item__price">IDR 70k</span>
+                                    </div>
+                                    <p class="menu-item__desc">A wholesome blend of organic rolled oats and plump, sweet raisins baked to a perfect golden crisp. (Pouch)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category: Bakes & Loaves -->
+                        <div class="menu-category">
+                            <h4 class="menu-category__title">Bakes &amp; Loaves</h4>
+                            <div class="menu-category__grid">
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Banana Loaf</span>
+                                        <span class="menu-item__price">IDR 38k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Sweet, incredibly moist, and fragrant banana loaf bread baked fresh from our oven using ripe local bananas.</p>
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Carrot Cake Loaf</span>
+                                        <span class="menu-item__price">IDR 48k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Spiced, moist carrot cake baked in a convenient loaf size, studded with walnuts and lightly sweet cream highlights.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category: Korean Kitchen -->
+                        <div class="menu-category">
+                            <h4 class="menu-category__title">Korean Kitchen</h4>
+                            <div class="menu-category__grid">
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Bulgogi Gimbap</span>
+                                        <span class="menu-item__price">IDR 78k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Authentic seaweed rice roll filled with savory, sweet marinated beef bulgogi, carrots, egg, and fresh spinach. (Roll)</p>
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Chicken Gimbap</span>
+                                        <span class="menu-item__price">IDR 73k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Seaweed rice roll packed with seasoned roasted chicken breast, pickled radish, and crisp vegetables. (Roll)</p>
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Egg &amp; Veggies Gimbap</span>
+                                        <span class="menu-item__price">IDR 70k</span>
+                                    </div>
+                                    <p class="menu-item__desc">A wholesome, vegetarian-friendly seaweed rice roll packed with fluffy seasoned egg strips, cucumbers, and sesame-infused carrots. (Roll)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category: Sides -->
+                        <div class="menu-category">
+                            <h4 class="menu-category__title">Sides</h4>
+                            <div class="menu-category__grid">
+                                <div class="menu-item">
+                                    <div class="menu-item__top">
+                                        <span class="menu-item__name">Japchae</span>
+                                        <span class="menu-item__price">IDR 55k</span>
+                                    </div>
+                                    <p class="menu-item__desc">Stir-fried sweet potato glass noodles with mixed vegetables, mushrooms, and a rich, toasted sesame soy sauce dressing. (Portion)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <p class="menu__note reveal">All prices in IDR &nbsp;·&nbsp; Freshly made, Monday to Saturday</p>
-
+                <!-- Call to Action block for Menu -->
                 <div class="menu__order reveal">
                     <span class="eyebrow">Get a Jar?</span>
                     <h3 class="menu__order-title">Order is just a message away</h3>
                     <p class="menu__order-lead">We bake to order and take everything over WhatsApp — tell us what you'd love, and we'll have it freshly made.</p>
                     <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener" class="menu__order-btn">
-                        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="margin-right: 6px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         WhatsApp Us
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- Full-bleed quote -->
+        <!-- Full-bleed Image Quote -->
         <section class="fullbleed reveal">
-            <img src="assets/oats-trio.jpg" alt="Our overnight oats by the window">
+            <img src="assets/oats-trio.jpg" alt="Our Overnight Oats Jars Kept Cold">
             <div class="fullbleed__overlay">
                 <p class="fullbleed__quote">Freshly made, kept cold —<br>ready when you are.</p>
             </div>
         </section>
 
-        <!-- Journal -->
+        <!-- Journal Section -->
         <section class="section" id="journal">
             <div class="container">
                 <div class="section-head reveal">
@@ -240,13 +341,73 @@ jars of their own.</p>
             </div>
         </section>
 
-        <!-- Contact -->
+        <!-- Premium Interactive FAQ Accordion Section -->
+        <section class="section" id="faq" aria-label="Frequently Asked Questions">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="eyebrow">FAQ</span>
+                    <h2>Got questions? <em>We have answers</em></h2>
+                    <p>Learn more about how we bake, deliver, and ensure freshness across Batam.</p>
+                </div>
+                
+                <div class="faq-grid reveal reveal-d1">
+                    <div class="faq-item">
+                        <button class="faq-item__trigger" aria-expanded="false">
+                            <h3>How do I place an order?</h3>
+                            <svg class="faq-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="faq-item__content">
+                            <p>We take all orders exclusively through WhatsApp to ensure personal care and schedule fresh baking for you. Just click any "WhatsApp Us" button, and it will direct you to a WhatsApp chat with a pre-filled ordering format. Once we confirm your menu choice, we schedule your bakes.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-item__trigger" aria-expanded="false">
+                            <h3>Where are you located and do you deliver?</h3>
+                            <svg class="faq-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="faq-item__content">
+                            <p>We are a family home bakery located in Batam, Indonesia, and we provide same-day cold-chain delivery across the island. Deliveries are made from Monday to Saturday to ensure your overnight oats and cookies arrive perfectly chilled. Shipping fees vary depending on your district in Batam.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-item__trigger" aria-expanded="false">
+                            <h3>How long do the overnight oats stay fresh?</h3>
+                            <svg class="faq-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="faq-item__content">
+                            <p>Our overnight oats stay fresh for up to 3 days when stored continuously in the refrigerator. We recommend keeping them cold until you are ready to shake and enjoy them. Do not freeze, as this can affect the texture of the oats and fruits.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-item__trigger" aria-expanded="false">
+                            <h3>Are your treats Halal and free from refined sugar?</h3>
+                            <svg class="faq-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="faq-item__content">
+                            <p>Yes, all of our bakes and overnight oats are made with Halal-friendly ingredients and contain no refined sugar. We sweeten our oats naturally using local honey and fresh fruit. Our cookies are also baked with dark chocolate and organic whole grains.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
         <section class="section contact" id="contact">
             <div class="container reveal">
                 <span class="eyebrow">Get in Touch</span>
                 <h2>Place an order?</h2>
-                <p>We make everything to order and take it all over WhatsApp. Tell us what you'd love — we'd be glad to
-                    hear from you.</p>
+                <p>We make everything to order and take it all over WhatsApp. Tell us what you'd love — we'd be glad to hear from you.</p>
                 <div class="contact__links">
                     <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener" class="channel channel--wa">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -267,81 +428,180 @@ jars of their own.</p>
             </div>
         </section>
 
-        <!-- Footer -->
+        <!-- Footer Section -->
         <footer class="footer">
-            <div class="container footer__inner">
-                <a href="#hero" class="footer__logo"><img src="assets/logo-footer.png" alt="Little Hanniel"></a>
-                <div class="footer__nav">
-                    <a href="#journal">Journal</a>
-                    <a href="#menu">Menu</a>
-                    <a href="#contact">Contact</a>
+            <div class="container footer__grid">
+                <div class="footer__info">
+                    <a href="#hero" class="footer__logo"><img src="assets/logo-footer.png" alt="Little Hanniel Footer Logo"></a>
+                    <p class="footer__desc">Handcrafting premium overnight oats, fresh bakes, and Korean kitchen favorites in Batam, Indonesia.</p>
                 </div>
-                <p class="footer__copy">© 2025 Little Hanniel · Made with love by our family</p>
+                <div>
+                    <h5 class="footer__heading">Navigation</h5>
+                    <div class="footer__nav">
+                        <a href="#menu">Menu</a>
+                        <a href="#journal">Journal</a>
+                        <a href="#faq">FAQ</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer__heading">Hours &amp; Contact</h5>
+                    <div class="footer__address">
+                        <span><strong>Hours:</strong> Mon–Sat, 09:00 - 18:00 WIB</span>
+                        <span><strong>Batam, Riau Islands, Indonesia</strong></span>
+                        <span><strong>WhatsApp:</strong> <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener">Chat with Us</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="container footer__bottom">
+                <p class="footer__copy">© 2025 Little Hanniel. Made with love by our family.</p>
+                <div class="footer__nav" style="flex-direction: row; gap: var(--space-sm);">
+                    <a href="https://instagram.com/littlehanniel" target="_blank" rel="noopener">Instagram</a>
+                    <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener">WhatsApp</a>
+                </div>
             </div>
         </footer>
     </main>
 
-    <!-- Floating WhatsApp -->
+    <!-- Floating WhatsApp Action -->
     <a href="https://wa.me/message/OZUDXGIT5FJEE1" target="_blank" rel="noopener" class="floating-wa" aria-label="Chat on WhatsApp">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
         </svg>
     </a>
 
-    <!-- Structured data (JSON-LD) — improves Google rich results.
-         Note: Offer/price is intentionally omitted until per-SKU prices are confirmed.
-         Add an "offers": { "@type": "Offer", "price": "...", "priceCurrency": "IDR" }
-         block to each Product once Ervina finalises the menu pricing. -->
+    <!-- Structured Data (JSON-LD) for Local Business & FAQ -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": "Organization",
-          "@id": "https://little.hanniel.co/#org",
+          "@type": "Restaurant",
+          "@id": "https://little.hanniel.co/#bakery",
           "name": "Little Hanniel",
           "url": "https://little.hanniel.co/",
           "logo": "https://little.hanniel.co/assets/logo.png",
-          "description": "Family home bakery in Batam, Indonesia. Freshly made Overnight Oats and Almond Choco Cookies, baked to order.",
+          "image": "https://little.hanniel.co/assets/og-default.png",
+          "description": "Artisanal family bakery and kitchen in Batam, Indonesia, specializing in cold-chain Overnight Oats, fresh cookies, bakes, and Korean kitchen favourites.",
+          "telephone": "+62811000000",
+          "priceRange": "$$",
+          "servesCuisine": "Overnight Oats, Cookies, Loaves, Korean Gimbap",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Batam",
+            "addressRegion": "Riau Islands",
+            "addressCountry": "ID"
+          },
+          "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday"
+            ],
+            "opens": "09:00",
+            "closes": "18:00"
+          },
           "sameAs": ["https://instagram.com/littlehanniel"]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://little.hanniel.co/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How do I place an order?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We take all orders exclusively through WhatsApp to ensure personal care and schedule fresh baking for you. Just click any 'WhatsApp Us' button, and it will direct you to a WhatsApp chat with a pre-filled ordering format."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Where are you located and do you deliver?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We are a family home bakery located in Batam, Indonesia, and we provide same-day cold-chain delivery across the island. Deliveries are made from Monday to Saturday to ensure your overnight oats and cookies arrive perfectly chilled."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How long do the overnight oats stay fresh?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Our overnight oats stay fresh for up to 3 days when stored continuously in the refrigerator. We recommend keeping them cold until you are ready to shake and enjoy them."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Are your treats Halal and free from refined sugar?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, all of our bakes and overnight oats are made with Halal-friendly ingredients and contain no refined sugar. We sweeten our oats naturally using local honey and fresh fruit."
+              }
+            }
+          ]
         },
         {
           "@type": "Product",
           "name": "Tiramisu Overnight Oats",
           "image": "https://little.hanniel.co/assets/oats-tiramisu.jpg",
           "description": "Tiramisu-inspired overnight oats with cocoa, espresso and mascarpone cream. Made with rolled oats, chia seeds and roasted almonds.",
-          "brand": {"@type": "Brand", "name": "Little Hanniel"},
-          "category": "Food & Beverages > Breakfast"
+          "offers": {
+            "@type": "Offer",
+            "price": "42000",
+            "priceCurrency": "IDR",
+            "availability": "https://schema.org/InStock"
+          },
+          "brand": {"@type": "Brand", "name": "Little Hanniel"}
         },
         {
           "@type": "Product",
           "name": "Strawberry Overnight Oats",
           "image": "https://little.hanniel.co/assets/oats-strawberry.jpg",
           "description": "Strawberry overnight oats with fresh fruit, chia seeds and a touch of local honey.",
-          "brand": {"@type": "Brand", "name": "Little Hanniel"},
-          "category": "Food & Beverages > Breakfast"
+          "offers": {
+            "@type": "Offer",
+            "price": "42000",
+            "priceCurrency": "IDR",
+            "availability": "https://schema.org/InStock"
+          },
+          "brand": {"@type": "Brand", "name": "Little Hanniel"}
         },
         {
           "@type": "Product",
           "name": "Double Chocolate Overnight Oats",
           "image": "https://little.hanniel.co/assets/oats-doublechoco.jpg",
           "description": "Double chocolate overnight oats with cocoa and dark chocolate.",
-          "brand": {"@type": "Brand", "name": "Little Hanniel"},
-          "category": "Food & Beverages > Breakfast"
+          "offers": {
+            "@type": "Offer",
+            "price": "42000",
+            "priceCurrency": "IDR",
+            "availability": "https://schema.org/InStock"
+          },
+          "brand": {"@type": "Brand", "name": "Little Hanniel"}
         },
         {
           "@type": "Product",
           "name": "Almond Choco Cookies",
           "image": "https://little.hanniel.co/assets/almond_choco_cookies.png",
           "description": "Almond chocolate cookies with roasted almonds and dark chocolate chunks.",
-          "brand": {"@type": "Brand", "name": "Little Hanniel"},
-          "category": "Food & Beverages > Bakery"
+          "offers": {
+            "@type": "Offer",
+            "price": "70000",
+            "priceCurrency": "IDR",
+            "availability": "https://schema.org/InStock"
+          },
+          "brand": {"@type": "Brand", "name": "Little Hanniel"}
         }
       ]
     }
     </script>
 
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=22"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
     <script src="splide-init.js"></script>
 </body>
