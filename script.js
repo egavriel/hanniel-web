@@ -120,7 +120,10 @@
   /* ---- Scroll reveals (progressive enhancement + guaranteed fallback) ---- */
   var docEl = document.documentElement;
   docEl.classList.add('reveal-enabled');
-  var reveals = document.querySelectorAll('.reveal');
+  // All elements that opt into a scroll-triggered reveal. Hero intro is excluded
+  // (it cascades on load, not on scroll) and the accent line is keyed to its
+  // .section-head parent via CSS, so we observe the parent here.
+  var reveals = document.querySelectorAll('.reveal, .reveal-media, .reveal-wipe');
 
   function revealAll() {
     reveals.forEach(function (el) { el.classList.add('is-visible'); });
@@ -197,6 +200,59 @@
     }, { passive: true });
   }
 
+  /* ---- Hero load-time cascade ----
+     NOT scroll-triggered — fires on DOMContentLoaded so the hero is rendered
+     and the cascade runs on top of already-painted content (zero LCP delay).
+     Pattern: title → subhead +100ms → CTAs +320ms. */
+  function initHeroCascade() {
+    var intros = document.querySelectorAll('.hero__intro');
+    if (!intros.length) return;
+    // Two rAFs so the browser paints the hidden state first, then animates.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        intros.forEach(function (el) { el.classList.add('is-visible'); });
+      });
+    });
+  }
+
+  /* ---- Parallax (one section, transform-only, max ~12% offset) ----
+     Skips on mobile (<=860px) and on prefers-reduced-motion.
+     Listens to scroll with rAF throttle, writes --parallax-y on the element. */
+  function initParallax() {
+    var targets = document.querySelectorAll('.parallax-media');
+    if (!targets.length) return;
+
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var isMobile = window.matchMedia && window.matchMedia('(max-width: 860px)').matches;
+    if (reduceMotion || isMobile) return;
+
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var vh = window.innerHeight;
+      targets.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        // Element center as a fraction of viewport; clamp to [-1, 1]
+        var center = rect.top + rect.height / 2;
+        var progress = (center - vh / 2) / vh; // -1 when below viewport, 0 at center, +1 above
+        if (progress > 1) progress = 1;
+        if (progress < -1) progress = -1;
+        // Max offset ~12% of element height, capped to 80px to stay restrained
+        var max = Math.min(rect.height * 0.12, 80);
+        var offset = -progress * max;
+        el.style.setProperty('--parallax-y', offset.toFixed(1) + 'px');
+      });
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+
   /* ---- Content surface (Tier 2b) ----
      Edit content.json to change promo copy without touching index.html. */
   function applyContent(data) {
@@ -220,12 +276,16 @@
         tagWaLinks();
         initFaq();
         initScrollEffects();
+        initHeroCascade();
+        initParallax();
         if (CURRENT_ARM) trackEvent('exposure', { arm: CURRENT_ARM });
       })
       .catch(function () {
         tagWaLinks();
         initFaq();
         initScrollEffects();
+        initHeroCascade();
+        initParallax();
       });
   }
 

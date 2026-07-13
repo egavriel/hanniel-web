@@ -1065,6 +1065,64 @@ html.reveal-enabled .reveal:not(.is-visible) {
   transform: translateY(0);
 }
 
+/* Image reveal: fade + scale-down (1.06 → 1.0) — applied to figures + imgs */
+html.reveal-enabled .reveal-media:not(.is-visible) {
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 900ms var(--transition-smooth), transform 1100ms var(--transition-smooth);
+}
+.reveal-media.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Signature clip-path wipe — for 1-2 hero/signature images only */
+html.reveal-enabled .reveal-wipe:not(.is-visible) {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transition: opacity 600ms var(--transition-smooth), clip-path 1100ms var(--transition-smooth);
+}
+.reveal-wipe.is-visible {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+}
+
+/* Hero load-time cascade — NOT scroll-triggered, runs once on DOMContentLoaded */
+html.reveal-enabled .hero__intro {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 700ms var(--transition-smooth), transform 700ms var(--transition-smooth);
+}
+.hero__intro.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero__intro--d1 { transition-delay: 100ms; }
+.hero__intro--d2 { transition-delay: 200ms; }
+.hero__intro--d3 { transition-delay: 320ms; } /* CTA group */
+
+/* Section heading accent line — scales in from left on reveal */
+.section-heading__accent {
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin: var(--space-sm) 0 var(--space-md);
+  background: var(--color-accent, #A67C52);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 700ms var(--transition-smooth);
+}
+html.reveal-enabled .section-head.is-visible .section-heading__accent {
+  transform: scaleX(1);
+}
+
+/* Parallax media — JS sets --parallax-y, CSS does the transform.
+   Applied only to one section (fullbleed image). Desktop-only via media query below. */
+.parallax-media {
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
+  will-change: transform;
+}
+
 .reveal-d1 {
   transition-delay: 100ms;
 }
@@ -1120,8 +1178,25 @@ html.reveal-enabled .reveal:not(.is-visible) {
     transition-duration: 0s !important;
     scroll-behavior: auto !important;
   }
-  .reveal:not(.is-visible) {
+  .reveal:not(.is-visible),
+  .reveal-media:not(.is-visible),
+  .reveal-wipe:not(.is-visible),
+  .hero__intro {
     opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .section-heading__accent {
+    transform: scaleX(1) !important;
+  }
+  .parallax-media {
+    transform: none !important;
+  }
+}
+
+/* Parallax: desktop only — max 15% offset is enforced in JS, mobile gets transform: none */
+@media (max-width: 860px) {
+  .parallax-media {
     transform: none !important;
   }
 }
