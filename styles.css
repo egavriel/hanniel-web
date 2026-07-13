@@ -269,19 +269,6 @@ em {
   position: relative;
 }
 
-.hero__hand {
-  position: absolute;
-  top: 100px;
-  right: var(--space-xl);
-  writing-mode: vertical-rl;
-  font-family: var(--font-hand);
-  font-size: 2.2rem;
-  color: var(--border-strong);
-  transform: rotate(4deg);
-  user-select: none;
-  pointer-events: none;
-}
-
 .hero__text {
   max-width: 800px;
   margin: 0 auto;
@@ -669,6 +656,16 @@ em {
   margin-left: var(--space-xs);
   display: inline-block;
   vertical-align: middle;
+}
+
+.menu__currency-note {
+  margin: var(--space-md) auto 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted, #7a6f63);
+  font-style: italic;
+  letter-spacing: 0.01em;
+  max-width: 960px;
 }
 
 .menu__order {
