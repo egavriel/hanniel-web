@@ -1031,55 +1031,49 @@ em {
   box-shadow: 0 12px 30px rgba(18, 140, 126, 0.45);
 }
 
-/* ---------- Progressive Reveal Animation ---------- */
-html.reveal-enabled .reveal:not(.is-visible) {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 800ms var(--transition-smooth), transform 800ms var(--transition-smooth);
+/* ---------- Motion (GSAP-driven) ----------
+   The old CSS-driven reveal system (.reveal / .reveal-media / .reveal-wipe /
+   .hero__intro / .parallax-media) has been removed. Scroll-driven motion is
+   now orchestrated by motion.js using GSAP + ScrollTrigger + Lenis.
+
+   Initial hidden states are set in JS (gsap.fromTo) only, so:
+     - JS-disabled users see the full page in plain HTML
+     - No CLS from CSS hiding
+     - One single source of truth for motion timing
+*/
+
+/* Image parallax wrapper: overflow hidden, inner img scales 1.18 + scrubs Y.
+   The wrap is created by motion.js around each targeted <img>. */
+.parallax-img-wrap {
+  display: block;
+  overflow: hidden;
+  /* width/height inherited from parent block context */
+}
+.parallax-img-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center center;
 }
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+/* Heading line-reveal masks (hero h1 only).
+   Initial hidden state is set via gsap.set in motion.js — NO CSS transform
+   here, otherwise GSAP fromTo stacks on top of the CSS-set base and the
+   lines never reach translateY(0). If JS is disabled, lines just render at
+   their natural position (translateY(0)) — fully visible. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.line-mask .line,
+.line-mask .line > em {
+  display: inline-block;
+  will-change: transform;
 }
 
-/* Image reveal: fade + scale-down (1.06 → 1.0) — applied to figures + imgs */
-html.reveal-enabled .reveal-media:not(.is-visible) {
-  opacity: 0;
-  transform: scale(1.06);
-  transition: opacity 900ms var(--transition-smooth), transform 1100ms var(--transition-smooth);
-}
-.reveal-media.is-visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Signature clip-path wipe — for 1-2 hero/signature images only */
-html.reveal-enabled .reveal-wipe:not(.is-visible) {
-  opacity: 0;
-  clip-path: inset(0 100% 0 0);
-  transition: opacity 600ms var(--transition-smooth), clip-path 1100ms var(--transition-smooth);
-}
-.reveal-wipe.is-visible {
-  opacity: 1;
-  clip-path: inset(0 0 0 0);
-}
-
-/* Hero load-time cascade — NOT scroll-triggered, runs once on DOMContentLoaded */
-html.reveal-enabled .hero__intro:not(.is-visible) {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.hero__intro.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.hero__intro--d1 { transition-delay: 100ms; }
-.hero__intro--d2 { transition-delay: 200ms; }
-.hero__intro--d3 { transition-delay: 320ms; } /* CTA group */
-
-/* Section heading accent line — scales in from left on reveal */
+/* Section heading accent line — preserved (decorative, no JS dependency) */
 .section-heading__accent {
   display: block;
   width: 56px;
@@ -1087,34 +1081,8 @@ html.reveal-enabled .hero__intro:not(.is-visible) {
   margin: var(--space-sm) 0 var(--space-md);
   background: var(--color-accent, #A67C52);
   transform-origin: left center;
-  transform: scaleX(0);
-  transition: transform 700ms var(--transition-smooth);
+  transform: scaleX(1);   /* visible by default — no JS gate */
 }
-html.reveal-enabled .section-head.is-visible .section-heading__accent {
-  transform: scaleX(1);
-}
-
-/* Parallax media — JS sets --parallax-y, CSS does the transform.
-   Applied only to one section (fullbleed image). Desktop-only via media query below. */
-.parallax-media {
-  transform: translate3d(0, var(--parallax-y, 0px), 0);
-  will-change: transform;
-}
-
-.reveal-d1 {
-  transition-delay: 0.12s;
-}
-
-.reveal-d2 {
-  transition-delay: 0.24s;
-}
-
-/* reveal stagger list items delays */
-.reveal-stagger > .reveal:nth-child(1) { transition-delay: 40ms; }
-.reveal-stagger > .reveal:nth-child(2) { transition-delay: 80ms; }
-.reveal-stagger > .reveal:nth-child(3) { transition-delay: 120ms; }
-.reveal-stagger > .reveal:nth-child(4) { transition-delay: 160ms; }
-.reveal-stagger > .reveal:nth-child(5) { transition-delay: 200ms; }
 
 /* ---------- Responsive Adjustments ---------- */
 @media (max-width: 860px) {
@@ -1144,7 +1112,9 @@ html.reveal-enabled .section-head.is-visible .section-heading__accent {
   }
 }
 
-/* Prefers Reduced Motion Compatibility */
+/* Prefers Reduced Motion Compatibility
+   GSAP and Lenis bail entirely in motion.js when reduce-motion is on.
+   modu-shake (continuous ingredient icon wobble) also stops. */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-delay: 0s !important;
@@ -1153,21 +1123,14 @@ html.reveal-enabled .section-head.is-visible .section-heading__accent {
     transition-duration: 0s !important;
     scroll-behavior: auto !important;
   }
-  .reveal:not(.is-visible),
-  .reveal-media:not(.is-visible),
-  .reveal-wipe:not(.is-visible),
-  .hero__intro:not(.is-visible) {
-    opacity: 1 !important;
-    transform: none !important;
-    clip-path: none !important;
-  }
   .section-heading__accent {
     transform: scaleX(1) !important;
   }
-  .parallax-media {
-    transform: none !important;
-  }
 }
+
+/* Mobile (<=860px): no Lenis smoothing (native touch scroll is preserved),
+   no pinned sequences; amplitudes are scaled to 0.6 in motion.js.
+   This block intentionally left empty — motion.js handles it. */
 
 /* =====================================================================
    modu.sg shake-bottom animation (verbatim from modu.sg pagetify CSS)
@@ -1195,11 +1158,4 @@ html.reveal-enabled .section-head.is-visible .section-heading__accent {
 
 @media (prefers-reduced-motion: reduce) {
   .modu-shake { animation: none !important; transform: none !important; }
-}
-
-/* Parallax: desktop only — max 15% offset is enforced in JS, mobile gets transform: none */
-@media (max-width: 860px) {
-  .parallax-media {
-    transform: none !important;
-  }
 }
