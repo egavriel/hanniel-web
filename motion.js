@@ -73,7 +73,7 @@
           trigger: wrap,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: true,
+          scrub: 1,
         }
       }
     );
@@ -125,17 +125,25 @@
       );
     });
     // Hero image scrub (scale 1→1.08 + slight up-drift on scroll)
-    var heroImg = document.querySelector('.hero__strip img');
-    if (heroImg) {
-      ScrollTrigger.create({
-        trigger: '.hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-        onUpdate: function (self) {
-          var p = self.progress;
-          gsap.set('.hero__strip', { scale: 1 + 0.08 * p });
-          gsap.set('.hero__text', { yPercent: -8 * p * 0.85 });
+    if (document.querySelector('.hero__strip img')) {
+      gsap.to('.hero__strip', {
+        scale: 1.08,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1,
+        }
+      });
+      gsap.to('.hero__text', {
+        yPercent: -6.8,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1,
         }
       });
     }
@@ -211,7 +219,7 @@
           yPercent: 15 * AMP, ease: 'none',
           scrollTrigger: {
             trigger: fullbleedImg.parentElement,
-            start: 'top bottom', end: 'bottom top', scrub: true
+            start: 'top bottom', end: 'bottom top', scrub: 1
           }
         }
       );
@@ -230,7 +238,6 @@
 
     // 5) Menu cards rotate-settle (alternating ±3°)
     rotateSettleEnter('.menu-card', { stagger: 0.12 });
-    rotateSettleEnter('.menu-item', { stagger: 0.04, duration: 0.6 });
 
     // 6) Journal stories rotate-settle
     rotateSettleEnter('.story', { stagger: 0.18 });
