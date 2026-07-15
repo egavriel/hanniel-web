@@ -341,14 +341,14 @@ em { font-style: italic; }
 }
 /* Filled primary variant for the hero, emphasizes the key action (Our Menu). */
 .hero-btn--primary {
-  background: #3e2723;
+  background: #bf9b7a;
   color: #fff;
-  border-color: #3e2723;
+  border-color: #bf9b7a;
 }
 .hero-btn--primary:hover {
-  background: #2b1d1a;
+  background: #a07d5f;
   color: #fff;
-  border-color: #2b1d1a;
+  border-color: #a07d5f;
 }
 .hero__strip {
   display: grid;
