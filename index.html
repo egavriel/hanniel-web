@@ -37,7 +37,7 @@
         rel="stylesheet">
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="styles.css?v=25">
+    <link rel="stylesheet" href="styles.css?v=26">
 
     <!--
         Cloudflare Web Analytics is auto-injected by the CF edge for the
@@ -176,11 +176,25 @@
                         class="menu__image"
                         src="assets/little-hanniel-menu.png"
                         alt="Little Hanniel menu: overnight oats, cookies, bakes, and Korean kitchen items with prices in IDR"
-                        width="2000"
-                        height="1236"
+                        width="1236"
+                        height="1600"
                         loading="lazy"
                         decoding="async"
                     >
+                    <!-- Native share button (mobile only). Hidden by default;
+                         CSS reveals it at max-width:720px. Wired up in
+                         script.js to navigator.share with a WhatsApp
+                         deep-link fallback for browsers without Web Share. -->
+                    <button type="button" class="menu__share" id="menuShareBtn" aria-label="Share this menu">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                        <span>Share this menu</span>
+                    </button>
                 </div>
 
                 <p class="menu__note reveal">All prices in IDR &nbsp;·&nbsp; Freshly made, Monday to Saturday</p>
@@ -341,7 +355,7 @@ jars of their own.</p>
     }
     </script>
 
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=22"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
     <script src="splide-init.js"></script>
     <!-- Premium refinements: Lenis smooth scroll + GSAP/ScrollTrigger.

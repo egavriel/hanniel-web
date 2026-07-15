@@ -163,16 +163,57 @@
     if (data._experimental_test) applyArm(data._experimental_test);
   }
 
+  /* ---- Native share button (mobile menu) ----
+     Uses navigator.share where available (iOS Safari 12+, Android
+     Chrome 61+, Samsung Internet). On user-cancel (AbortError) we
+     silently bail. For browsers without Web Share we fall back to
+     a WhatsApp send pre-filled with the menu URL — that's the most
+     common share target for this audience anyway. */
+  function initShareButton() {
+    var btn = document.getElementById('menuShareBtn');
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+      var shareData = {
+        title: 'Little Hanniel Menu',
+        text: 'Little Hanniel menu — overnight oats, cookies, bakes, and our little Korean kitchen. From our kitchen to yours.',
+        url: window.location.href,
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(function (err) {
+          // AbortError = user cancelled the share sheet. Don't surface
+          // that as an error. For any other failure, drop to the
+          // WhatsApp fallback so the share still works.
+          if (err && err.name === 'AbortError') return;
+          openWhatsAppShare(shareData);
+        });
+      } else {
+        openWhatsAppShare(shareData);
+      }
+    });
+  }
+
+  function openWhatsAppShare(shareData) {
+    var msg = (shareData.text || '') + ' ' + (shareData.url || '');
+    // wa.me deep link with pre-filled text. Works on mobile WhatsApp
+    // and on desktop WhatsApp Web.
+    var url = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    window.open(url, '_blank', 'noopener');
+  }
+
   function loadContentThenInit() {
     fetch('/content.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
         applyContent(data);
         tagWaLinks();
+        initShareButton();
         if (CURRENT_ARM) trackEvent('exposure', { arm: CURRENT_ARM });
       })
       .catch(function () {
         tagWaLinks();
+        initShareButton();
       });
   }
 

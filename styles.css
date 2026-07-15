@@ -435,6 +435,48 @@ em { font-style: italic; }
   height: auto;
   border-radius: calc(var(--radius-lg) - 4px);
 }
+
+/* ---------- Native share button (mobile only) ----------
+   Sits inside the menu card, below the image. Hidden on desktop
+   (display:none), shown on viewports at or below 720px wide. Uses
+   the Web Share API (navigator.share) — wired in script.js with a
+   WhatsApp deep-link fallback for browsers without Web Share.
+   Style follows the Mastercard pill system: 20px radius, ink
+   background, calm typographic rhythm. Slightly toned down vs.
+   a primary CTA so it doesn't compete with the WhatsApp order
+   button further down the section. */
+.menu__share {
+  display: none;             /* hidden on desktop by default */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px 20px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--text-strong);
+  border: 1.5px solid var(--text-strong);
+  border-radius: var(--ms-radius-button);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  transition: transform 0.2s var(--ease-out),
+              background-color 0.2s var(--ease-out);
+}
+.menu__share:active { transform: scale(0.98); }
+.menu__share:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .menu__share { display: inline-flex; }
+}
 .menu__note { text-align: center; margin-top: 26px; font-family: var(--font-sans); font-size: 0.76rem; letter-spacing: 0.04em; color: var(--text-muted); }
 .menu__order {
   margin-top: 56px;
