@@ -37,7 +37,7 @@
         rel="stylesheet">
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="styles.css?v=22">
+    <link rel="stylesheet" href="styles.css?v=29">
 
     <!--
         Cloudflare Web Analytics is auto-injected by the CF edge for the
@@ -105,26 +105,6 @@
             </div>
         </section>
 
-        <!-- Trust strip — Tier 6 Ploy recommendation #2
-             Three micro-facts under the hero resolve the "is this real, fresh,
-             what hours?" questions visitors from WA share previews ask. -->
-        <section class="trust-strip reveal" aria-label="Why Little Hanniel">
-            <div class="container trust-strip__row">
-                <div class="trust-strip__item">
-                    <span class="trust-strip__icon" aria-hidden="true">🌿</span>
-                    <p class="trust-strip__text"><strong>Made Mon–Sat</strong><br>Fresh every morning</p>
-                </div>
-                <div class="trust-strip__item">
-                    <span class="trust-strip__icon" aria-hidden="true">📦</span>
-                    <p class="trust-strip__text"><strong>Batam cold-chain</strong><br>Delivered same day</p>
-                </div>
-                <div class="trust-strip__item">
-                    <span class="trust-strip__icon" aria-hidden="true">💬</span>
-                    <p class="trust-strip__text"><strong>WhatsApp reply</strong><br>Within ~1 hour</p>
-                </div>
-            </div>
-        </section>
-
         <!-- Ingredients -->
         <section class="section ingredients">
             <div class="container">
@@ -175,15 +155,27 @@
                     <img
                         class="menu__image"
                         src="assets/little-hanniel-menu.png"
-                        alt="Little Hanniel menu: overnight oats, cookies, bakes, and Korean kitchen items with prices in IDR"
-                        width="2000"
-                        height="1236"
+                        alt="Little Hanniel menu card — Overnight Oats, Cookies, Bakes, and Korean kitchen items, with prices in IDR. From our kitchen to yours."
+                        width="1632"
+                        height="2112"
                         loading="lazy"
                         decoding="async"
                     >
+                    <!-- Native share button (mobile only). Hidden by default;
+                         CSS reveals it at max-width:720px. Wired up in
+                         script.js to navigator.share with a WhatsApp
+                         deep-link fallback for browsers without Web Share. -->
+                    <button type="button" class="menu__share" id="menuShareBtn" aria-label="Share this menu">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                        <span>Share this menu</span>
+                    </button>
                 </div>
-
-                <p class="menu__note reveal">All prices in IDR &nbsp;·&nbsp; Freshly made, Monday to Saturday</p>
 
                 <div class="menu__order reveal">
                     <span class="eyebrow">Get a Jar?</span>
@@ -240,6 +232,75 @@ jars of their own.</p>
             </div>
         </section>
 
+        <!-- FAQ -->
+        <section class="section faq" id="faq" aria-label="Frequently Asked Questions">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="eyebrow">FAQ</span>
+                    <h2>Got questions? <em>We have answers</em></h2>
+                    <p>Learn more about how we bake, deliver, and ensure freshness across Batam.</p>
+                </div>
+
+                <div class="faq-list reveal reveal-d1">
+                    <div class="faq-item">
+                        <button type="button" class="faq-item__trigger" aria-expanded="false">
+                            <span class="faq-item__q">How do I place an order?</span>
+                            <svg class="faq-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="faq-item__panel">
+                            <div class="faq-item__body">
+                                <p>We take all orders exclusively through WhatsApp to ensure personal care and schedule fresh baking for you. Just click any "WhatsApp Us" button, and it will direct you to a WhatsApp chat with a pre-filled ordering format. Once we confirm your menu choice, we schedule your bakes.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button type="button" class="faq-item__trigger" aria-expanded="false">
+                            <span class="faq-item__q">Where are you located and do you deliver?</span>
+                            <svg class="faq-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="faq-item__panel">
+                            <div class="faq-item__body">
+                                <p>We are a family home bakery located in Batam, Indonesia, and we provide same-day cold-chain delivery across the island. Deliveries are made from Monday to Saturday to ensure your overnight oats and cookies arrive perfectly chilled. Shipping fees vary depending on your district in Batam.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button type="button" class="faq-item__trigger" aria-expanded="false">
+                            <span class="faq-item__q">How long do the overnight oats stay fresh?</span>
+                            <svg class="faq-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="faq-item__panel">
+                            <div class="faq-item__body">
+                                <p>Our overnight oats stay fresh for up to 3 days when stored continuously in the refrigerator. We recommend keeping them cold until you are ready to shake and enjoy them. Do not freeze, as this can affect the texture of the oats and fruits.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button type="button" class="faq-item__trigger" aria-expanded="false">
+                            <span class="faq-item__q">Are your treats Halal and free from refined sugar?</span>
+                            <svg class="faq-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="faq-item__panel">
+                            <div class="faq-item__body">
+                                <p>Yes, all of our bakes and overnight oats are made with Halal-friendly ingredients and contain no refined sugar. We sweeten our oats naturally using local honey and fresh fruit. Our cookies are also baked with dark chocolate and organic whole grains.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Contact -->
         <section class="section contact" id="contact">
             <div class="container reveal">
@@ -274,6 +335,7 @@ jars of their own.</p>
                 <div class="footer__nav">
                     <a href="#journal">Journal</a>
                     <a href="#menu">Menu</a>
+                    <a href="#faq">FAQ</a>
                     <a href="#contact">Contact</a>
                 </div>
                 <p class="footer__copy">© 2025 Little Hanniel · Made with love by our family</p>
@@ -304,6 +366,44 @@ jars of their own.</p>
           "logo": "https://little.hanniel.co/assets/logo.png",
           "description": "Family home bakery in Batam, Indonesia. Freshly made Overnight Oats and Almond Choco Cookies, baked to order.",
           "sameAs": ["https://instagram.com/littlehanniel"]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://little.hanniel.co/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How do I place an order?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We take all orders exclusively through WhatsApp to ensure personal care and schedule fresh baking for you. Just click any WhatsApp Us button, and it will direct you to a WhatsApp chat with a pre-filled ordering format. Once we confirm your menu choice, we schedule your bakes."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Where are you located and do you deliver?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We are a family home bakery located in Batam, Indonesia, and we provide same-day cold-chain delivery across the island. Deliveries are made from Monday to Saturday to ensure your overnight oats and cookies arrive perfectly chilled. Shipping fees vary depending on your district in Batam."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How long do the overnight oats stay fresh?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Our overnight oats stay fresh for up to 3 days when stored continuously in the refrigerator. We recommend keeping them cold until you are ready to shake and enjoy them. Do not freeze, as this can affect the texture of the oats and fruits."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Are your treats Halal and free from refined sugar?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, all of our bakes and overnight oats are made with Halal-friendly ingredients and contain no refined sugar. We sweeten our oats naturally using local honey and fresh fruit. Our cookies are also baked with dark chocolate and organic whole grains."
+              }
+            }
+          ]
         },
         {
           "@type": "Product",
@@ -341,9 +441,16 @@ jars of their own.</p>
     }
     </script>
 
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=25"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
     <script src="splide-init.js"></script>
+    <!-- Premium refinements: Lenis smooth scroll + GSAP/ScrollTrigger.
+         Loaded after core scripts so refinements.js can layer on top
+         without touching existing reveal/floating/CTA logic. -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="refinements.js?v=6"></script>
 </body>
 
 </html>

@@ -65,6 +65,41 @@
   --header-height: 140px;            /* taller focal band for the larger logo */
 }
 
+/* ---------- Mastercard design system overlay ----------
+   Adopts the tokens from ./DESIGN.md (VoltAgent/awesome-design-md
+   > design-md/mastercard/DESIGN.md) adapted per ./DESIGN-HANNIEL.md.
+
+   Three-tier shadow scale (atmospheric, not directional):
+   - --ms-shadow-1: 0 4px 24px rgba(43,33,24,0.04) — barely-there lift
+   - --ms-shadow-2: 0 24px 48px rgba(43,33,24,0.08) — soft halo
+   - --ms-shadow-3: 0 70px 110px rgba(43,33,24,0.25) — rare, dramatic
+   Signature pill radius (Mastercard system uses 20px for body CTAs):
+   - --ms-radius-button: 20px
+   Heading tracking (Mastercard uses -2% on h1/h2):
+   - --ms-track-h1: -0.025em
+   - --ms-track-h2: -0.02em
+   - --ms-track-h3: -0.02em
+   Body weight: Mastercard uses 450 (between 400 and 500). Lora variable
+   font doesn't have 450, so we render body copy at 500 — the closest
+   stable weight that gives the same "firmer than 400, softer than 700"
+   feel Mastercard calls "load-bearing." */
+:root {
+  --ms-shadow-1: 0 4px 24px rgba(43, 33, 24, 0.04);
+  --ms-shadow-2: 0 24px 48px rgba(43, 33, 24, 0.08);
+  --ms-shadow-3: 0 70px 110px rgba(43, 33, 24, 0.25);
+
+  --ms-radius-button: 20px;
+
+  --ms-track-h1: -0.025em;
+  --ms-track-h2: -0.02em;
+  --ms-track-h3: -0.02em;
+
+  --ms-line-display: 1.1;
+  --ms-line-body: 1.65;            /* Lora needs a touch more air than
+                                      Mastercard's 1.4 (MarkForMC sans) */
+  --ms-line-eyebrow: 1.3;
+}
+
 /* ---------- Reset ---------- */
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -96,7 +131,17 @@ p { margin: 0; }
 }
 .display { font-family: var(--font-display); line-height: 1.14; color: var(--text-body); }
 
-/* ---------- Buttons ---------- */
+/* ---------- Buttons ----------
+   Three CTA vocabularies live here:
+   - .btn--ink     → Mastercard system primary (Ink Black pill, 20px radius)
+                     reserved for marketing CTAs ("Order", "Get a jar")
+   - .btn--primary → Caramel pill (legacy Hanniel accent), kept for menu/contact
+   - .btn--secondary → Caramel outline (legacy)
+   - .btn--ghost   → text-only
+
+   The menu order card's WhatsApp pill (.menu__order-btn) is a special
+   case: it fills with WhatsApp green and uses --radius-pill (full pill).
+   That's a literal CTA signal, not a style — see DESIGN-HANNIEL.md. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -116,10 +161,36 @@ p { margin: 0; }
               background-color 0.3s var(--ease-out),
               color 0.3s var(--ease-out);
 }
-.btn--primary { background: var(--accent); color: #fff; box-shadow: var(--shadow-accent); }
-.btn--primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-accent-hover); }
+/* Mastercard §4: "Ink Pill" — Ink Black bg, Canvas Cream text, 20px radius,
+   6×24 padding, MarkForMC 16px / 500 / -2% tracking. We use Inter at 600
+   (slightly heavier to compensate for the letter-spacing loss on a
+   narrower font) and 15×34 padding (Hanniel's CTA rows need a touch more
+   horizontal room than the Mastercard marketing scale). */
+.btn--ink {
+  background: var(--text-strong);
+  color: var(--bg-page);
+  border-color: var(--text-strong);
+  border-radius: var(--ms-radius-button);
+  box-shadow: var(--ms-shadow-1);
+}
+.btn--ink:hover {
+  background: #1a1410;            /* one stop darker than --text-strong */
+  transform: translateY(-2px);
+  box-shadow: var(--ms-shadow-2);
+}
+.btn--ink:active { transform: scale(0.98); }
+
+/* Legacy caramel button — kept for menu/contact. Tightened to the same
+   20px radius as the ink pill so the system has one button shape. */
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--ms-radius-button);
+  box-shadow: var(--shadow-accent);
+}
+.btn--primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-accent-hover); }
 .btn--primary:active { transform: scale(0.98); }
-.btn--secondary { background: transparent; color: var(--accent-hover); border-color: var(--accent); }
+.btn--secondary { background: transparent; color: var(--accent-hover); border-color: var(--accent); border-radius: var(--ms-radius-button); }
 .btn--secondary:hover { background: var(--accent-soft); }
 .btn--ghost { background: transparent; color: var(--text-secondary); }
 .btn--ghost:hover { color: var(--text-body); }
@@ -225,57 +296,6 @@ em { font-style: italic; }
 }
 .hero__ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
-/* ---------- Trust strip (Tier 6) ----------
-   Three micro-facts under hero to resolve trust questions from shared WA links.
-   Brand tokens only — no new colors. */
-.trust-strip {
-  border-top: 1px solid rgba(43, 33, 24, 0.08);
-  border-bottom: 1px solid rgba(43, 33, 24, 0.08);
-  background: rgba(255, 255, 255, 0.55);
-  padding: 28px 0;
-  margin: 0;
-}
-.trust-strip__row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  align-items: center;
-}
-@media (max-width: 720px) {
-  .trust-strip__row { grid-template-columns: 1fr; gap: 18px; text-align: center; }
-}
-.trust-strip__item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 6px;
-}
-@media (max-width: 720px) { .trust-strip__item { justify-content: center; } }
-.trust-strip__icon {
-  font-size: 1.65rem;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  background: rgba(166, 124, 82, 0.12);
-  flex: 0 0 auto;
-}
-.trust-strip__text {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
-  line-height: 1.4;
-  color: var(--text-body);
-}
-.trust-strip__text strong {
-  color: var(--text-strong);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
 /* ---------- Modu-style hero CTA row ----------
    Source: modu.sg hero — 3 equal-width bordered buttons, sentence case,
    hover inverts to dark fill. Replaces the pill-style .btn--primary/
@@ -364,7 +384,48 @@ em { font-style: italic; }
   height: auto;
   border-radius: calc(var(--radius-lg) - 4px);
 }
-.menu__note { text-align: center; margin-top: 26px; font-family: var(--font-sans); font-size: 0.76rem; letter-spacing: 0.04em; color: var(--text-muted); }
+
+/* ---------- Native share button (mobile only) ----------
+   Sits inside the menu card, below the image. Hidden on desktop
+   (display:none), shown on viewports at or below 720px wide. Uses
+   the Web Share API (navigator.share) — wired in script.js with a
+   WhatsApp deep-link fallback for browsers without Web Share.
+   Style follows the Mastercard pill system: 20px radius, ink
+   background, calm typographic rhythm. Slightly toned down vs.
+   a primary CTA so it doesn't compete with the WhatsApp order
+   button further down the section. */
+.menu__share {
+  display: none;             /* hidden on desktop by default */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px 20px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--text-strong);
+  border: 1.5px solid var(--text-strong);
+  border-radius: var(--ms-radius-button);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  transition: transform 0.2s var(--ease-out),
+              background-color 0.2s var(--ease-out);
+}
+.menu__share:active { transform: scale(0.98); }
+.menu__share:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .menu__share { display: inline-flex; }
+}
 .menu__order {
   margin-top: 56px;
   max-width: 1000px;
@@ -446,6 +507,94 @@ em { font-style: italic; }
   line-height: 1.35;
   color: #fff;
   max-width: 720px;
+}
+
+/* ---------- FAQ (wording from feature/website-revamp; design from current DESIGN.md system) ----------
+   Single-column accordion, cream surface, soft 8% border, atmospheric Level-1
+   shadow, 20px button radius language, grid-rows open/close (no max-height
+   jump). One open at a time is handled in script.js. */
+.faq { background: var(--bg-page); }
+.faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.faq-item {
+  background: var(--surface);
+  border: 1px solid rgba(43, 33, 24, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--ms-shadow-1);
+  overflow: hidden;
+  transition: border-color 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out);
+}
+.faq-item:hover {
+  border-color: rgba(43, 33, 24, 0.14);
+  box-shadow: var(--ms-shadow-2);
+}
+.faq-item.is-active {
+  border-color: rgba(43, 33, 24, 0.14);
+}
+.faq-item__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-strong);
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+}
+.faq-item__trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.faq-item__q {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  font-weight: 400;
+  letter-spacing: var(--ms-track-h3);
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+.faq-item__icon {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  transition: transform 0.28s var(--ease-out), color 0.28s var(--ease-out);
+}
+.faq-item.is-active .faq-item__icon {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+.faq-item__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s var(--ease-out);
+}
+.faq-item.is-active .faq-item__panel {
+  grid-template-rows: 1fr;
+}
+.faq-item__body {
+  overflow: hidden;
+  min-height: 0;
+}
+.faq-item__body p {
+  margin: 0;
+  padding: 0 22px 20px;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: var(--ms-line-body);
+  color: var(--text-secondary);
+  max-width: 68ch;
 }
 
 /* ---------- Contact ---------- */
@@ -566,6 +715,243 @@ html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY
 
 @media (prefers-reduced-motion: reduce) {
   .modu-shake { animation: none !important; transform: none !important; }
+}
+
+/* =====================================================================
+   Premium refinement pass — additive polish only.
+   Targets: gsap/reveal coexistence, scroll progress bar, typography
+   tightening (letter-spacing, line-height), softer borders + layered
+   shadows, micro-interactions (lift, slow scale), spacing rhythm.
+   ===================================================================== */
+
+/* When refinements.js is loaded it adds html.gsap-enabled. GSAP owns
+   the entrance animation for the elements it targets, so the CSS
+   transition would cause a visible double-fade. Disable the CSS
+   transition in that mode — script.js still adds .is-visible which
+   keeps the final state correct. */
+html.gsap-enabled .reveal {
+  transition: none !important;
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Scroll progress bar ----------
+   Thin 2px caramel line at the very top of the viewport. transform-only
+   so it stays on the GPU. Only created when refinements.js loads. */
+.lh-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--caramel-700));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 100;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ---------- Typography refinement (Mastercard system tokens) ----------
+   h1/h2/h3 letter-spacing pulled from --ms-track-h1/h2/h3. h1 line-height
+   1.1:1, h2 1.12:1, h3 1.18:1 — all per DESIGN.md §3. */
+h1, h2, h3, h4 {
+  letter-spacing: var(--ms-track-h2);
+}
+h1 { letter-spacing: var(--ms-track-h1); line-height: var(--ms-line-display); }
+h2 { line-height: var(--ms-line-display); }
+h3 { line-height: 1.2; }
+
+.hero__title { line-height: 1.05; letter-spacing: var(--ms-track-h1); }
+.section-head h2 { line-height: 1.12; letter-spacing: var(--ms-track-h2); }
+.story__title { letter-spacing: var(--ms-track-h3); line-height: 1.18; }
+.menu__order-title { letter-spacing: var(--ms-track-h3); line-height: 1.15; }
+.contact h2 { letter-spacing: var(--ms-track-h2); line-height: 1.12; }
+
+/* Mastercard §3: body weight 450 is "load-bearing." Lora doesn't ship 450
+   so we render body copy at 500 — same "firmer than 400, softer than 700"
+   feel. Only the lead-class body copy carries the upgrade; UI meta text
+   (.eyebrow, footer copy) keeps 400/500/600 for clarity. */
+.hero__lead,
+.story__body,
+.contact p,
+.menu__order-lead {
+  max-width: 68ch;
+  font-weight: 500;
+  line-height: var(--ms-line-body);
+}
+.menu__order-lead { max-width: 56ch; }
+
+/* Body line-height for everything else — pull toward Mastercard 1.4 but
+   Lora needs ~1.65 for the serif reading tone. */
+body { line-height: var(--ms-line-body); }
+
+/* ---------- Surface polish ----------
+   Borders softened to ~8% opacity (Mastercard uses 1px at low opacity
+   throughout). Shadows use the three-tier atmospheric scale from
+   DESIGN.md §6 — large spread, low opacity, no hard light. */
+.section { padding: clamp(5rem, 10vw, 9rem) 0; }
+.section-head { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+
+.hero { padding: 24px 0 clamp(3rem, 7vw, 5rem); }
+
+.ingredients,
+.contact { border-color: rgba(43, 33, 24, 0.08); }
+
+.menu__image-wrap,
+.menu__order,
+.story__media,
+.hero__strip figure,
+.hanniel-splide .hero__strip-figure {
+  border: 1px solid rgba(43, 33, 24, 0.08);
+  /* Mastercard Level 1 shadow: 24px spread, 4% opacity, atmospheric lift. */
+  box-shadow: var(--ms-shadow-1);
+}
+
+/* Ingredient cards in the "Wholesome by nature" section: keep the
+   soft atmospheric shadow (Mastercard Level 1) for the calm lift,
+   drop the 1px border. The user wants a clean edge — no card
+   outline around each icon. The icon itself sits in a transparent
+   64×64 box, so removing the border reveals the bg-subtle section
+   surface directly behind it, which is exactly the "clean" look. */
+.ingredient {
+  box-shadow: var(--ms-shadow-1);
+}
+
+/* Lift on hover for any image-in-card surface. Existing :hover scale
+   on img stays, this adds a soft shadow deepening + card lift. Mastercard
+   Level 2: 48px spread, 8% opacity — the soft halo. */
+.menu__image-wrap,
+.story__media,
+.menu__order,
+.hero__strip figure,
+.hanniel-splide .hero__strip-figure {
+  transition:
+    transform 0.5s var(--ease-out),
+    box-shadow 0.5s var(--ease-out),
+    border-color 0.5s var(--ease-out);
+}
+.menu__image-wrap:hover,
+.story__media:hover,
+.hero__strip figure:hover,
+.hanniel-splide .hero__strip-figure:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ms-shadow-2);
+  border-color: rgba(43, 33, 24, 0.14);
+}
+
+/* Disable hover-lift for the menu__order card so the WhatsApp CTA inside
+   gets the visual focus instead. */
+.menu__order:hover {
+  transform: none;
+  box-shadow: var(--ms-shadow-1);
+}
+
+/* ---------- Micro-interaction polish ----------
+   Buttons/links/CTA — slower ease, gentle lift, no bouncy spring. */
+.btn,
+.hero-btn,
+.menu__order-btn,
+.channel,
+.floating-wa,
+.nav__order {
+  transition:
+    transform 0.28s var(--ease-out),
+    background-color 0.28s var(--ease-out),
+    color 0.28s var(--ease-out),
+    border-color 0.28s var(--ease-out),
+    box-shadow 0.28s var(--ease-out);
+}
+
+.hero-btn:hover { transform: translateY(-2px); }
+.btn--primary:hover { transform: translateY(-2px); }
+.channel:hover { transform: translateY(-2px); }
+.menu__order-btn:hover { transform: translateY(-2px); }
+.nav__order:hover { transform: translateY(-2px); }
+.floating-wa:hover { transform: translateY(-3px) scale(1.04); }
+
+/* Remove the old bouncy spring transition on .btn--primary only —
+   the user spec says "no bouncy easing" for micro-interactions. */
+.btn--primary { transition:
+    transform 0.28s var(--ease-out),
+    box-shadow 0.28s var(--ease-out),
+    background-color 0.28s var(--ease-out),
+    color 0.28s var(--ease-out); }
+
+/* Underline slide-in for footer nav + section nav links.
+   Subtle, premium. */
+.footer__nav a,
+.nav__link {
+  position: relative;
+  padding-bottom: 4px;
+}
+.footer__nav a::after,
+.nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.3s var(--ease-out);
+}
+.footer__nav a:hover::after,
+.nav__link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------- Subtle background treatment ----------
+   Faint warm gradient on the page bg so flat surfaces aren't dead-flat.
+   Sits behind everything (z-index 0 implied via body's position context). */
+body {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(166, 124, 82, 0.05), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(224, 201, 160, 0.10), transparent 60%),
+    var(--bg-page);
+  background-attachment: fixed;
+}
+
+/* ---------- Eyebrow refinement ----------
+   Slightly more breathing room and consistent sizing. */
+.eyebrow { letter-spacing: 0.2em; }
+
+/* ---------- Heading rhythm ----------
+   Ensure h1/h2/h3 margins give breathing room above section heads. */
+.section-head h2 { margin-top: 18px; }
+
+/* ---------- Mobile spacing tighten (preserves rhythm) ---------- */
+@media (max-width: 860px) {
+  .section { padding: clamp(3.5rem, 8vw, 5.5rem) 0; }
+  .hero { padding: 16px 0 clamp(2.5rem, 6vw, 4rem); }
+  .menu__image-wrap:hover,
+  .story__media:hover,
+  .hero__strip figure:hover,
+  .hanniel-splide .hero__strip-figure:hover {
+    transform: none; /* disable lift on touch devices */
+  }
+}
+
+/* ---------- Reduced motion: also kill parallax entrance transforms ----------
+   refinements.js returns early on reduce-motion, but if it ever runs,
+   belt-and-braces: no card-lift, no progress-bar animation jumps. */
+@media (prefers-reduced-motion: reduce) {
+  .lh-scroll-progress { display: none; }
+  .menu__image-wrap,
+  .story__media,
+  .menu__order,
+  .hero__strip figure,
+  .hanniel-splide .hero__strip-figure {
+    transition: none !important;
+  }
+  .menu__image-wrap:hover,
+  .story__media:hover,
+  .hero__strip figure:hover,
+  .hanniel-splide .hero__strip-figure:hover { transform: none !important; }
+  .footer__nav a::after,
+  .nav__link::after { display: none; }
 }
 
 /* =====================================================================

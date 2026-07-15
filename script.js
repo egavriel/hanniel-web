@@ -163,16 +163,132 @@
     if (data._experimental_test) applyArm(data._experimental_test);
   }
 
+  /* ---- Native share button (mobile menu) ----
+     Prefers sharing the actual menu PNG via Web Share Level 2
+     (navigator.share + files). That lets WhatsApp / Telegram /
+     Messages receive the image itself instead of only a website link.
+
+     Fallback chain:
+     1) share file (PNG) when canShare({ files }) is true
+     2) share title/text + direct image URL when file share is unavailable
+     3) WhatsApp deep-link with the direct image URL
+     AbortError (user cancelled the sheet) is silent. */
+  function initShareButton() {
+    var btn = document.getElementById('menuShareBtn');
+    if (!btn) return;
+
+    var menuImg = document.querySelector('.menu__image');
+    var menuSrc = (menuImg && menuImg.getAttribute('src')) || 'assets/little-hanniel-menu.png';
+    // Resolve to absolute URL so share payloads and wa.me links always work.
+    var menuUrl = new URL(menuSrc, window.location.href).href;
+
+    btn.addEventListener('click', function () {
+      shareMenuImage(menuUrl);
+    });
+  }
+
+  function shareMenuImage(menuUrl) {
+    var text = 'Little Hanniel menu — overnight oats, cookies, bakes, and our little Korean kitchen. From our kitchen to yours.';
+    var title = 'Little Hanniel Menu';
+
+    // Try file share first (actual PNG).
+    fetch(menuUrl, { cache: 'force-cache' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('menu image fetch failed');
+        return res.blob();
+      })
+      .then(function (blob) {
+        // Force image/png even if the server content-type is off.
+        var file = new File([blob], 'little-hanniel-menu.png', {
+          type: blob.type || 'image/png',
+        });
+        var fileData = {
+          title: title,
+          text: text,
+          files: [file],
+        };
+
+        // Level-2 Web Share with files (Android Chrome, many iOS Safari versions).
+        if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+          return navigator.share(fileData);
+        }
+
+        // No file-share support: share a direct image URL instead of the homepage.
+        if (navigator.share) {
+          return navigator.share({
+            title: title,
+            text: text,
+            url: menuUrl,
+          });
+        }
+
+        openWhatsAppShare({ text: text, url: menuUrl });
+      })
+      .catch(function (err) {
+        if (err && err.name === 'AbortError') return;
+
+        // Last-resort fallback: WhatsApp with direct image URL.
+        if (navigator.share) {
+          navigator.share({
+            title: title,
+            text: text,
+            url: menuUrl,
+          }).catch(function (err2) {
+            if (err2 && err2.name === 'AbortError') return;
+            openWhatsAppShare({ text: text, url: menuUrl });
+          });
+          return;
+        }
+        openWhatsAppShare({ text: text, url: menuUrl });
+      });
+  }
+
+  function openWhatsAppShare(shareData) {
+    var msg = (shareData.text || '') + ' ' + (shareData.url || '');
+    // wa.me deep link with pre-filled text. Works on mobile WhatsApp
+    // and on desktop WhatsApp Web.
+    var url = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    window.open(url, '_blank', 'noopener');
+  }
+
+  /* ---- FAQ accordion ----
+     Wordings from feature/website-revamp. One item open at a time.
+     Uses class .is-active; open/close height is CSS grid-rows. */
+  function initFaq() {
+    var items = document.querySelectorAll('.faq-item');
+    if (!items.length) return;
+    items.forEach(function (item) {
+      var trigger = item.querySelector('.faq-item__trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function () {
+        var wasOpen = item.classList.contains('is-active');
+        items.forEach(function (other) {
+          other.classList.remove('is-active');
+          var otherTrigger = other.querySelector('.faq-item__trigger');
+          if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          item.classList.add('is-active');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
   function loadContentThenInit() {
     fetch('/content.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
         applyContent(data);
         tagWaLinks();
+        initShareButton();
+        initFaq();
         if (CURRENT_ARM) trackEvent('exposure', { arm: CURRENT_ARM });
       })
       .catch(function () {
         tagWaLinks();
+        initShareButton();
+        initFaq();
       });
   }
 
