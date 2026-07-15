@@ -202,6 +202,30 @@
     window.open(url, '_blank', 'noopener');
   }
 
+  /* ---- FAQ accordion ----
+     Wordings from feature/website-revamp. One item open at a time.
+     Uses class .is-active; open/close height is CSS grid-rows. */
+  function initFaq() {
+    var items = document.querySelectorAll('.faq-item');
+    if (!items.length) return;
+    items.forEach(function (item) {
+      var trigger = item.querySelector('.faq-item__trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function () {
+        var wasOpen = item.classList.contains('is-active');
+        items.forEach(function (other) {
+          other.classList.remove('is-active');
+          var otherTrigger = other.querySelector('.faq-item__trigger');
+          if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          item.classList.add('is-active');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
   function loadContentThenInit() {
     fetch('/content.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -209,11 +233,13 @@
         applyContent(data);
         tagWaLinks();
         initShareButton();
+        initFaq();
         if (CURRENT_ARM) trackEvent('exposure', { arm: CURRENT_ARM });
       })
       .catch(function () {
         tagWaLinks();
         initShareButton();
+        initFaq();
       });
   }
 
