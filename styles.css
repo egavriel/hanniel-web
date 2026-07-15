@@ -569,6 +569,218 @@ html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY
 }
 
 /* =====================================================================
+   Premium refinement pass — additive polish only.
+   Targets: gsap/reveal coexistence, scroll progress bar, typography
+   tightening (letter-spacing, line-height), softer borders + layered
+   shadows, micro-interactions (lift, slow scale), spacing rhythm.
+   ===================================================================== */
+
+/* When refinements.js is loaded it adds html.gsap-enabled. GSAP owns
+   the entrance animation for the elements it targets, so the CSS
+   transition would cause a visible double-fade. Disable the CSS
+   transition in that mode — script.js still adds .is-visible which
+   keeps the final state correct. */
+html.gsap-enabled .reveal {
+  transition: none !important;
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Scroll progress bar ----------
+   Thin 2px caramel line at the very top of the viewport. transform-only
+   so it stays on the GPU. Only created when refinements.js loads. */
+.lh-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--caramel-700));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 100;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ---------- Typography refinement ----------
+   Tighten large-heading rhythm and the body max-width for readability. */
+h1, h2, h3, h4 {
+  letter-spacing: -0.02em;
+}
+.hero__title { line-height: 1.08; letter-spacing: -0.025em; }
+.section-head h2 { line-height: 1.12; letter-spacing: -0.022em; }
+.story__title { letter-spacing: -0.02em; line-height: 1.18; }
+.menu__order-title { letter-spacing: -0.02em; }
+.contact h2 { letter-spacing: -0.022em; }
+
+.hero__lead,
+.story__body,
+.contact p,
+.menu__order-lead {
+  max-width: 68ch;
+}
+.menu__order-lead { max-width: 56ch; }
+
+/* ---------- Surface polish ----------
+   Soften the harsh cream borders, deepen layered shadows, unify radius. */
+.section { padding: clamp(5rem, 10vw, 9rem) 0; }
+.section-head { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+
+.hero { padding: 24px 0 clamp(3rem, 7vw, 5rem); }
+
+.trust-strip { border-color: rgba(43, 33, 24, 0.08); }
+
+.ingredients,
+.contact { border-color: rgba(43, 33, 24, 0.08); }
+
+.menu__image-wrap,
+.menu__order,
+.story__media,
+.ingredient,
+.hero__strip figure,
+.hanniel-splide .hero__strip-figure {
+  border: 1px solid rgba(43, 33, 24, 0.08);
+  box-shadow:
+    0 1px 2px rgba(43, 33, 24, 0.04),
+    0 8px 24px rgba(43, 33, 24, 0.06);
+}
+
+/* Lift on hover for any image-in-card surface. Existing :hover scale
+   on img stays, this adds a soft shadow deepening + card lift. */
+.menu__image-wrap,
+.story__media,
+.menu__order,
+.hero__strip figure,
+.hanniel-splide .hero__strip-figure {
+  transition:
+    transform 0.5s var(--ease-out),
+    box-shadow 0.5s var(--ease-out),
+    border-color 0.5s var(--ease-out);
+}
+.menu__image-wrap:hover,
+.story__media:hover,
+.hero__strip figure:hover,
+.hanniel-splide .hero__strip-figure:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 2px 4px rgba(43, 33, 24, 0.05),
+    0 16px 36px rgba(43, 33, 24, 0.10);
+  border-color: rgba(43, 33, 24, 0.14);
+}
+
+/* Disable hover-lift for the menu__order card so the WhatsApp CTA inside
+   gets the visual focus instead. */
+.menu__order:hover { transform: none; box-shadow: 0 1px 2px rgba(43, 33, 24, 0.04), 0 8px 24px rgba(43, 33, 24, 0.06); }
+
+/* ---------- Micro-interaction polish ----------
+   Buttons/links/CTA — slower ease, gentle lift, no bouncy spring. */
+.btn,
+.hero-btn,
+.menu__order-btn,
+.channel,
+.floating-wa,
+.nav__order {
+  transition:
+    transform 0.28s var(--ease-out),
+    background-color 0.28s var(--ease-out),
+    color 0.28s var(--ease-out),
+    border-color 0.28s var(--ease-out),
+    box-shadow 0.28s var(--ease-out);
+}
+
+.hero-btn:hover { transform: translateY(-2px); }
+.btn--primary:hover { transform: translateY(-2px); }
+.channel:hover { transform: translateY(-2px); }
+.menu__order-btn:hover { transform: translateY(-2px); }
+.nav__order:hover { transform: translateY(-2px); }
+.floating-wa:hover { transform: translateY(-3px) scale(1.04); }
+
+/* Remove the old bouncy spring transition on .btn--primary only —
+   the user spec says "no bouncy easing" for micro-interactions. */
+.btn--primary { transition:
+    transform 0.28s var(--ease-out),
+    box-shadow 0.28s var(--ease-out),
+    background-color 0.28s var(--ease-out),
+    color 0.28s var(--ease-out); }
+
+/* Underline slide-in for footer nav + section nav links.
+   Subtle, premium. */
+.footer__nav a,
+.nav__link {
+  position: relative;
+  padding-bottom: 4px;
+}
+.footer__nav a::after,
+.nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.3s var(--ease-out);
+}
+.footer__nav a:hover::after,
+.nav__link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------- Subtle background treatment ----------
+   Faint warm gradient on the page bg so flat surfaces aren't dead-flat.
+   Sits behind everything (z-index 0 implied via body's position context). */
+body {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(166, 124, 82, 0.05), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(224, 201, 160, 0.10), transparent 60%),
+    var(--bg-page);
+  background-attachment: fixed;
+}
+
+/* ---------- Eyebrow refinement ----------
+   Slightly more breathing room and consistent sizing. */
+.eyebrow { letter-spacing: 0.2em; }
+
+/* ---------- Heading rhythm ----------
+   Ensure h1/h2/h3 margins give breathing room above section heads. */
+.section-head h2 { margin-top: 18px; }
+
+/* ---------- Mobile spacing tighten (preserves rhythm) ---------- */
+@media (max-width: 860px) {
+  .section { padding: clamp(3.5rem, 8vw, 5.5rem) 0; }
+  .hero { padding: 16px 0 clamp(2.5rem, 6vw, 4rem); }
+  .menu__image-wrap:hover,
+  .story__media:hover,
+  .hero__strip figure:hover,
+  .hanniel-splide .hero__strip-figure:hover {
+    transform: none; /* disable lift on touch devices */
+  }
+}
+
+/* ---------- Reduced motion: also kill parallax entrance transforms ----------
+   refinements.js returns early on reduce-motion, but if it ever runs,
+   belt-and-braces: no card-lift, no progress-bar animation jumps. */
+@media (prefers-reduced-motion: reduce) {
+  .lh-scroll-progress { display: none; }
+  .menu__image-wrap,
+  .story__media,
+  .menu__order,
+  .hero__strip figure,
+  .hanniel-splide .hero__strip-figure {
+    transition: none !important;
+  }
+  .menu__image-wrap:hover,
+  .story__media:hover,
+  .hero__strip figure:hover,
+  .hanniel-splide .hero__strip-figure:hover { transform: none !important; }
+  .footer__nav a::after,
+  .nav__link::after { display: none; }
+}
+
+/* =====================================================================
    Splide 4 — Hanniel theme overrides (hero overnight-oats carousel)
    Pattern source: modu.sg pagetify CSS uses Splide v2.4.21 from
    jsDelivr. We use Splide v4 (modern API) loaded from the same CDN.
