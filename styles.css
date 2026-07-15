@@ -477,7 +477,6 @@ em { font-style: italic; }
 @media (max-width: 720px) {
   .menu__share { display: inline-flex; }
 }
-.menu__note { text-align: center; margin-top: 26px; font-family: var(--font-sans); font-size: 0.76rem; letter-spacing: 0.04em; color: var(--text-muted); }
 .menu__order {
   margin-top: 56px;
   max-width: 1000px;

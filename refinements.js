@@ -135,7 +135,7 @@
   var entranceEls = document.querySelectorAll(
     '.hero__text, .hero__strip, .trust-strip, ' +
     '.section-head, .menu__image-wrap, .menu__order, ' +
-    '.menu__note, .story__media, .story__text, .ingredient, ' +
+    '.story__media, .story__text, .ingredient, ' +
     '.contact .container > *, .fullbleed, .footer__inner'
   );
   entranceEls.forEach(animateIn);
