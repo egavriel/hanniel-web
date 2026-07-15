@@ -296,57 +296,6 @@ em { font-style: italic; }
 }
 .hero__ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
-/* ---------- Trust strip (Tier 6) ----------
-   Three micro-facts under hero to resolve trust questions from shared WA links.
-   Brand tokens only — no new colors. */
-.trust-strip {
-  border-top: 1px solid rgba(43, 33, 24, 0.08);
-  border-bottom: 1px solid rgba(43, 33, 24, 0.08);
-  background: rgba(255, 255, 255, 0.55);
-  padding: 28px 0;
-  margin: 0;
-}
-.trust-strip__row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  align-items: center;
-}
-@media (max-width: 720px) {
-  .trust-strip__row { grid-template-columns: 1fr; gap: 18px; text-align: center; }
-}
-.trust-strip__item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 6px;
-}
-@media (max-width: 720px) { .trust-strip__item { justify-content: center; } }
-.trust-strip__icon {
-  font-size: 1.65rem;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  background: rgba(166, 124, 82, 0.12);
-  flex: 0 0 auto;
-}
-.trust-strip__text {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
-  line-height: 1.4;
-  color: var(--text-body);
-}
-.trust-strip__text strong {
-  color: var(--text-strong);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
 /* ---------- Modu-style hero CTA row ----------
    Source: modu.sg hero — 3 equal-width bordered buttons, sentence case,
    hover inverts to dark fill. Replaces the pill-style .btn--primary/
@@ -757,8 +706,6 @@ body { line-height: var(--ms-line-body); }
 .section-head { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
 
 .hero { padding: 24px 0 clamp(3rem, 7vw, 5rem); }
-
-.trust-strip { border-color: rgba(43, 33, 24, 0.08); }
 
 .ingredients,
 .contact { border-color: rgba(43, 33, 24, 0.08); }
