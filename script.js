@@ -188,7 +188,7 @@
   }
 
   function shareMenuImage(menuUrl) {
-    var text = 'Little Hanniel menu — overnight oats, cookies, bakes, and our little Korean kitchen. From our kitchen to yours.';
+    var text = 'Little Hanniel menu — overnight oats, cookies, bakes, and our little Korean kitchen.';
     var title = 'Little Hanniel Menu';
 
     // Try file share first (actual PNG).
