@@ -725,11 +725,20 @@ body { line-height: var(--ms-line-body); }
 .menu__image-wrap,
 .menu__order,
 .story__media,
-.ingredient,
 .hero__strip figure,
 .hanniel-splide .hero__strip-figure {
   border: 1px solid rgba(43, 33, 24, 0.08);
   /* Mastercard Level 1 shadow: 24px spread, 4% opacity, atmospheric lift. */
+  box-shadow: var(--ms-shadow-1);
+}
+
+/* Ingredient cards in the "Wholesome by nature" section: keep the
+   soft atmospheric shadow (Mastercard Level 1) for the calm lift,
+   drop the 1px border. The user wants a clean edge — no card
+   outline around each icon. The icon itself sits in a transparent
+   64×64 box, so removing the border reveals the bg-subtle section
+   surface directly behind it, which is exactly the "clean" look. */
+.ingredient {
   box-shadow: var(--ms-shadow-1);
 }
 
