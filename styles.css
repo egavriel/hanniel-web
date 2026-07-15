@@ -65,6 +65,41 @@
   --header-height: 140px;            /* taller focal band for the larger logo */
 }
 
+/* ---------- Mastercard design system overlay ----------
+   Adopts the tokens from ./DESIGN.md (VoltAgent/awesome-design-md
+   > design-md/mastercard/DESIGN.md) adapted per ./DESIGN-HANNIEL.md.
+
+   Three-tier shadow scale (atmospheric, not directional):
+   - --ms-shadow-1: 0 4px 24px rgba(43,33,24,0.04) — barely-there lift
+   - --ms-shadow-2: 0 24px 48px rgba(43,33,24,0.08) — soft halo
+   - --ms-shadow-3: 0 70px 110px rgba(43,33,24,0.25) — rare, dramatic
+   Signature pill radius (Mastercard system uses 20px for body CTAs):
+   - --ms-radius-button: 20px
+   Heading tracking (Mastercard uses -2% on h1/h2):
+   - --ms-track-h1: -0.025em
+   - --ms-track-h2: -0.02em
+   - --ms-track-h3: -0.02em
+   Body weight: Mastercard uses 450 (between 400 and 500). Lora variable
+   font doesn't have 450, so we render body copy at 500 — the closest
+   stable weight that gives the same "firmer than 400, softer than 700"
+   feel Mastercard calls "load-bearing." */
+:root {
+  --ms-shadow-1: 0 4px 24px rgba(43, 33, 24, 0.04);
+  --ms-shadow-2: 0 24px 48px rgba(43, 33, 24, 0.08);
+  --ms-shadow-3: 0 70px 110px rgba(43, 33, 24, 0.25);
+
+  --ms-radius-button: 20px;
+
+  --ms-track-h1: -0.025em;
+  --ms-track-h2: -0.02em;
+  --ms-track-h3: -0.02em;
+
+  --ms-line-display: 1.1;
+  --ms-line-body: 1.65;            /* Lora needs a touch more air than
+                                      Mastercard's 1.4 (MarkForMC sans) */
+  --ms-line-eyebrow: 1.3;
+}
+
 /* ---------- Reset ---------- */
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -96,7 +131,17 @@ p { margin: 0; }
 }
 .display { font-family: var(--font-display); line-height: 1.14; color: var(--text-body); }
 
-/* ---------- Buttons ---------- */
+/* ---------- Buttons ----------
+   Three CTA vocabularies live here:
+   - .btn--ink     → Mastercard system primary (Ink Black pill, 20px radius)
+                     reserved for marketing CTAs ("Order", "Get a jar")
+   - .btn--primary → Caramel pill (legacy Hanniel accent), kept for menu/contact
+   - .btn--secondary → Caramel outline (legacy)
+   - .btn--ghost   → text-only
+
+   The menu order card's WhatsApp pill (.menu__order-btn) is a special
+   case: it fills with WhatsApp green and uses --radius-pill (full pill).
+   That's a literal CTA signal, not a style — see DESIGN-HANNIEL.md. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -116,10 +161,36 @@ p { margin: 0; }
               background-color 0.3s var(--ease-out),
               color 0.3s var(--ease-out);
 }
-.btn--primary { background: var(--accent); color: #fff; box-shadow: var(--shadow-accent); }
-.btn--primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-accent-hover); }
+/* Mastercard §4: "Ink Pill" — Ink Black bg, Canvas Cream text, 20px radius,
+   6×24 padding, MarkForMC 16px / 500 / -2% tracking. We use Inter at 600
+   (slightly heavier to compensate for the letter-spacing loss on a
+   narrower font) and 15×34 padding (Hanniel's CTA rows need a touch more
+   horizontal room than the Mastercard marketing scale). */
+.btn--ink {
+  background: var(--text-strong);
+  color: var(--bg-page);
+  border-color: var(--text-strong);
+  border-radius: var(--ms-radius-button);
+  box-shadow: var(--ms-shadow-1);
+}
+.btn--ink:hover {
+  background: #1a1410;            /* one stop darker than --text-strong */
+  transform: translateY(-2px);
+  box-shadow: var(--ms-shadow-2);
+}
+.btn--ink:active { transform: scale(0.98); }
+
+/* Legacy caramel button — kept for menu/contact. Tightened to the same
+   20px radius as the ink pill so the system has one button shape. */
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--ms-radius-button);
+  box-shadow: var(--shadow-accent);
+}
+.btn--primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-accent-hover); }
 .btn--primary:active { transform: scale(0.98); }
-.btn--secondary { background: transparent; color: var(--accent-hover); border-color: var(--accent); }
+.btn--secondary { background: transparent; color: var(--accent-hover); border-color: var(--accent); border-radius: var(--ms-radius-button); }
 .btn--secondary:hover { background: var(--accent-soft); }
 .btn--ghost { background: transparent; color: var(--text-secondary); }
 .btn--ghost:hover { color: var(--text-body); }
@@ -603,27 +674,44 @@ html.gsap-enabled .reveal {
   will-change: transform;
 }
 
-/* ---------- Typography refinement ----------
-   Tighten large-heading rhythm and the body max-width for readability. */
+/* ---------- Typography refinement (Mastercard system tokens) ----------
+   h1/h2/h3 letter-spacing pulled from --ms-track-h1/h2/h3. h1 line-height
+   1.1:1, h2 1.12:1, h3 1.18:1 — all per DESIGN.md §3. */
 h1, h2, h3, h4 {
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ms-track-h2);
 }
-.hero__title { line-height: 1.08; letter-spacing: -0.025em; }
-.section-head h2 { line-height: 1.12; letter-spacing: -0.022em; }
-.story__title { letter-spacing: -0.02em; line-height: 1.18; }
-.menu__order-title { letter-spacing: -0.02em; }
-.contact h2 { letter-spacing: -0.022em; }
+h1 { letter-spacing: var(--ms-track-h1); line-height: var(--ms-line-display); }
+h2 { line-height: var(--ms-line-display); }
+h3 { line-height: 1.2; }
 
+.hero__title { line-height: 1.05; letter-spacing: var(--ms-track-h1); }
+.section-head h2 { line-height: 1.12; letter-spacing: var(--ms-track-h2); }
+.story__title { letter-spacing: var(--ms-track-h3); line-height: 1.18; }
+.menu__order-title { letter-spacing: var(--ms-track-h3); line-height: 1.15; }
+.contact h2 { letter-spacing: var(--ms-track-h2); line-height: 1.12; }
+
+/* Mastercard §3: body weight 450 is "load-bearing." Lora doesn't ship 450
+   so we render body copy at 500 — same "firmer than 400, softer than 700"
+   feel. Only the lead-class body copy carries the upgrade; UI meta text
+   (.eyebrow, footer copy) keeps 400/500/600 for clarity. */
 .hero__lead,
 .story__body,
 .contact p,
 .menu__order-lead {
   max-width: 68ch;
+  font-weight: 500;
+  line-height: var(--ms-line-body);
 }
 .menu__order-lead { max-width: 56ch; }
 
+/* Body line-height for everything else — pull toward Mastercard 1.4 but
+   Lora needs ~1.65 for the serif reading tone. */
+body { line-height: var(--ms-line-body); }
+
 /* ---------- Surface polish ----------
-   Soften the harsh cream borders, deepen layered shadows, unify radius. */
+   Borders softened to ~8% opacity (Mastercard uses 1px at low opacity
+   throughout). Shadows use the three-tier atmospheric scale from
+   DESIGN.md §6 — large spread, low opacity, no hard light. */
 .section { padding: clamp(5rem, 10vw, 9rem) 0; }
 .section-head { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
 
@@ -641,13 +729,13 @@ h1, h2, h3, h4 {
 .hero__strip figure,
 .hanniel-splide .hero__strip-figure {
   border: 1px solid rgba(43, 33, 24, 0.08);
-  box-shadow:
-    0 1px 2px rgba(43, 33, 24, 0.04),
-    0 8px 24px rgba(43, 33, 24, 0.06);
+  /* Mastercard Level 1 shadow: 24px spread, 4% opacity, atmospheric lift. */
+  box-shadow: var(--ms-shadow-1);
 }
 
 /* Lift on hover for any image-in-card surface. Existing :hover scale
-   on img stays, this adds a soft shadow deepening + card lift. */
+   on img stays, this adds a soft shadow deepening + card lift. Mastercard
+   Level 2: 48px spread, 8% opacity — the soft halo. */
 .menu__image-wrap,
 .story__media,
 .menu__order,
@@ -663,15 +751,16 @@ h1, h2, h3, h4 {
 .hero__strip figure:hover,
 .hanniel-splide .hero__strip-figure:hover {
   transform: translateY(-4px);
-  box-shadow:
-    0 2px 4px rgba(43, 33, 24, 0.05),
-    0 16px 36px rgba(43, 33, 24, 0.10);
+  box-shadow: var(--ms-shadow-2);
   border-color: rgba(43, 33, 24, 0.14);
 }
 
 /* Disable hover-lift for the menu__order card so the WhatsApp CTA inside
    gets the visual focus instead. */
-.menu__order:hover { transform: none; box-shadow: 0 1px 2px rgba(43, 33, 24, 0.04), 0 8px 24px rgba(43, 33, 24, 0.06); }
+.menu__order:hover {
+  transform: none;
+  box-shadow: var(--ms-shadow-1);
+}
 
 /* ---------- Micro-interaction polish ----------
    Buttons/links/CTA — slower ease, gentle lift, no bouncy spring. */
