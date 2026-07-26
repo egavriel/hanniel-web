@@ -640,6 +640,23 @@ em { font-style: italic; }
 .footer__nav a:hover { color: var(--accent); }
 .footer__copy { font-family: var(--font-sans); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.04em; }
 
+/* ---------- Floating Grab ---------- */
+.floating-grab {
+  position: fixed;
+  bottom: 96px; right: 24px;
+  z-index: 80;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  transition: transform 0.3s var(--ease-spring);
+}
+.floating-grab img { width: 30px; height: 30px; display: block; }
+.floating-grab:hover { transform: scale(1.08) translateY(-2px); }
+
 /* ---------- Floating WhatsApp ---------- */
 .floating-wa {
   position: fixed;
@@ -697,7 +714,7 @@ html.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .btn, .floating-wa { transition: none !important; }
+  .btn, .floating-wa, .floating-grab { transition: none !important; }
 }
 
 /* =====================================================================
