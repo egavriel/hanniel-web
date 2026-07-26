@@ -647,14 +647,14 @@ em { font-style: italic; }
   z-index: 80;
   width: 56px; height: 56px;
   border-radius: 50%;
-  background: #00B14F;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(0, 177, 79, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
   transition: transform 0.3s var(--ease-spring);
 }
+.floating-grab img { width: 30px; height: 30px; display: block; }
 .floating-grab:hover { transform: scale(1.08) translateY(-2px); }
 
 /* ---------- Floating WhatsApp ---------- */
