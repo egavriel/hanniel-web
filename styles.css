@@ -1090,3 +1090,161 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .hanniel-splide .splide__track { overflow: visible; }
 }
+
+/* =====================================================================
+   Collab & Partnership section
+   Inserted between FAQ and Get in Touch. All class names prefixed `lh-collab`
+   so they cannot collide with site-wide tokens. Reuses the live site's
+   existing CSS variables — no new hex values introduced.
+   ===================================================================== */
+
+.lh-collab {
+  background: var(--bg-page);
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.lh-collab__eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent-hover);
+  display: inline-block;
+}
+
+.lh-collab h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(28px, 3.6vw, 40px);
+  margin: 14px 0 14px;
+  color: var(--text-strong);
+  line-height: 1.2;
+}
+
+.lh-collab h2 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent-hover);
+}
+
+.lh-collab__sub {
+  max-width: 52ch;
+  margin: 0 auto 40px;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+}
+
+.lh-collab__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  max-width: 860px;
+  margin: 0 auto 48px;
+  text-align: left;
+}
+
+.lh-collab__card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px 22px;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+
+.lh-collab__card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.lh-collab__card h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin: 0 0 8px;
+  color: var(--text-strong);
+}
+
+.lh-collab__card p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+  font-family: var(--font-body);
+}
+
+.lh-collab__napkin {
+  max-width: 430px;
+  margin: 0 auto;
+  background: var(--surface-inset);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 28px 30px 26px;
+  position: relative;
+  transform: rotate(-1.1deg);
+  box-shadow: var(--shadow-lg);
+}
+
+.lh-collab__napkin::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%) rotate(2deg);
+  width: 84px;
+  height: 22px;
+  background: rgba(225, 200, 175, 0.55);
+  border-left: 1px solid rgba(58, 48, 40, 0.08);
+  border-right: 1px solid rgba(58, 48, 40, 0.08);
+}
+
+.lh-collab__hand {
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  line-height: 1.4;
+  color: var(--text-strong);
+  margin: 0 0 18px;
+}
+
+.lh-collab__btn {
+  display: inline-block;
+  background: var(--whatsapp);
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 13px 26px;
+  border-radius: var(--radius-pill);
+  transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.lh-collab__btn:hover {
+  background: #1FB857;
+  transform: translateY(-1px);
+}
+
+.lh-collab__btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lh-collab__alt {
+  display: block;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lh-collab__card,
+  .lh-collab__btn { transition: none; }
+  .lh-collab__napkin { transform: none; }
+}
+
+@media (max-width: 640px) {
+  .lh-collab { padding: 56px 20px; }
+  .lh-collab__cards { margin-bottom: 36px; }
+}
