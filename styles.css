@@ -1262,11 +1262,14 @@ body {
   position: fixed;
   /* Pet shifted left (away from chat column edge) and up (more
      headroom above) so the full body + shoes are visible without
-     being crowded by the Grab button. */
-  right: 100px;
-  bottom: 220px;
-  width: 120px;
-  height: 130px;
+     being crowded by the Grab button. Bumped to 168×182 (88% of native
+     192×208) so the chunky hands + lifted sneakers are clearly
+     readable on screen — the previous 120×130 (= 62% scale) squashed
+     them too small to see. */
+  right: 132px;
+  bottom: 232px;
+  width: 168px;
+  height: 182px;
   z-index: 81;              /* above the buttons (which sit at z-index 80) */
   opacity: 0;
   transform: translateY(16px);
@@ -1281,7 +1284,7 @@ body {
 .lh-pet-sprite {
   width: 100%;
   height: 100%;
-  background-image: url("assets/pet-spritesheet.webp?v=5");
+  background-image: url("assets/pet-spritesheet.webp?v=6");
   background-repeat: no-repeat;
   image-rendering: pixelated;
   /* background-position + background-size set from JS each frame */
