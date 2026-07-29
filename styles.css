@@ -1315,19 +1315,16 @@ body {
   transform: translateY(-50%) translateY(0) scale(1);
 }
 
-/* On phones: keep the visible-limb sprite (cfbd57b) but at a comfortable
-   size that doesn't get clipped by the menu card or button column.
-   Stage sits ABOVE the menu card so legs + shoes render on the
-   page background, not behind the card image. */
+/* On phones: stage sized to keep 192:208 aspect ratio so the entire
+   sprite frame fits without clipping. Pet sits above the floating
+   buttons — bottom 196px in a typical 720px-tall phone viewport puts
+   the pet top at ~y=378 (well above the menu card image area). */
 @media (max-width: 480px) {
   .lh-pet-stage {
-    width: 104px;
-    height: 113px;
-    right: 96px;
-    /* Hand-position: high enough that the feet clear the menu card
-       (card top ≈ 60% of viewport on phones). bottom 280px puts the
-       pet in the upper-middle of the screen with room to spare. */
-    bottom: 280px;
+    width: 120px;
+    height: 130px;
+    right: 88px;
+    bottom: 196px;
   }
   .lh-pet-bubble { font-size: 12px; padding: 6px 10px; }
 }

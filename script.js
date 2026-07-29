@@ -306,16 +306,33 @@
   function initPetCorner() {
     var sprite = document.getElementById('lh-pet-sprite');
     if (!sprite) return;
+    var stage = sprite.parentElement; // .lh-pet-stage
 
     var SPRITE = {
       cols: 8, rows: 7, frameW: 192, frameH: 208, fps: 8,
       states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6 }
     };
-    var SCALE = 168 / SPRITE.frameW; // 0.875 — matches .lh-pet-stage width (168px) on desktop
+    /* SCALE: derived from the LIVE stage box so the sprite frame fills
+       the stage without clipping.  aspect of stage is what matters —
+       both desktop (168×182) and mobile (120×130) have the same 192:208
+       aspect as the sprite, so SCALE = stageW / frameW.  Computed AFTER
+       the stage is in the DOM and styled; Re-read on resize. */
+    var SCALE = stage.clientWidth / SPRITE.frameW;
+    if (!SCALE || !isFinite(SCALE)) SCALE = 168 / SPRITE.frameW;
 
     sprite.style.backgroundSize =
       (SPRITE.frameW * SPRITE.cols * SCALE) + 'px ' +
       (SPRITE.frameH * SPRITE.rows * SCALE) + 'px';
+
+    // Re-compute SCALE on resize so mobile/desktop stay correct
+    window.addEventListener('resize', function () {
+      var newScale = stage.clientWidth / SPRITE.frameW;
+      if (!newScale || !isFinite(newScale)) return;
+      SCALE = newScale;
+      sprite.style.backgroundSize =
+        (SPRITE.frameW * SPRITE.cols * SCALE) + 'px ' +
+        (SPRITE.frameH * SPRITE.rows * SCALE) + 'px';
+    });
 
     var bubble = document.getElementById('lh-pet-bubble');
     var state = 'idle', frame = 0, lastT = 0;
