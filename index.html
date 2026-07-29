@@ -93,6 +93,11 @@
                                         <img src="assets/oats-strawberry.jpg" alt="Strawberry overnight oats" loading="eager">
                                     </figure>
                                 </li>
+                                <li class="splide__slide">
+                                    <figure class="hero__strip-figure">
+                                        <img src="assets/oats-doublechoco.jpg" alt="Double Chocolate overnight oats" loading="eager">
+                                    </figure>
+                                </li>
                                 </ul>
                         </div>
                     </section>
@@ -459,7 +464,12 @@ jars of their own.</p>
         },
         {
           "@type": "Product",
-          "name": "Almond Choco Cookies",
+          "name": "Double Chocolate Overnight Oats",
+          "image": "https://little.hanniel.co/assets/oats-doublechoco.jpg",
+          "description": "Double chocolate overnight oats with cocoa, dark chocolate and a creamy chocolate layer. Made with rolled oats, chia seeds and roasted almonds.",
+          "brand": {"@type": "Brand", "name": "Little Hanniel"},
+          "category": "Food & Beverages > Breakfast"
+        },
           "image": "https://little.hanniel.co/assets/almond_choco_cookies.png",
           "description": "Almond chocolate cookies with roasted almonds and dark chocolate chunks.",
           "brand": {"@type": "Brand", "name": "Little Hanniel"},
@@ -479,6 +489,18 @@ jars of their own.</p>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="refinements.js?v=6"></script>
+
+    <!-- ===== Pet Corner — animated bunny mascot =====
+         Sits above the existing floating Grab + WhatsApp buttons.
+         Only the bunny is new; the chat buttons already live below. -->
+    <div class="lh-pet-stage" aria-hidden="true">
+      <div class="lh-pet-sprite" id="lh-pet-sprite"></div>
+      <div class="lh-pet-bubble" id="lh-pet-bubble">Hi! Order on WhatsApp 👋</div>
+    </div>
+
+    <script>
+      // Pet Corner markup only — controller lives in script.js (see initPetCorner)
+    </script>
 </body>
 
 </html>
