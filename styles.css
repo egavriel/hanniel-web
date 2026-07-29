@@ -1261,7 +1261,9 @@ body {
 .lh-pet-stage {
   position: fixed;
   right: 24px;             /* right-aligned with the chat buttons */
-  bottom: 160px;            /* sit above the Grab button (grab top is bottom:152) */
+  /* Grab sits at bottom:96 height:56 → top edge at bottom:152.
+     Pet is 104 tall; keep a clear ~20px air gap so shoes never cover Grab. */
+  bottom: 176px;
   width: 96px;
   height: 104px;
   z-index: 81;              /* above the buttons (which sit at z-index 80) */
@@ -1309,9 +1311,10 @@ body {
   transform: translateY(-50%) translateY(0) scale(1);
 }
 
-/* On phones, sit slightly closer to the buttons */
+/* On phones, keep the same clear gap above Grab */
 @media (max-width: 480px) {
-  .lh-pet-stage { width: 72px; height: 78px; right: 16px; bottom: 134px; }
+  /* Grab top still at bottom:152. Pet 78 tall → bottom ≥ 152+16 = 168 */
+  .lh-pet-stage { width: 72px; height: 78px; right: 16px; bottom: 168px; }
   .lh-pet-bubble { font-size: 12px; padding: 6px 10px; }
 }
 
