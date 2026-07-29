@@ -295,21 +295,21 @@
   }
 
   /* ---- Pet Corner controller ----------------------------------------
-     Drives /assets/pet-spritesheet.webp (8×9 grid, 192×208 each).
-     State row map: idle 0, walk 1, run 2, bake 3, review 4,
-                    error 5, done 6.
+     Drives /assets/pet-spritesheet.webp — Codex pet spritesheet v2.
+     Atlas: 1536x2288 (8 cols × 11 rows of 192x208 frames).
+     Standard 7 states occupy rows 0-6; rows 7-10 are directional looking.
      Triggered by:
        - window scroll → walk
        - click on the existing .floating-wa / .floating-grab → run → done
-     We deliberately do NOT wrap window.fetch — the existing site uses
-     fetch() for /content.json and we don't want to mutate its behaviour.
+     Pet: "SalaryCat / 月薪喵" by LemonZ (CC BY-NC 4.0)
+     Source: https://github.com/legeling/awesome-codex-pet/tree/main/pets/miu-meo--lemon-z
      ----------------------------------------------------------------- */
   function initPetCorner() {
     var sprite = document.getElementById('lh-pet-sprite');
     if (!sprite) return;
 
     var SPRITE = {
-      cols: 8, rows: 9, frameW: 192, frameH: 208, fps: 8,
+      cols: 8, rows: 11, frameW: 192, frameH: 208, fps: 8,
       states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6 }
     };
     var SCALE = 96 / SPRITE.frameW; // 0.5
@@ -349,7 +349,7 @@
         state = 'run';
         setTimeout(function () { state = 'done'; }, 900);
         if (bubble) {
-          bubble.textContent = 'On the way! 🥐';
+          bubble.textContent = 'Purr… on the way! 🥐';
           bubble.classList.add('is-visible');
           setTimeout(function () { bubble.classList.remove('is-visible'); }, 2200);
         }
