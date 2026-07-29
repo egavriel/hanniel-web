@@ -1284,7 +1284,7 @@ body {
 .lh-pet-sprite {
   width: 100%;
   height: 100%;
-  background-image: url("assets/pet-spritesheet.webp?v=4");
+  background-image: url("assets/pet-spritesheet.webp?v=5");
   background-repeat: no-repeat;
   image-rendering: pixelated;
   /* background-position + background-size set from JS each frame */
