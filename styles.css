@@ -1254,7 +1254,8 @@ body {
    Atlas: assets/pet-spritesheet.webp (custom Hanniel jar, 1536x1456 =
    8×7 grid, 192×208 each). 7 states in rows 0-6:
    idle / walk / run / bake / review / error / done.
-   Sprite: custom "Little Hanniel" overnight-oats jar character.
+   Sprite: custom "Little Hanniel" overnight-oats jar with tiny arms +
+   legs (walk-in-place swing cycle).
    ===================================================================== */
 
 .lh-pet-stage {
@@ -1277,7 +1278,7 @@ body {
 .lh-pet-sprite {
   width: 100%;
   height: 100%;
-  background-image: url("assets/pet-spritesheet.webp");
+  background-image: url("assets/pet-spritesheet.webp?v=2");
   background-repeat: no-repeat;
   image-rendering: pixelated;
   /* background-position + background-size set from JS each frame */
