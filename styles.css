@@ -1284,7 +1284,7 @@ body {
 .lh-pet-sprite {
   width: 100%;
   height: 100%;
-  background-image: url("assets/pet-spritesheet.webp?v=6");
+  background-image: url("assets/pet-spritesheet.webp?v=4");
   background-repeat: no-repeat;
   image-rendering: pixelated;
   /* background-position + background-size set from JS each frame */
@@ -1315,9 +1315,20 @@ body {
   transform: translateY(-50%) translateY(0) scale(1);
 }
 
-/* On phones, same shift-left + shift-up pattern */
+/* On phones: keep the visible-limb sprite (cfbd57b) but at a comfortable
+   size that doesn't get clipped by the menu card or button column.
+   Stage sits ABOVE the menu card so legs + shoes render on the
+   page background, not behind the card image. */
 @media (max-width: 480px) {
-  .lh-pet-stage { width: 88px; height: 95px; right: 80px; bottom: 200px; }
+  .lh-pet-stage {
+    width: 104px;
+    height: 113px;
+    right: 96px;
+    /* Hand-position: high enough that the feet clear the menu card
+       (card top ≈ 60% of viewport on phones). bottom 280px puts the
+       pet in the upper-middle of the screen with room to spare. */
+    bottom: 280px;
+  }
   .lh-pet-bubble { font-size: 12px; padding: 6px 10px; }
 }
 

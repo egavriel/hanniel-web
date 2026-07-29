@@ -311,7 +311,7 @@
       cols: 8, rows: 7, frameW: 192, frameH: 208, fps: 8,
       states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6 }
     };
-    var SCALE = 168 / SPRITE.frameW; // 0.875 — matches .lh-pet-stage width (168px) in styles.css
+    var SCALE = 168 / SPRITE.frameW; // 0.875 — matches .lh-pet-stage width (168px) on desktop
 
     sprite.style.backgroundSize =
       (SPRITE.frameW * SPRITE.cols * SCALE) + 'px ' +
