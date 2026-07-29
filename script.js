@@ -283,13 +283,86 @@
         tagWaLinks();
         initShareButton();
         initFaq();
+        initPetCorner();
         if (CURRENT_ARM) trackEvent('exposure', { arm: CURRENT_ARM });
       })
       .catch(function () {
         tagWaLinks();
         initShareButton();
         initFaq();
+        initPetCorner();
       });
+  }
+
+  /* ---- Pet Corner controller ----------------------------------------
+     Drives /assets/pet-spritesheet.webp (8×9 grid, 192×208 each).
+     State row map: idle 0, walk 1, run 2, bake 3, review 4,
+                    error 5, done 6.
+     Triggered by:
+       - window scroll → walk
+       - click on the existing .floating-wa / .floating-grab → run → done
+     We deliberately do NOT wrap window.fetch — the existing site uses
+     fetch() for /content.json and we don't want to mutate its behaviour.
+     ----------------------------------------------------------------- */
+  function initPetCorner() {
+    var sprite = document.getElementById('lh-pet-sprite');
+    if (!sprite) return;
+
+    var SPRITE = {
+      cols: 8, rows: 9, frameW: 192, frameH: 208, fps: 8,
+      states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6 }
+    };
+    var SCALE = 96 / SPRITE.frameW; // 0.5
+
+    sprite.style.backgroundSize =
+      (SPRITE.frameW * SPRITE.cols * SCALE) + 'px ' +
+      (SPRITE.frameH * SPRITE.rows * SCALE) + 'px';
+
+    var bubble = document.getElementById('lh-pet-bubble');
+    var state = 'idle', frame = 0, lastT = 0;
+
+    function draw(now) {
+      if (!lastT) lastT = now;
+      if (now - lastT < 1000 / SPRITE.fps) return requestAnimationFrame(draw);
+      lastT = now;
+      var row = SPRITE.states[state] || 0;
+      var col = frame % SPRITE.cols;
+      sprite.style.backgroundPosition =
+        '-' + (col * SPRITE.frameW * SCALE) + 'px -' +
+             (row * SPRITE.frameH * SCALE) + 'px';
+      frame++;
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+
+    // Scroll → walk
+    var walkTimer = null;
+    window.addEventListener('scroll', function () {
+      state = 'walk';
+      clearTimeout(walkTimer);
+      walkTimer = setTimeout(function () { state = 'idle'; }, 250);
+    }, { passive: true });
+
+    // Click on the existing floating Grab / WhatsApp buttons → run → done
+    document.querySelectorAll('.floating-wa, .floating-grab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        state = 'run';
+        setTimeout(function () { state = 'done'; }, 900);
+        if (bubble) {
+          bubble.textContent = 'On the way! 🥐';
+          bubble.classList.add('is-visible');
+          setTimeout(function () { bubble.classList.remove('is-visible'); }, 2200);
+        }
+      });
+    });
+
+    // Welcome bubble on entrance
+    if (bubble) {
+      setTimeout(function () {
+        bubble.classList.add('is-visible');
+        setTimeout(function () { bubble.classList.remove('is-visible'); }, 3500);
+      }, 1400);
+    }
   }
 
   if (document.readyState === 'loading') {
