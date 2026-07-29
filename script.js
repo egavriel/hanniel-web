@@ -295,21 +295,20 @@
   }
 
   /* ---- Pet Corner controller ----------------------------------------
-     Drives /assets/pet-spritesheet.webp — Codex pet spritesheet v2.
-     Atlas: 1536x2288 (8 cols × 11 rows of 192x208 frames).
-     Standard 7 states occupy rows 0-6; rows 7-10 are directional looking.
+     Drives /assets/pet-spritesheet.webp — custom Hanniel jar mascot.
+     Atlas: 1536x1456 (8 cols × 7 rows of 192x208 frames).
+     7 states occupy rows 0-6: idle / walk / run / bake / review / error / done.
      Triggered by:
        - window scroll → walk
        - click on the existing .floating-wa / .floating-grab → run → done
-     Pet: "SalaryCat / 月薪喵" by LemonZ (CC BY-NC 4.0)
-     Source: https://github.com/legeling/awesome-codex-pet/tree/main/pets/miu-meo--lemon-z
+     Pet: custom "Little Hanniel" overnight-oats jar character (PIL-drawn).
      ----------------------------------------------------------------- */
   function initPetCorner() {
     var sprite = document.getElementById('lh-pet-sprite');
     if (!sprite) return;
 
     var SPRITE = {
-      cols: 8, rows: 11, frameW: 192, frameH: 208, fps: 8,
+      cols: 8, rows: 7, frameW: 192, frameH: 208, fps: 8,
       states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6 }
     };
     var SCALE = 96 / SPRITE.frameW; // 0.5 — matches .lh-pet-stage width in styles.css
@@ -351,7 +350,7 @@
         state = 'run';
         setTimeout(function () { state = 'done'; }, 900);
         if (bubble) {
-          bubble.textContent = 'Purr… on the way! 🥐';
+          bubble.textContent = 'On the way! Fresh oats 🥣';
           bubble.classList.add('is-visible');
           setTimeout(function () { bubble.classList.remove('is-visible'); }, 2200);
         }

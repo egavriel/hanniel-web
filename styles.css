@@ -1251,10 +1251,10 @@ body {
 
 /* =====================================================================
    Pet Corner — animated mascot sprite
-   Atlas: assets/pet-spritesheet.webp (Codex v2, 1536x2288 = 8×11 grid,
-   192×208 each). Standard 7 states in rows 0-6; rows 7-10 directional.
-   Sprite: "SalaryCat / 月薪喵" by LemonZ (CC BY-NC 4.0).
-   https://github.com/legeling/awesome-codex-pet/tree/main/pets/miu-meo--lemon-z
+   Atlas: assets/pet-spritesheet.webp (custom Hanniel jar, 1536x1456 =
+   8×7 grid, 192×208 each). 7 states in rows 0-6:
+   idle / walk / run / bake / review / error / done.
+   Sprite: custom "Little Hanniel" overnight-oats jar character.
    ===================================================================== */
 
 .lh-pet-stage {
