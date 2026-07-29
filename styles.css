@@ -1259,10 +1259,10 @@ body {
 
 .lh-pet-stage {
   position: fixed;
-  right: 100px;            /* 56 (wa button) + 24 (wa right) + 20 (gap) = sit left of WA */
-  bottom: 20px;             /* aligned with the chat buttons' bottom baseline */
-  width: 120px;             /* a bit wider so the sprite reads clearly */
-  height: 130px;
+  right: 24px;             /* right-aligned with the chat buttons */
+  bottom: 160px;            /* sit above the Grab button (grab top is bottom:152) */
+  width: 96px;
+  height: 104px;
   z-index: 81;              /* above the buttons (which sit at z-index 80) */
   opacity: 0;
   transform: translateY(16px);
@@ -1310,7 +1310,7 @@ body {
 
 /* On phones, sit slightly closer to the buttons */
 @media (max-width: 480px) {
-  .lh-pet-stage { width: 84px; height: 91px; right: 86px; bottom: 14px; }
+  .lh-pet-stage { width: 72px; height: 78px; right: 16px; bottom: 134px; }
   .lh-pet-bubble { font-size: 12px; padding: 6px 10px; }
 }
 
