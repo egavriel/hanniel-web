@@ -312,7 +312,7 @@
       cols: 8, rows: 11, frameW: 192, frameH: 208, fps: 8,
       states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6 }
     };
-    var SCALE = 120 / SPRITE.frameW; // 0.625 — matches .lh-pet-stage width in styles.css
+    var SCALE = 96 / SPRITE.frameW; // 0.5 — matches .lh-pet-stage width in styles.css
 
     sprite.style.backgroundSize =
       (SPRITE.frameW * SPRITE.cols * SCALE) + 'px ' +
@@ -322,15 +322,17 @@
     var state = 'idle', frame = 0, lastT = 0;
 
     function draw(now) {
-      if (!lastT) lastT = now;
-      if (now - lastT < 1000 / SPRITE.fps) return requestAnimationFrame(draw);
-      lastT = now;
-      var row = SPRITE.states[state] || 0;
-      var col = frame % SPRITE.cols;
-      sprite.style.backgroundPosition =
-        '-' + (col * SPRITE.frameW * SCALE) + 'px -' +
-             (row * SPRITE.frameH * SCALE) + 'px';
-      frame++;
+      // Always schedule the next frame first so the loop never drops,
+      // even if we skip the body for this tick (fps limiter).
+      if (now - lastT >= 1000 / SPRITE.fps) {
+        lastT = now;
+        var row = SPRITE.states[state] || 0;
+        var col = frame % SPRITE.cols;
+        sprite.style.backgroundPosition =
+          '-' + (col * SPRITE.frameW * SCALE) + 'px -' +
+               (row * SPRITE.frameH * SCALE) + 'px';
+        frame++;
+      }
       requestAnimationFrame(draw);
     }
     requestAnimationFrame(draw);
