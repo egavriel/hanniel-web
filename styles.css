@@ -1264,7 +1264,7 @@ body {
      column (right:100 = 76px gap to button rail) and lifted up so its
      feet sit ~90px above the grab top. Sprite kept compact (120×130,
      62.5% of native 192×208) so it doesn't crowd the page. */
-  right: 88px;
+  right: 82px;
   bottom: 240px;
   width: 120px;
   height: 130px;
@@ -1319,7 +1319,7 @@ body {
   .lh-pet-stage {
     width: 96px;
     height: 104px;
-    right: 72px;
+    right: 66px;
     bottom: 200px;
   }
   .lh-pet-bubble { font-size: 12px; padding: 6px 10px; }
