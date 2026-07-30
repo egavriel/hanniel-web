@@ -1260,14 +1260,12 @@ body {
 
 .lh-pet-stage {
   position: fixed;
-  /* Pet shifted left (away from chat column edge) and up (more
-     headroom above) so the full body + shoes are visible without
-     being crowded by the Grab button. Bumped to 168×182 (88% of native
-     192×208) so the chunky hands + lifted sneakers are clearly
-     readable on screen — the previous 120×130 (= 62% scale) squashed
-     them too small to see. */
-  right: 132px;
-  bottom: 232px;
+  /* Pet sits UNDER the floating button column on the LEFT side — bottom
+     anchored at the same level as WhatsApp, shifted right by the
+     column width (24 + 56 + 32 gap + 168 width + 12 buffer = 292)
+     so the pet never overlaps the button rail. */
+  right: 152px;
+  bottom: 24px;
   width: 168px;
   height: 182px;
   z-index: 81;              /* above the buttons (which sit at z-index 80) */
@@ -1315,16 +1313,14 @@ body {
   transform: translateY(-50%) translateY(0) scale(1);
 }
 
-/* On phones: stage sized to keep 192:208 aspect ratio so the entire
-   sprite frame fits without clipping. Pet sits above the floating
-   buttons — bottom 196px in a typical 720px-tall phone viewport puts
-   the pet top at ~y=378 (well above the menu card image area). */
+/* On phones: pet sits under the floating button column on the LEFT
+   side — bottom-anchored at the same level as WhatsApp. */
 @media (max-width: 480px) {
   .lh-pet-stage {
     width: 120px;
     height: 130px;
-    right: 88px;
-    bottom: 196px;
+    right: 96px;
+    bottom: 16px;
   }
   .lh-pet-bubble { font-size: 12px; padding: 6px 10px; }
 }
