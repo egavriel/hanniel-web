@@ -1260,14 +1260,14 @@ body {
 
 .lh-pet-stage {
   position: fixed;
-  /* Pet sits UNDER the floating button column on the LEFT side — bottom
-     anchored at the same level as WhatsApp, shifted right by the
-     column width (24 + 56 + 32 gap + 168 width + 12 buffer = 292)
-     so the pet never overlaps the button rail. */
-  right: 152px;
-  bottom: 24px;
-  width: 168px;
-  height: 182px;
+  /* Pet floats ABOVE the grab button: anchored to the right of the chat
+     column (right:100 = 76px gap to button rail) and lifted up so its
+     feet sit ~90px above the grab top. Sprite kept compact (120×130,
+     62.5% of native 192×208) so it doesn't crowd the page. */
+  right: 100px;
+  bottom: 240px;
+  width: 120px;
+  height: 130px;
   z-index: 81;              /* above the buttons (which sit at z-index 80) */
   opacity: 0;
   transform: translateY(16px);
@@ -1313,14 +1313,14 @@ body {
   transform: translateY(-50%) translateY(0) scale(1);
 }
 
-/* On phones: pet sits under the floating button column on the LEFT
-   side — bottom-anchored at the same level as WhatsApp. */
+/* On phones: small pet floats above the floating button column on the
+   LEFT side — bottom-anchored higher than the chat buttons. */
 @media (max-width: 480px) {
   .lh-pet-stage {
-    width: 120px;
-    height: 130px;
-    right: 96px;
-    bottom: 16px;
+    width: 96px;
+    height: 104px;
+    right: 88px;
+    bottom: 200px;
   }
   .lh-pet-bubble { font-size: 12px; padding: 6px 10px; }
 }
