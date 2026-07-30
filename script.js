@@ -283,13 +283,105 @@
         tagWaLinks();
         initShareButton();
         initFaq();
+        initPetCorner();
         if (CURRENT_ARM) trackEvent('exposure', { arm: CURRENT_ARM });
       })
       .catch(function () {
         tagWaLinks();
         initShareButton();
         initFaq();
+        initPetCorner();
       });
+  }
+
+  /* ---- Pet Corner controller ----------------------------------------
+     Drives /assets/pet-spritesheet.webp — custom Hanniel jar mascot.
+     Atlas: 1536x1456 (8 cols × 7 rows of 192x208 frames).
+     7 states occupy rows 0-6: idle / walk / run / bake / review / error / done.
+     Triggered by:
+       - window scroll → walk
+       - click on the existing .floating-wa / .floating-grab → run → done
+     Pet: custom "Little Hanniel" overnight-oats jar character (PIL-drawn).
+     ----------------------------------------------------------------- */
+  function initPetCorner() {
+    var sprite = document.getElementById('lh-pet-sprite');
+    if (!sprite) return;
+    var stage = sprite.parentElement; // .lh-pet-stage
+
+    var SPRITE = {
+      cols: 8, rows: 7, frameW: 192, frameH: 208, fps: 8,
+      states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6 }
+    };
+    /* SCALE: derived from the LIVE stage box so the sprite frame fills
+       the stage without clipping.  aspect of stage is what matters —
+       both desktop (168×182) and mobile (120×130) have the same 192:208
+       aspect as the sprite, so SCALE = stageW / frameW.  Computed AFTER
+       the stage is in the DOM and styled; Re-read on resize. */
+    var SCALE = stage.clientWidth / SPRITE.frameW;
+    if (!SCALE || !isFinite(SCALE)) SCALE = 168 / SPRITE.frameW;
+
+    sprite.style.backgroundSize =
+      (SPRITE.frameW * SPRITE.cols * SCALE) + 'px ' +
+      (SPRITE.frameH * SPRITE.rows * SCALE) + 'px';
+
+    // Re-compute SCALE on resize so mobile/desktop stay correct
+    window.addEventListener('resize', function () {
+      var newScale = stage.clientWidth / SPRITE.frameW;
+      if (!newScale || !isFinite(newScale)) return;
+      SCALE = newScale;
+      sprite.style.backgroundSize =
+        (SPRITE.frameW * SPRITE.cols * SCALE) + 'px ' +
+        (SPRITE.frameH * SPRITE.rows * SCALE) + 'px';
+    });
+
+    var bubble = document.getElementById('lh-pet-bubble');
+    var state = 'idle', frame = 0, lastT = 0;
+
+    function draw(now) {
+      // Always schedule the next frame first so the loop never drops,
+      // even if we skip the body for this tick (fps limiter).
+      if (now - lastT >= 1000 / SPRITE.fps) {
+        lastT = now;
+        var row = SPRITE.states[state] || 0;
+        var col = frame % SPRITE.cols;
+        sprite.style.backgroundPosition =
+          '-' + (col * SPRITE.frameW * SCALE) + 'px -' +
+               (row * SPRITE.frameH * SCALE) + 'px';
+        frame++;
+      }
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+
+    // Scroll → walk (walk frames keep the smiley face + sparkly eyes)
+    var walkTimer = null;
+    window.addEventListener('scroll', function () {
+      state = 'walk';
+      clearTimeout(walkTimer);
+      walkTimer = setTimeout(function () { state = 'idle'; }, 250);
+    }, { passive: true });
+
+    // Click on the existing floating Grab / WhatsApp buttons → run → done
+    // (run frames keep the smiley face)
+    document.querySelectorAll('.floating-wa, .floating-grab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        state = 'run';
+        setTimeout(function () { state = 'done'; }, 900);
+        if (bubble) {
+          bubble.textContent = 'On the way! Fresh oats 🥣';
+          bubble.classList.add('is-visible');
+          setTimeout(function () { bubble.classList.remove('is-visible'); }, 2200);
+        }
+      });
+    });
+
+    // Welcome bubble on entrance
+    if (bubble) {
+      setTimeout(function () {
+        bubble.classList.add('is-visible');
+        setTimeout(function () { bubble.classList.remove('is-visible'); }, 3500);
+      }, 1400);
+    }
   }
 
   if (document.readyState === 'loading') {

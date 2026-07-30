@@ -37,7 +37,7 @@
         rel="stylesheet">
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="styles.css?v=33">
+    <link rel="stylesheet" href="styles.css?v=52">
 
     <!--
         Cloudflare Web Analytics is auto-injected by the CF edge for the
@@ -479,7 +479,7 @@ jars of their own.</p>
     }
     </script>
 
-    <script src="script.js?v=26"></script>
+    <script src="script.js?v=33"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
     <script src="splide-init.js"></script>
     <!-- Premium refinements: Lenis smooth scroll + GSAP/ScrollTrigger.
@@ -489,6 +489,20 @@ jars of their own.</p>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="refinements.js?v=6"></script>
+
+    <!-- ===== Pet Corner — animated mascot sprite =====
+         Custom "Little Hanniel" overnight-oats jar character (PIL-drawn).
+         Sits above the existing floating Grab + WhatsApp buttons. -->
+    <div class="lh-pet-stage" aria-hidden="true"
+         title="Pet: Little Hanniel overnight oats jar">
+      <div class="lh-pet-sprite" id="lh-pet-sprite"
+           role="img" aria-label="Little Hanniel jar, the corner mascot"></div>
+      <div class="lh-pet-bubble" id="lh-pet-bubble">Hungry for oats? 🥣</div>
+    </div>
+
+    <script>
+      // Pet Corner markup only — controller lives in script.js (see initPetCorner)
+    </script>
 </body>
 
 </html>
