@@ -1265,7 +1265,7 @@ body {
      feet sit ~90px above the grab top. Sprite kept compact (120×130,
      62.5% of native 192×208) so it doesn't crowd the page. */
   right: 24px;
-  bottom: 240px;
+  bottom: 170px;
   width: 120px;
   height: 130px;
   z-index: 81;              /* above the buttons (which sit at z-index 80) */
@@ -1320,7 +1320,7 @@ body {
     width: 96px;
     height: 104px;
     right: 9px;
-    bottom: 200px;
+    bottom: 160px;
   }
   .lh-pet-bubble { font-size: 12px; padding: 6px 10px; }
 }
