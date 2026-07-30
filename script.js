@@ -310,8 +310,11 @@
 
     var SPRITE = {
       cols: 8, rows: 7, frameW: 192, frameH: 208, fps: 8,
-      states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6 }
+      states: { idle: 0, walk: 1, run: 2, tool_call: 3, reviewing: 4, error: 5, done: 6, celebrate: 6 }
     };
+    /* Row 6 is shared by 'done' (built-in completion celebration) and
+       'celebrate' (tap-to-celebrate). The visual is the same; using
+       one row keeps the atlas at 7×8 frames. */
     /* SCALE: derived from the LIVE stage box so the sprite frame fills
        the stage without clipping.  aspect of stage is what matters —
        both desktop (168×182) and mobile (120×130) have the same 192:208
@@ -353,13 +356,16 @@
     }
     requestAnimationFrame(draw);
 
-    // Scroll → walk (walk frames keep the smiley face + sparkly eyes)
+    // Scroll → walk (walk frames keep the smiley face + sparkly eyes).
+    // Guarded so celebrating taps aren't yanked back to walk by stray scroll events.
     var walkTimer = null;
-    window.addEventListener('scroll', function () {
+    var scrollStateGuard = function () {
+      if (state === 'celebrate') return;
       state = 'walk';
       clearTimeout(walkTimer);
       walkTimer = setTimeout(function () { state = 'idle'; }, 250);
-    }, { passive: true });
+    };
+    window.addEventListener('scroll', scrollStateGuard, { passive: true });
 
     // Click on the existing floating Grab / WhatsApp buttons → run → done
     // (run frames keep the smiley face)
@@ -375,6 +381,32 @@
       });
     });
 
+    // Tap on the pet → celebrate: hands-up + shout, then return to idle.
+    var celebrateTimer = null;
+    function triggerCelebrate() {
+      state = 'celebrate';
+      if (bubble) {
+        bubble.textContent = 'YAY! 🎉';
+        bubble.classList.add('is-visible');
+      }
+      clearTimeout(celebrateTimer);
+      celebrateTimer = setTimeout(function () {
+        state = 'idle';
+        if (bubble) bubble.classList.remove('is-visible');
+      }, 1200);
+    }
+    // Make the pet itself the tap target. The stage has pointer-events:none
+    // so it never blocks page scrolling or other click targets; turn events
+    // back on for the sprite only, and keep keyboard-accessible via Enter/Space.
+    sprite.style.pointerEvents = 'auto';
+    sprite.style.cursor = 'pointer';
+    sprite.addEventListener('click', triggerCelebrate);
+    sprite.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        triggerCelebrate();
+      }
+    });
     // Welcome bubble on entrance
     if (bubble) {
       setTimeout(function () {
