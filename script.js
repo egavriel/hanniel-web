@@ -353,26 +353,10 @@
     }
     requestAnimationFrame(draw);
 
-    // Scroll → walk
-    var walkTimer = null;
-    window.addEventListener('scroll', function () {
-      state = 'walk';
-      clearTimeout(walkTimer);
-      walkTimer = setTimeout(function () { state = 'idle'; }, 250);
-    }, { passive: true });
-
-    // Click on the existing floating Grab / WhatsApp buttons → run → done
-    document.querySelectorAll('.floating-wa, .floating-grab').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        state = 'run';
-        setTimeout(function () { state = 'done'; }, 900);
-        if (bubble) {
-          bubble.textContent = 'On the way! Fresh oats 🥣';
-          bubble.classList.add('is-visible');
-          setTimeout(function () { bubble.classList.remove('is-visible'); }, 2200);
-        }
-      });
-    });
+    // Mascot stays in smile expression (idle state) at all times.
+    // Scroll-driven walk animation and click-driven run/done transitions
+    // are intentionally disabled — the user wants a constant friendly
+    // smile. Only the welcome bubble on entrance remains.
 
     // Welcome bubble on entrance
     if (bubble) {
