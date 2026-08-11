@@ -40,45 +40,46 @@
     <link rel="stylesheet" href="styles.css?v=53">
 
     <!--
-        Cloudflare Web Analytics — staging-only manual beacon.
+        Cloudflare Web Analytics — per-environment manual beacons.
 
         Background:
-          - Cloudflare's auto-inject (CF dashboard → Analytics & Logs →
-            Web Analytics → hanniel.co → "Auto-inject JS: ON") attaches
-            a beacon to every response on the hanniel.co zone, including
-            *.hanniel.co subdomains. That beacon uses the MAIN token
-            and writes all traffic to the main dashboard.
-          - staging.little.hanniel.co needs a SEPARATE token
-            (845cb65a20b949deb8645e8919b36ab3) so the staging traffic
-            doesn't pollute the main dashboard.
+          - The hanniel.co zone had CF's auto-inject JS toggle ON. It
+            attached the main-token beacon to every response on the
+            zone, including *.hanniel.co subdomains — which meant
+            staging.little.hanniel.co was being counted under the
+            main dashboard and (after the staging-token beacon was
+            added) also under the staging dashboard. Double counts.
+          - Fix: turn auto-inject OFF for the hanniel.co zone in the CF
+            dashboard (Web Analytics → hanniel.co → "Auto-inject JS" off).
+            Then this script manually loads the right token per host.
 
         What this snippet does:
-          - Loads beacon.min.js with the staging token ONLY when the
-            current hostname is staging.little.hanniel.co.
-          - On production (little.hanniel.co) it stays inert and the
-            auto-injected main-token beacon handles tracking as before.
+          - On staging.little.hanniel.co → loads the staging beacon
+            (token 845cb65a20b949deb8645e8919b36ab3).
+          - On little.hanniel.co → loads the main beacon
+            (token ←— set below).
+          - Anywhere else (preview URLs, localhost, other subdomains)
+            → no beacon. Add an `else if` block for each new env.
 
-        Caveat:
-          - Until auto-inject is disabled for the hanniel.co zone (or
-            the staging subdomain is excluded from it), staging visitors
-            will be counted ONCE by the main beacon (auto-injected) and
-            ONCE by this staging beacon. — two dashboard writes per
-            pageview, not one.
-          - To get clean staging-only counts: disable auto-inject for the
-            hanniel.co zone in the CF dashboard, then add a parallel
-            manual beacon (with the main token) under the host check
-            for little.hanniel.co.
-
-        No build-time env var needed: the host check runs client-side.
+        After deploying this change, set the token below and turn off
+        auto-inject in the CF dashboard. Until then, staging is still
+        double-counted.
     -->
     <script>
-        if (location.hostname === "staging.little.hanniel.co") {
+        (function () {
+            var mainToken = "MAIN_TOKEN_PASTE_HERE";
+            var stagingToken = "845cb65a20b949deb8645e8919b36ab3";
+            var host = location.hostname;
+            var token = null;
+            if (host === "staging.little.hanniel.co") token = stagingToken;
+            else if (host === "little.hanniel.co") token = mainToken;
+            if (!token) return;
             var s = document.createElement("script");
             s.type = "module";
             s.src = "https://static.cloudflareinsights.com/beacon.min.js";
-            s.setAttribute("data-cf-beacon", '{"token": "845cb65a20b949deb8645e8919b36ab3"}');
+            s.setAttribute("data-cf-beacon", JSON.stringify({ token: token }));
             document.head.appendChild(s);
-        }
+        })();
     </script>
 </head>
 
