@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="reveal-enabled">
 
 <head>
     <meta charset="UTF-8">
@@ -32,24 +32,73 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Remaining Google Fonts: Inter 500, Lora 500/italic, Playfair 500/600,
+         Gochi Hand. Self-hosted @font-face in styles.css handles the LCP-critical
+         400 weights — preloaded below so they don't depend on this <link>. -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Gochi+Hand&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Inter:wght@500&family=Lora:ital,wght@0,500;1,400&family=Gochi+Hand&display=swap"
         rel="stylesheet">
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="styles.css?v=52">
+    <link rel="stylesheet" href="styles.css?v=53">
+
+    <!-- Preload LCP-critical self-hosted fonts so the browser fetches them
+         in parallel with HTML parsing, not after. Without preloads, the
+         browser only discovers font files when it parses styles.css and
+         matches @font-face — that's after CSS download, parsing, and
+         matching against text. Preloads collapse that chain to a single
+         discovery tick. -->
+    <link rel="preload" href="/assets/fonts/playfair-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/playfair-400i.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/lora-400.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Preload LCP image so it starts fetching before HTML parsing finishes.
+         2846x4269 source → browser picks the smallest matching WebP at first paint. -->
+    <link rel="preload" as="image" href="assets/oats-tiramisu.webp" type="image/webp" fetchpriority="high">
 
     <!--
-        Cloudflare Web Analytics is auto-injected by the CF edge for the
-        hanniel.co zone (dash.cloudflare.com → Analytics & Logs → Web
-        Analytics → hanniel.co → "Auto-inject JS: ON"). No manual beacon
-        snippet required — CF attaches it to every response at the edge,
-        including prod and *.hanniel.co subdomains.
+        Cloudflare Web Analytics — per-environment manual beacons.
 
-        No token to manage. No env var to wire. Keep this comment as a
-        breadcrumb in case the auto-inject toggle gets turned off — at
-        that point, fall back to the manual snippet this comment replaced.
+        Background:
+          - The hanniel.co zone had CF's auto-inject JS toggle ON. It
+            attached the main-token beacon to every response on the
+            zone, including *.hanniel.co subdomains — which meant
+            staging.little.hanniel.co was being counted under the
+            main dashboard and (after the staging-token beacon was
+            added) also under the staging dashboard. Double counts.
+          - Fix: turn auto-inject OFF for the hanniel.co zone in the CF
+            dashboard (Web Analytics → hanniel.co → "Auto-inject JS" off).
+            Then this script manually loads the right token per host.
+
+        What this snippet does:
+          - On staging.little.hanniel.co → loads the staging beacon
+            (token 845cb65a20b949deb8645e8919b36ab3).
+          - On little.hanniel.co → loads the main beacon
+            (token ←— set below).
+          - Anywhere else (preview URLs, localhost, other subdomains)
+            → no beacon. Add an `else if` block for each new env.
+
+        After deploying this change, set the token below and turn off
+        auto-inject in the CF dashboard. Until then, staging is still
+        double-counted.
     -->
+    <script>
+        (function () {
+            var mainToken = "dd1d29bf2da643f59d2d8040431429c5";
+            var stagingToken = "845cb65a20b949deb8645e8919b36ab3";
+            var host = location.hostname;
+            var token = null;
+            if (host === "staging.little.hanniel.co") token = stagingToken;
+            else if (host === "little.hanniel.co") token = mainToken;
+            if (!token) return;
+            var s = document.createElement("script");
+            s.type = "module";
+            s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+            s.setAttribute("data-cf-beacon", JSON.stringify({ token: token }));
+            document.head.appendChild(s);
+        })();
+    </script>
 </head>
 
 <body>
@@ -58,7 +107,7 @@
     <!-- Header -->
     <header class="header" id="header">
         <div class="header__inner">
-            <a href="#hero" class="logo"><img src="assets/logo.png" alt="Little Hanniel"></a>
+            <a href="#hero" class="logo"><img src="assets/logo.png" alt="Little Hanniel" width="1563" height="2137" decoding="async"></a>
         </div>
     </header>
 
@@ -85,17 +134,26 @@
                             <ul class="splide__list">
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-tiramisu.jpg" alt="Tiramisu overnight oats" loading="eager">
+                                        <picture>
+                                            <source srcset="assets/oats-tiramisu.webp" type="image/webp">
+                                            <img src="assets/oats-tiramisu.jpg" alt="Tiramisu overnight oats" loading="eager" fetchpriority="high" decoding="async" width="2846" height="4269">
+                                        </picture>
                                     </figure>
                                 </li>
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-strawberry.jpg" alt="Strawberry overnight oats" loading="eager">
+                                        <picture>
+                                            <source srcset="assets/oats-strawberry.webp" type="image/webp">
+                                            <img src="assets/oats-strawberry.jpg" alt="Strawberry overnight oats" loading="eager" decoding="async" width="2907" height="4360">
+                                        </picture>
                                     </figure>
                                 </li>
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-doublechoco.jpg" alt="Double Chocolate overnight oats" loading="eager">
+                                        <picture>
+                                            <source srcset="assets/oats-doublechoco.webp" type="image/webp">
+                                            <img src="assets/oats-doublechoco.jpg" alt="Double Chocolate overnight oats" loading="eager" decoding="async" width="1706" height="2560">
+                                        </picture>
                                     </figure>
                                 </li>
                                 </ul>
@@ -152,15 +210,18 @@
                 </div>
 
                 <div class="menu__image-wrap reveal reveal-d1">
-                    <img
-                        class="menu__image"
-                        src="assets/little-hanniel-menu.png"
-                        alt="Little Hanniel menu card — Overnight Oats, Cookies, Bakes, and Korean kitchen items, with prices in IDR. From our kitchen to yours."
-                        width="1632"
-                        height="2112"
-                        loading="lazy"
-                        decoding="async"
-                    >
+                    <picture>
+                        <source srcset="assets/little-hanniel-menu.webp" type="image/webp">
+                        <img
+                            class="menu__image"
+                            src="assets/little-hanniel-menu.png"
+                            alt="Little Hanniel menu card — Overnight Oats, Cookies, Bakes, and Korean kitchen items, with prices in IDR. From our kitchen to yours."
+                            width="1632"
+                            height="2112"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </picture>
                     <!-- Native share button (mobile only). Hidden by default;
                          CSS reveals it at max-width:720px. Wired up in
                          script.js to navigator.share with a WhatsApp
@@ -191,7 +252,10 @@
 
         <!-- Full-bleed quote -->
         <section class="fullbleed reveal">
-            <img src="assets/oats-trio.jpg" alt="Our overnight oats by the window">
+            <picture>
+                <source srcset="assets/oats-trio.webp" type="image/webp">
+                <img src="assets/oats-trio.jpg" alt="Our overnight oats by the window" loading="lazy" decoding="async" width="2903" height="4355">
+            </picture>
             <div class="fullbleed__overlay">
                 <p class="fullbleed__quote">Freshly made, kept cold —<br>ready when you are.</p>
             </div>
@@ -207,7 +271,12 @@
 
                 <!-- JOURNAL_ENTRIES_START -->
                 <article class="story">
-                    <div class="story__media reveal"><img src="assets/family_beginning.png" alt="Where it all began"></div>
+                    <div class="story__media reveal">
+                        <picture>
+                            <source srcset="assets/family_beginning.webp" type="image/webp">
+                            <img src="assets/family_beginning.png" alt="Where it all began" loading="lazy" decoding="async" width="1696" height="2528">
+                        </picture>
+                    </div>
                     <div class="story__text reveal reveal-d1">
                         <span class="story__date">2024</span>
                         <h3 class="story__title">The Beginning</h3>
@@ -218,7 +287,12 @@ first batch was far from perfect — but it tasted like the start of something b
                 </article>
 
                 <article class="story story--reverse">
-                    <div class="story__media reveal"><img src="assets/overnight_oats.png" alt="Our overnight oats journey"></div>
+                    <div class="story__media reveal">
+                        <picture>
+                            <source srcset="assets/overnight_oats.webp" type="image/webp">
+                            <img src="assets/overnight_oats.png" alt="Our overnight oats journey" loading="lazy" decoding="async" width="1536" height="2752">
+                        </picture>
+                    </div>
                     <div class="story__text reveal reveal-d1">
                         <span class="story__date">2025</span>
                         <h3 class="story__title">Overnight Oats</h3>
@@ -366,7 +440,7 @@ jars of their own.</p>
         <!-- Footer -->
         <footer class="footer">
             <div class="container footer__inner">
-                <a href="#hero" class="footer__logo"><img src="assets/logo-footer.png" alt="Little Hanniel"></a>
+                <a href="#hero" class="footer__logo"><img src="assets/logo-footer.png" alt="Little Hanniel" width="1783" height="661" decoding="async"></a>
                 <div class="footer__nav">
                     <a href="#journal">Journal</a>
                     <a href="#menu">Menu</a>
@@ -479,16 +553,16 @@ jars of their own.</p>
     }
     </script>
 
-    <script src="script.js?v=33"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
-    <script src="splide-init.js"></script>
-    <!-- Premium refinements: Lenis smooth scroll + GSAP/ScrollTrigger.
-         Loaded after core scripts so refinements.js can layer on top
-         without touching existing reveal/floating/CTA logic. -->
-    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="refinements.js?v=6"></script>
+    <script defer src="script.js?v=33"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
+        <script defer src="splide-init.js"></script>
+        <!-- Premium refinements: Lenis smooth scroll + GSAP/ScrollTrigger.
+             Loaded after core scripts so refinements.js can layer on top
+             without touching existing reveal/floating/CTA logic. -->
+        <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+        <script defer src="refinements.js?v=6"></script>
 
     <!-- ===== Pet Corner — animated mascot sprite =====
          Custom "Little Hanniel" overnight-oats jar character (PIL-drawn).

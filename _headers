@@ -1,0 +1,29 @@
+# Cloudflare Pages _headers file.
+# Syntax: https://developers.cloudflare.com/pages/configuration/headers/
+#
+# Sets Cache-Control on long-lived static assets so returning visitors
+# serve them from the browser's disk cache without a network round trip.
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+/script.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/refinements.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/splide-init.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/styles.css
+  Cache-Control: public, max-age=31536000, immutable

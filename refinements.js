@@ -207,20 +207,17 @@
   function buildParallax() {
     if (parallaxTweens.length || !parallaxEnabled || PARALLAX_RANGE === 0) return;
 
-    document.querySelectorAll('.story__media img').forEach(function (img) {
-      parallaxTweens.push(gsap.fromTo(img,
-        { yPercent: -PARALLAX_RANGE * 100 },
-        {
-          yPercent: PARALLAX_RANGE * 100,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: img.closest('.story__media'),
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-          },
-        }));
-    });
+    // Journal story images: skip parallax.
+    // The .story__media wrapper already runs a reveal transition
+    // (translateY(32px) → 0 over 0.9s) on scroll-into-view, and these
+    // images are also lazy-loading at the same moment. Adding a
+    // continuous scrub transform on the <img> while reveal + decode
+    // are competing for the main thread produces visible stutter on
+    // mobile. The visual cost of dropping ±5% parallax on two images
+    // is zero; the gain is no jitter while scrolling past them.
+    //
+    // Menu and full-bleed parallax remain — they're single focal
+    // images with no reveal transform, so the parallax is clean.
 
     var menuImg = document.querySelector('.menu__image');
     if (menuImg) {
