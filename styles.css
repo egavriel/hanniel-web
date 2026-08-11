@@ -3,6 +3,46 @@
    Warm cream & caramel palette, MODU-inspired editorial layout.
    ===================================================================== */
 
+/* ---------- Self-hosted fonts (LCP-critical) ----------
+   Playfair Display (Regular + Italic), Inter, Lora are served from the
+   site itself with Cache-Control: public, max-age=31536000, immutable.
+   Saves the Google Fonts round-trip on first paint (was: 2 DNS + 2 TCP/TLS
+   + 1 CSS GET + 4 font-file GETs before the hero headline could render in
+   the right typeface). The Google Fonts <link> in index.html still loads
+   the remaining families (Inter 500, Lora 500, Gochi Hand) and the
+   fallback metrics — our self-hosted copies handle the LCP-critical
+   Regular/Italic400 of Playfair, Inter 400, and Lora 400.
+   swap tells the browser to paint fallback text first and re-render
+   once the woff2 lands. */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/playfair-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/playfair-400i.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/lora-400.woff2') format('woff2');
+}
+
 /* ---------- Tokens ---------- */
 :root {
   /* surfaces / paper */

@@ -32,12 +32,26 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Remaining Google Fonts: Inter 500, Lora 500/italic, Playfair 500/600,
+         Gochi Hand. Self-hosted @font-face in styles.css handles the LCP-critical
+         400 weights — preloaded below so they don't depend on this <link>. -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Gochi+Hand&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Inter:wght@500&family=Lora:ital,wght@0,500;1,400&family=Gochi+Hand&display=swap"
         rel="stylesheet">
     <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
     <link rel="stylesheet" href="styles.css?v=53">
+
+    <!-- Preload LCP-critical self-hosted fonts so the browser fetches them
+         in parallel with HTML parsing, not after. Without preloads, the
+         browser only discovers font files when it parses styles.css and
+         matches @font-face — that's after CSS download, parsing, and
+         matching against text. Preloads collapse that chain to a single
+         discovery tick. -->
+    <link rel="preload" href="/assets/fonts/playfair-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/playfair-400i.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/lora-400.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Preload LCP image so it starts fetching before HTML parsing finishes.
          2846x4269 source → browser picks the smallest matching WebP at first paint. -->
