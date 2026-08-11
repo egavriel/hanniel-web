@@ -39,6 +39,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
     <link rel="stylesheet" href="styles.css?v=53">
 
+    <!-- Preload LCP image so it starts fetching before HTML parsing finishes.
+         2846x4269 source → browser picks the smallest matching WebP at first paint. -->
+    <link rel="preload" as="image" href="assets/oats-tiramisu.webp" type="image/webp" fetchpriority="high">
+
     <!--
         Cloudflare Web Analytics — per-environment manual beacons.
 
@@ -89,7 +93,7 @@
     <!-- Header -->
     <header class="header" id="header">
         <div class="header__inner">
-            <a href="#hero" class="logo"><img src="assets/logo.png" alt="Little Hanniel"></a>
+            <a href="#hero" class="logo"><img src="assets/logo.png" alt="Little Hanniel" width="1563" height="2137" decoding="async"></a>
         </div>
     </header>
 
@@ -116,17 +120,26 @@
                             <ul class="splide__list">
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-tiramisu.jpg" alt="Tiramisu overnight oats" loading="eager">
+                                        <picture>
+                                            <source srcset="assets/oats-tiramisu.webp" type="image/webp">
+                                            <img src="assets/oats-tiramisu.jpg" alt="Tiramisu overnight oats" loading="eager" fetchpriority="high" decoding="async" width="2846" height="4269">
+                                        </picture>
                                     </figure>
                                 </li>
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-strawberry.jpg" alt="Strawberry overnight oats" loading="eager">
+                                        <picture>
+                                            <source srcset="assets/oats-strawberry.webp" type="image/webp">
+                                            <img src="assets/oats-strawberry.jpg" alt="Strawberry overnight oats" loading="eager" decoding="async" width="2907" height="4360">
+                                        </picture>
                                     </figure>
                                 </li>
                                 <li class="splide__slide">
                                     <figure class="hero__strip-figure">
-                                        <img src="assets/oats-doublechoco.jpg" alt="Double Chocolate overnight oats" loading="eager">
+                                        <picture>
+                                            <source srcset="assets/oats-doublechoco.webp" type="image/webp">
+                                            <img src="assets/oats-doublechoco.jpg" alt="Double Chocolate overnight oats" loading="eager" decoding="async" width="1706" height="2560">
+                                        </picture>
                                     </figure>
                                 </li>
                                 </ul>
@@ -183,15 +196,18 @@
                 </div>
 
                 <div class="menu__image-wrap reveal reveal-d1">
-                    <img
-                        class="menu__image"
-                        src="assets/little-hanniel-menu.png"
-                        alt="Little Hanniel menu card — Overnight Oats, Cookies, Bakes, and Korean kitchen items, with prices in IDR. From our kitchen to yours."
-                        width="1632"
-                        height="2112"
-                        loading="lazy"
-                        decoding="async"
-                    >
+                    <picture>
+                        <source srcset="assets/little-hanniel-menu.webp" type="image/webp">
+                        <img
+                            class="menu__image"
+                            src="assets/little-hanniel-menu.png"
+                            alt="Little Hanniel menu card — Overnight Oats, Cookies, Bakes, and Korean kitchen items, with prices in IDR. From our kitchen to yours."
+                            width="1632"
+                            height="2112"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </picture>
                     <!-- Native share button (mobile only). Hidden by default;
                          CSS reveals it at max-width:720px. Wired up in
                          script.js to navigator.share with a WhatsApp
@@ -222,7 +238,10 @@
 
         <!-- Full-bleed quote -->
         <section class="fullbleed reveal">
-            <img src="assets/oats-trio.jpg" alt="Our overnight oats by the window">
+            <picture>
+                <source srcset="assets/oats-trio.webp" type="image/webp">
+                <img src="assets/oats-trio.jpg" alt="Our overnight oats by the window" loading="lazy" decoding="async" width="2903" height="4355">
+            </picture>
             <div class="fullbleed__overlay">
                 <p class="fullbleed__quote">Freshly made, kept cold —<br>ready when you are.</p>
             </div>
@@ -238,7 +257,12 @@
 
                 <!-- JOURNAL_ENTRIES_START -->
                 <article class="story">
-                    <div class="story__media reveal"><img src="assets/family_beginning.png" alt="Where it all began"></div>
+                    <div class="story__media reveal">
+                        <picture>
+                            <source srcset="assets/family_beginning.webp" type="image/webp">
+                            <img src="assets/family_beginning.png" alt="Where it all began" loading="lazy" decoding="async" width="1696" height="2528">
+                        </picture>
+                    </div>
                     <div class="story__text reveal reveal-d1">
                         <span class="story__date">2024</span>
                         <h3 class="story__title">The Beginning</h3>
@@ -249,7 +273,12 @@ first batch was far from perfect — but it tasted like the start of something b
                 </article>
 
                 <article class="story story--reverse">
-                    <div class="story__media reveal"><img src="assets/overnight_oats.png" alt="Our overnight oats journey"></div>
+                    <div class="story__media reveal">
+                        <picture>
+                            <source srcset="assets/overnight_oats.webp" type="image/webp">
+                            <img src="assets/overnight_oats.png" alt="Our overnight oats journey" loading="lazy" decoding="async" width="1536" height="2752">
+                        </picture>
+                    </div>
                     <div class="story__text reveal reveal-d1">
                         <span class="story__date">2025</span>
                         <h3 class="story__title">Overnight Oats</h3>
@@ -397,7 +426,7 @@ jars of their own.</p>
         <!-- Footer -->
         <footer class="footer">
             <div class="container footer__inner">
-                <a href="#hero" class="footer__logo"><img src="assets/logo-footer.png" alt="Little Hanniel"></a>
+                <a href="#hero" class="footer__logo"><img src="assets/logo-footer.png" alt="Little Hanniel" width="1783" height="661" decoding="async"></a>
                 <div class="footer__nav">
                     <a href="#journal">Journal</a>
                     <a href="#menu">Menu</a>
