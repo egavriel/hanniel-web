@@ -219,21 +219,11 @@
     // Menu and full-bleed parallax remain — they're single focal
     // images with no reveal transform, so the parallax is clean.
 
-    var menuImg = document.querySelector('.menu__image');
-    if (menuImg) {
-      parallaxTweens.push(gsap.fromTo(menuImg,
-        { yPercent: -PARALLAX_RANGE * 100 },
-        {
-          yPercent: PARALLAX_RANGE * 100,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.menu__image-wrap',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-          },
-        }));
-    }
+    //
+    // Menu image parallax was removed in this same revision — see
+    // the journal-image parallax block above for the rationale
+    // (reveal + lazy decode + parallax compete for the main thread
+    // and produce visible stutter when the user scrolls near).
 
     var fullbleedImg = document.querySelector('.fullbleed img');
     if (fullbleedImg) {
@@ -307,7 +297,10 @@
       if (!target) return;
       ev.preventDefault();
       if (lenis) {
-        lenis.scrollTo(target, { offset: -20, duration: 1.1 });
+        // Anchor navigation duration: 0.5s reads as "snappy jump" without
+        // feeling instant (which can be disorienting). The previous value
+        // of 1.1s felt like a hover-then-scroll delay to the user.
+        lenis.scrollTo(target, { offset: -20, duration: 0.5 });
       } else {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
