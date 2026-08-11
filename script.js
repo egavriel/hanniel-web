@@ -115,9 +115,11 @@
     if (e.key === 'Escape') closeNav();
   });
 
-  /* ---- Scroll reveals (progressive enhancement + guaranteed fallback) ---- */
-  var docEl = document.documentElement;
-  docEl.classList.add('reveal-enabled');
+  /* ---- Scroll reveals (progressive enhancement + guaranteed fallback) ----
+     Note: <html> already carries class="reveal-enabled" in the markup, so
+     reveal elements render with opacity:0 from the very first paint —
+     no FOUC flash of opacity:1 → 0 → transition. IntersectionObserver
+     (or the 900ms fallback) adds .is-visible to start the entrance. */
   var reveals = document.querySelectorAll('.reveal');
 
   function revealAll() {
