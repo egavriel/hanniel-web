@@ -40,16 +40,46 @@
     <link rel="stylesheet" href="styles.css?v=53">
 
     <!--
-        Cloudflare Web Analytics is auto-injected by the CF edge for the
-        hanniel.co zone (dash.cloudflare.com → Analytics & Logs → Web
-        Analytics → hanniel.co → "Auto-inject JS: ON"). No manual beacon
-        snippet required — CF attaches it to every response at the edge,
-        including prod and *.hanniel.co subdomains.
+        Cloudflare Web Analytics — staging-only manual beacon.
 
-        No token to manage. No env var to wire. Keep this comment as a
-        breadcrumb in case the auto-inject toggle gets turned off — at
-        that point, fall back to the manual snippet this comment replaced.
+        Background:
+          - Cloudflare's auto-inject (CF dashboard → Analytics & Logs →
+            Web Analytics → hanniel.co → "Auto-inject JS: ON") attaches
+            a beacon to every response on the hanniel.co zone, including
+            *.hanniel.co subdomains. That beacon uses the MAIN token
+            and writes all traffic to the main dashboard.
+          - staging.little.hanniel.co needs a SEPARATE token
+            (845cb65a20b949deb8645e8919b36ab3) so the staging traffic
+            doesn't pollute the main dashboard.
+
+        What this snippet does:
+          - Loads beacon.min.js with the staging token ONLY when the
+            current hostname is staging.little.hanniel.co.
+          - On production (little.hanniel.co) it stays inert and the
+            auto-injected main-token beacon handles tracking as before.
+
+        Caveat:
+          - Until auto-inject is disabled for the hanniel.co zone (or
+            the staging subdomain is excluded from it), staging visitors
+            will be counted ONCE by the main beacon (auto-injected) and
+            ONCE by this staging beacon. — two dashboard writes per
+            pageview, not one.
+          - To get clean staging-only counts: disable auto-inject for the
+            hanniel.co zone in the CF dashboard, then add a parallel
+            manual beacon (with the main token) under the host check
+            for little.hanniel.co.
+
+        No build-time env var needed: the host check runs client-side.
     -->
+    <script>
+        if (location.hostname === "staging.little.hanniel.co") {
+            var s = document.createElement("script");
+            s.type = "module";
+            s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+            s.setAttribute("data-cf-beacon", '{"token": "845cb65a20b949deb8645e8919b36ab3"}');
+            document.head.appendChild(s);
+        }
+    </script>
 </head>
 
 <body>
