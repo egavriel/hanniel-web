@@ -1,0 +1,11 @@
+# Local-only env files (wrangler pages dev reads these)
+.dev.vars
+.dev.vars.*
+
+# Wrangler cache
+.wrangler/
+
+# OS / editor
+.DS_Store
+*.swp
+*~
