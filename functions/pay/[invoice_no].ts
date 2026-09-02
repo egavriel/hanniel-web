@@ -185,21 +185,9 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
   slug: string; hmac: string; demoMode: boolean;
   paymentAccount: { name: string; number: string; bank: string };
 }): string {
-  const items = (invoice.items || []).map((it) => `
-    <tr>
-      <td class="pay-item-name">${escapeHtml(it.name || it.product_id || '')}</td>
-      <td class="pay-item-qty">${Number(it.quantity || 0)}</td>
-      <td class="pay-item-price">${formatIdr(it.unit_price || 0)}</td>
-      <td class="pay-item-total">${formatIdr(it.line_total || 0)}</td>
-    </tr>
-  `).join('');
-
-  const subtotal = Number(invoice.subtotal || 0);
-  const deliveryFee = Number(invoice.delivery_fee || 0);
-  const grandTotal = Number(invoice.grand_total || 0);
-  const discount = Number(invoice.discount_amount || 0) + Number(invoice.courtesy_adjustment || 0);
-
   const customerName = demoMode ? 'BCA Demo Customer' : (invoice.customer_name || '');
+
+  const grandTotal = Number(invoice.grand_total || 0);
 
   const transferSection = `
     <div class="pay-transfer">
@@ -255,7 +243,7 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
   <meta property="og:title" content="Bayar ${escapeHtml(invoiceNo)} — Little Hanniel" />
   <meta property="og:description" content="Total ${formatIdr(grandTotal)} • Transfer ke ${escapeHtml(paymentAccount.bank)} a/n ${escapeHtml(paymentAccount.name)}" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://little.hanniel.co/og-cover.jpg" />
+  <meta property="og:image" content="https://little.hanniel.co/invoices/${escapeHtml(invoiceNo)}.jpg" />
   <meta property="og:locale" content="id_ID" />
   <meta property="og:site_name" content="Little Hanniel" />
 
@@ -304,46 +292,6 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: 18px; box-shadow: var(--shadow);
       padding: 24px 22px; margin-bottom: 16px;
-    }
-    .pay-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
-    .pay-invoice-no {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 20px; font-weight: 500; letter-spacing: -0.01em;
-      color: var(--text-strong); margin: 0;
-    }
-    .pay-date { font-size: 12px; color: var(--text-faint); }
-    .pay-status {
-      display: inline-block; font-size: 11px; font-weight: 600;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 999px;
-      background: var(--bg-subtle); color: var(--text-muted); margin-top: 8px;
-    }
-    .pay-status.paid { background: #DCEFD8; color: #1F5C2A; }
-    .pay-status.pending { background: #F8E9D2; color: #8A5419; }
-    .pay-divider { border: 0; border-top: 1px dashed var(--border); margin: 18px 0; }
-    .pay-items { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .pay-items th {
-      text-align: left; font-weight: 600; font-size: 11px;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--text-faint); padding: 4px 0 8px; border-bottom: 1px solid var(--border);
-    }
-    .pay-items th.pay-item-qty, .pay-items th.pay-item-price, .pay-items th.pay-item-total { text-align: right; }
-    .pay-items td { padding: 10px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
-    .pay-items tr:last-child td { border-bottom: 0; }
-    .pay-item-name { color: var(--text-strong); }
-    .pay-item-qty, .pay-item-price, .pay-item-total {
-      text-align: right; color: var(--text-muted); font-variant-numeric: tabular-nums;
-    }
-    .pay-item-total { color: var(--text-strong); font-weight: 600; }
-    .pay-totals { margin-top: 16px; font-size: 14px; }
-    .pay-total-row { display: flex; justify-content: space-between; padding: 4px 0; color: var(--text-muted); }
-    .pay-total-row.grand {
-      margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--border);
-      font-size: 18px; font-weight: 600; color: var(--text-strong);
-    }
-    .pay-total-row.grand .pay-total-amt {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 22px; letter-spacing: -0.01em;
     }
     .pay-card-title {
       font-family: 'Playfair Display', Georgia, serif;
@@ -450,7 +398,6 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
       .pay-shell { padding: 24px 16px 60px; }
       .pay-card { padding: 20px 16px; }
       .pay-logo { font-size: 24px; }
-      .pay-invoice-no { font-size: 18px; }
     }
   </style>
 </head>
@@ -471,42 +418,7 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
            width="1200" height="1500"
            onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='block');" />
       <div class="pay-jpeg-fallback" style="display:none;">
-        Invoice asli (JPEG) belum tersedia di server — mungkin invoice ini dibuat sebelum halaman pembayaran diaktifkan. Detail invoice di bawah ini sesuai dengan D1.
-      </div>
-    </section>
-
-    <section class="pay-card" aria-labelledby="invoice-no">
-      <div class="pay-meta">
-        <h2 class="pay-invoice-no" id="invoice-no">${escapeHtml(invoiceNo)}</h2>
-        <span class="pay-date">${escapeHtml(formatDate(invoice.invoice_date))}</span>
-      </div>
-      <span class="pay-status ${escapeHtml(invoice.status || 'issued')}">${escapeHtml((invoice.status || 'issued').toUpperCase())}</span>
-      ${customerName ? `<p style="margin: 14px 0 0; font-size: 14px; color: var(--text-muted);">Kepada <strong style="color: var(--text-strong);">${escapeHtml(customerName)}</strong></p>` : ''}
-
-      <hr class="pay-divider" />
-
-      <table class="pay-items" role="table">
-        <thead>
-          <tr>
-            <th scope="col">Item</th>
-            <th scope="col" class="pay-item-qty">Qty</th>
-            <th scope="col" class="pay-item-price">Harga</th>
-            <th scope="col" class="pay-item-total">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${items || '<tr><td colspan="4" style="text-align:center;color:var(--text-faint);padding:16px 0;">Tidak ada item.</td></tr>'}
-        </tbody>
-      </table>
-
-      <div class="pay-totals">
-        <div class="pay-total-row"><span>Subtotal</span><span>${formatIdr(subtotal)}</span></div>
-        ${discount > 0 ? `<div class="pay-total-row"><span>Diskon</span><span>−${formatIdr(discount)}</span></div>` : ''}
-        ${deliveryFee > 0 ? `<div class="pay-total-row"><span>Ongkir</span><span>${formatIdr(deliveryFee)}</span></div>` : ''}
-        <div class="pay-total-row grand">
-          <span>Total</span>
-          <span class="pay-total-amt">${formatIdr(grandTotal)}</span>
-        </div>
+        Invoice asli (JPEG) belum tersedia di server. Detail invoice bisa dilihat di WhatsApp — nomor invoice: <strong>${escapeHtml(invoiceNo)}</strong>, total: <strong>${formatIdr(grandTotal)}</strong>.
       </div>
     </section>
 
