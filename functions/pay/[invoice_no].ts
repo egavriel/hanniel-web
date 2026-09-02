@@ -33,10 +33,16 @@ const HMAC_RE = /^[0-9a-f]{12}$/;
 const HANNIEL_API = 'https://app.hanniel.co';
 const BCA_API_URL_ENV = 'HANNIEL_BCA_API_URL';
 const SALT_ENV = 'PAY_LINK_SALT';
+const PAYMENT_ACCOUNT_NAME_ENV = 'PAYMENT_ACCOUNT_NAME';
+const PAYMENT_ACCOUNT_NUMBER_ENV = 'PAYMENT_ACCOUNT_NUMBER';
+const PAYMENT_BANK_NAME_ENV = 'PAYMENT_BANK_NAME';
 
 interface PagesEnv {
   [BCA_API_URL_ENV]?: string;
   [SALT_ENV]?: string;
+  [PAYMENT_ACCOUNT_NAME_ENV]?: string;
+  [PAYMENT_ACCOUNT_NUMBER_ENV]?: string;
+  [PAYMENT_BANK_NAME_ENV]?: string;
   DEMO_PAY_LINKS?: string;
 }
 
@@ -165,39 +171,19 @@ async function fetchPaymentLink(env: PagesEnv | undefined, invoiceNo: string): P
   }
 }
 
-// ---- QR placeholder (inline SVG so the facilitator sees the visual) ----
-
-function placeholderQrSvg(amount: string, invoiceNo: string): string {
-  const cells: string[] = [];
-  const isFinder = (x: number, y: number): boolean => {
-    const inBox = (cx: number, cy: number) =>
-      x >= cx && x < cx + 7 && y >= cy && y < cy + 7;
-    const inOuter = (cx: number, cy: number) =>
-      x === cx || x === cx + 6 || y === cy || y === cy + 6;
-    const inInner = (cx: number, cy: number) =>
-      x >= cx + 2 && x <= cx + 4 && y >= cy + 2 && y <= cy + 4;
-    return (inBox(0, 0) || inBox(14, 0) || inBox(0, 14)) &&
-      (inOuter(0, 0) || inOuter(14, 0) || inOuter(0, 14) || inInner(0, 0) || inInner(14, 0) || inInner(0, 14));
-  };
-  for (let y = 0; y < 21; y++) {
-    for (let x = 0; x < 21; x++) {
-      const on = isFinder(x, y) || (((x * 7 + y * 11 + 3) % 5) < 2 && !isFinder(x, y));
-      if (on) cells.push(`<rect x="${x * 9}" y="${y * 9}" width="9" height="9" fill="#2B2118"/>`);
-    }
-  }
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 189 189" width="220" height="220" role="img" aria-label="QR placeholder">
-    <rect width="189" height="189" fill="#FFFFFF"/>
-    ${cells.join('')}
-    <rect x="0" y="170" width="189" height="19" fill="#FDFAF6"/>
-    <text x="94.5" y="184" text-anchor="middle" font-family="monospace" font-size="9" fill="#6E5F4F">PREVIEW • ${escapeHtml(amount)} • ${escapeHtml(invoiceNo)}</text>
-  </svg>`;
-}
+// ---- QR fallback (only used when the BCA Worker is live with a real paymentLink) ----
+//
+// Kept here as a stub so the page knows what a QR would look like if/when the
+// Worker returns a paymentLink. The inline SVG generator was removed in v0.7+
+// in favour of the manual-transfer card — BCA API integration will skip this
+// section entirely and go straight to "paid" via the recon Worker.
 
 // ---- page render ----
 
-function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode }: {
+function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, paymentAccount }: {
   invoice: Invoice; paymentLink: PaymentLink | null; invoiceNo: string;
   slug: string; hmac: string; demoMode: boolean;
+  paymentAccount: { name: string; number: string; bank: string };
 }): string {
   const items = (invoice.items || []).map((it) => `
     <tr>
@@ -215,7 +201,31 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode }: {
 
   const customerName = demoMode ? 'BCA Demo Customer' : (invoice.customer_name || '');
 
-  const qrSection = paymentLink
+  const transferSection = `
+    <div class="pay-transfer">
+      <p class="pay-transfer-label">Transfer ke rekening</p>
+      <p class="pay-transfer-bank">${escapeHtml(paymentAccount.bank)}</p>
+      <p class="pay-transfer-name">${escapeHtml(paymentAccount.name)}</p>
+      <p class="pay-transfer-number" data-copy="${escapeHtml(paymentAccount.number)}">
+        <span class="pay-transfer-number-text">${escapeHtml(paymentAccount.number)}</span>
+        <button type="button" class="pay-copy-btn" aria-label="Salin nomor rekening">Salin</button>
+      </p>
+      <p class="pay-transfer-amount">
+        Jumlah: <strong>${formatIdr(grandTotal)}</strong>
+      </p>
+    </div>
+    <ol class="pay-steps">
+      <li>Buka aplikasi <strong>${escapeHtml(paymentAccount.bank)} mobile</strong> atau m-banking pilihan Anda.</li>
+      <li>Pilih <em>Transfer</em> → <em>Antar Rekening</em> atau <em>Ke Rekening ${escapeHtml(paymentAccount.bank)}</em>.</li>
+      <li>Masukkan nomor rekening di atas. Pastikan nama penerima cocok: <strong>${escapeHtml(paymentAccount.name)}</strong>.</li>
+      <li>Masukkan jumlah yang harus dibayar: <strong>${formatIdr(grandTotal)}</strong>.</li>
+      <li>Sebelum konfirmasi, tambahkan berita: <em>${escapeHtml(invoiceNo)}</em> — ini membantu kami mencocokkan pembayaran Anda secara otomatis.</li>
+      <li>Konfirmasi transfer. Setelah berhasil, simpan bukti transfer (screenshot atau struk) dan kirim ke WhatsApp kami jika perlu konfirmasi cepat.</li>
+    </ol>
+    <p class="pay-transfer-note">Invoice ini akan ditandai <strong>lunas</strong> setelah transfer kami terima dan cocok dengan jumlah di atas. Biasanya dalam 1–10 menit pada jam operasional, atau di-reconcile otomatis oleh cron pagi/siang/malam.</p>
+  `;
+
+  const qrFallback = paymentLink
     ? `
       <div class="pay-qr">
         <img class="pay-qr-img" src="/pay/${escapeHtml(invoiceNo)}/qr.png?k=${escapeHtml(hmac)}" alt="QR code ${escapeHtml(invoiceNo)}" width="220" height="220" />
@@ -225,13 +235,7 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode }: {
         <p class="pay-qr-hint">Buka aplikasi e-wallet atau m-banking Anda, pilih <em>Scan QR</em>, arahkan ke kode di atas. Pembayaran via QRIS — BCA mobile, OVO, GoPay, Dana, ShopeePay, dll.</p>
       </div>
     `
-    : `
-      <div class="pay-qr">
-        ${placeholderQrSvg(formatIdr(grandTotal), invoiceNo)}
-        <p class="pay-qr-expiry"><strong>QR ini adalah preview</strong> — akan diganti QR asli setelah BCA API live.</p>
-        <p class="pay-qr-hint">Setelah live, pelanggan cukup scan QR di atas dari BCA mobile / OVO / GoPay / Dana / ShopeePay untuk membayar. Pembayaran otomatis terdeteksi via QR Inquiry dalam ~2 menit.</p>
-      </div>
-    `;
+    : '';
 
   const demoBanner = demoMode
     ? `<div class="pay-demo-banner"><strong>Mode demo.</strong> Nama pelanggan & item di-masker untuk presentasi ke BCA facilitator.</div>`
@@ -243,13 +247,13 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode }: {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Bayar ${escapeHtml(invoiceNo)} — Little Hanniel</title>
-  <meta name="description" content="Halaman pembayaran invoice ${escapeHtml(invoiceNo)} dari Little Hanniel. Scan QRIS untuk membayar via QRIS." />
+  <meta name="description" content="Halaman pembayaran invoice ${escapeHtml(invoiceNo)} dari Little Hanniel. Transfer ke rekening ${escapeHtml(paymentAccount.bank)} ${escapeHtml(paymentAccount.number)} a/n ${escapeHtml(paymentAccount.name)} sebesar ${formatIdr(grandTotal)}." />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#FDFAF6" />
   <link rel="icon" type="image/png" href="/favicon.png" />
 
   <meta property="og:title" content="Bayar ${escapeHtml(invoiceNo)} — Little Hanniel" />
-  <meta property="og:description" content="Total ${formatIdr(grandTotal)} • Scan QR untuk bayar via QRIS" />
+  <meta property="og:description" content="Total ${formatIdr(grandTotal)} • Transfer ke ${escapeHtml(paymentAccount.bank)} a/n ${escapeHtml(paymentAccount.name)}" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://little.hanniel.co/og-cover.jpg" />
   <meta property="og:locale" content="id_ID" />
@@ -341,7 +345,81 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode }: {
       font-family: 'Playfair Display', Georgia, serif;
       font-size: 22px; letter-spacing: -0.01em;
     }
-    .pay-qr { text-align: center; }
+    .pay-card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 16px; font-weight: 500;
+      letter-spacing: -0.01em; color: var(--text-strong);
+      margin: 0 0 14px;
+    }
+    .pay-transfer { text-align: left; margin-bottom: 18px; }
+    .pay-transfer-label {
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-faint); margin: 0 0 6px;
+    }
+    .pay-transfer-bank {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px; font-weight: 500;
+      color: var(--accent); margin: 0 0 2px;
+    }
+    .pay-transfer-name {
+      font-size: 14px; color: var(--text-muted);
+      margin: 0 0 10px;
+    }
+    .pay-transfer-number {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 0 0 12px;
+    }
+    .pay-transfer-number-text {
+      font-family: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text-strong);
+      flex: 1;
+    }
+    .pay-copy-btn {
+      font-family: inherit; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 6px 12px; border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: transparent; color: var(--accent);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .pay-copy-btn:hover { background: var(--accent); color: white; }
+    .pay-copy-btn.is-copied {
+      background: #DCEFD8; color: #1F5C2A;
+      border-color: #B7D5A8;
+    }
+    .pay-transfer-amount {
+      font-size: 14px; color: var(--text-muted);
+      margin: 0;
+    }
+    .pay-transfer-amount strong {
+      color: var(--text-strong);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 18px; font-weight: 500;
+    }
+    .pay-steps {
+      margin: 0 0 14px; padding-left: 22px;
+      font-size: 13px; color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .pay-steps li { margin-bottom: 6px; }
+    .pay-steps strong { color: var(--text-strong); }
+    .pay-transfer-note {
+      font-size: 12px; color: var(--text-faint);
+      background: var(--bg-subtle);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin: 0;
+      line-height: 1.55;
+    }
+    .pay-transfer-note strong { color: var(--text-muted); }
+    .pay-qr { text-align: center; margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--border); }
     .pay-qr img, .pay-qr svg {
       display: block; margin: 0 auto 12px;
       border-radius: 12px; background: white;
@@ -407,13 +485,51 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode }: {
     </section>
 
     <section class="pay-card">
-      ${qrSection}
+      <h3 class="pay-card-title">Cara bayar</h3>
+      ${transferSection}
+      ${qrFallback}
     </section>
 
     <p class="pay-help">
       Butuh bantuan? <a href="https://wa.me/6285190299779?text=Halo%20Little%20Hanniel%2C%20saya%20butuh%20bantuan%20invoice%20${encodeURIComponent(invoiceNo)}" rel="noopener">Hubungi kami via WhatsApp</a>.
     </p>
   </main>
+  <script>
+    (function () {
+      var btn = document.querySelector('.pay-copy-btn');
+      var num = document.querySelector('.pay-transfer-number');
+      if (!btn || !num) return;
+      btn.addEventListener('click', function () {
+        var text = num.getAttribute('data-copy') || num.querySelector('.pay-transfer-number-text').textContent.trim();
+        var done = function () {
+          var orig = btn.textContent;
+          btn.textContent = 'Tersalin';
+          btn.classList.add('is-copied');
+          setTimeout(function () {
+            btn.textContent = orig;
+            btn.classList.remove('is-copied');
+          }, 1500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { done(); });
+        } else {
+          // Fallback for older browsers / non-HTTPS localhost
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'absolute';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            done();
+          } catch (e) { /* silent fail */ }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>`;
 }
@@ -542,6 +658,21 @@ async function renderForInvoice(
     status: 502, headers: { 'content-type': 'text/plain' },
   });
 
+  const paymentAccount = {
+    name: (env[PAYMENT_ACCOUNT_NAME_ENV] || '').trim(),
+    number: (env[PAYMENT_ACCOUNT_NUMBER_ENV] || '').trim(),
+    bank: (env[PAYMENT_BANK_NAME_ENV] || 'BCA').trim(),
+  };
+
+  // If payment account isn't configured, render an admin-visible error
+  // instead of an incomplete page. Don't leak invoice details.
+  if (!paymentAccount.name || !paymentAccount.number) {
+    return new Response(
+      'Payment account not configured. Set PAYMENT_ACCOUNT_NAME and PAYMENT_ACCOUNT_NUMBER env vars on the Pages project.',
+      { status: 503, headers: { 'content-type': 'text/plain' } },
+    );
+  }
+
   const html = renderPage({
     invoice: fetched.invoice,
     paymentLink,
@@ -549,6 +680,7 @@ async function renderForInvoice(
     slug,
     hmac,
     demoMode,
+    paymentAccount,
   });
   return new Response(html, {
     status: 200,
