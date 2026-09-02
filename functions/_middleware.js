@@ -32,6 +32,10 @@ export const onRequest = async (context) => {
       init.body = context.request.body;
     }
     init.headers.delete('host');
+    // Preserve the user's original host so downstream redirects can
+    // send them back to the friendly domain, not the underlying
+    // *.pages.dev preview URL.
+    init.headers.set('x-original-host', host);
 
     const proxied = await fetch(target.toString(), init);
     const headers = new Headers(proxied.headers);

@@ -489,13 +489,20 @@ export async function onRequestGet(context: { request: Request; params: { invoic
 
     if (salt) {
       // Redirect to the canonical slug form. No body, no invoice_no in response.
+      // Preserve the original Host header so the redirect target matches the
+      // user-facing domain (the CF Pages middleware rewrites the URL but the
+      // Host header still carries the original hostname).
       const slug = (await sha256Hex(`${salt}|${invoiceNo}`)).slice(0, 8);
       const hmac = (await hmacSha256Hex(salt, invoiceNo)).slice(0, 12);
       const qs = new URLSearchParams();
       qs.set('k', hmac);
       if (demoMode) qs.set('demo', '1');
+      const host = context.request.headers.get('x-original-host')
+        || context.request.headers.get('host')
+        || url.host;
+      const proto = url.protocol.replace(':', '');
       return Response.redirect(
-        `${url.origin}/pay/${slug}?${qs.toString()}`,
+        `${proto}://${host}/pay/${slug}?${qs.toString()}`,
         302,
       );
     }
