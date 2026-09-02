@@ -203,14 +203,14 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
       </p>
     </div>
     <ol class="pay-steps">
-      <li>Buka aplikasi <strong>${escapeHtml(paymentAccount.bank)} mobile</strong> atau m-banking pilihan Anda.</li>
-      <li>Pilih <em>Transfer</em> → <em>Antar Rekening</em> atau <em>Ke Rekening ${escapeHtml(paymentAccount.bank)}</em>.</li>
-      <li>Masukkan nomor rekening di atas. Pastikan nama penerima cocok: <strong>${escapeHtml(paymentAccount.name)}</strong>.</li>
-      <li>Masukkan jumlah yang harus dibayar: <strong>${formatIdr(grandTotal)}</strong>.</li>
-      <li>Sebelum konfirmasi, tambahkan berita: <em>${escapeHtml(invoiceNo)}</em> — ini membantu kami mencocokkan pembayaran Anda secara otomatis.</li>
-      <li>Konfirmasi transfer. Setelah berhasil, simpan bukti transfer (screenshot atau struk) dan kirim ke WhatsApp kami jika perlu konfirmasi cepat.</li>
+      <li>Buka aplikasi <strong>${escapeHtml(paymentAccount.bank)} mobile</strong> atau aplikasi m-banking pilihan Anda.</li>
+      <li>Pilih menu <em>Transfer</em>, lalu <em>Antar Rekening</em> atau <em>Ke Rekening ${escapeHtml(paymentAccount.bank)}</em>.</li>
+      <li>Masukkan nomor rekening di atas, dan pastikan nama penerima yang tertera cocok dengan <strong>${escapeHtml(paymentAccount.name)}</strong>.</li>
+      <li>Masukkan jumlah pembayaran sebesar <strong>${formatIdr(grandTotal)}</strong>.</li>
+      <li>Pada kolom berita, tuliskan nomor invoice <em>${escapeHtml(invoiceNo)}</em> untuk membantu kami memverifikasi pembayaran Anda.</li>
+      <li>Konfirmasi transfer dan simpan bukti pembayaran Anda.</li>
     </ol>
-    <p class="pay-transfer-note">Invoice ini akan ditandai <strong>lunas</strong> setelah transfer kami terima dan cocok dengan jumlah di atas. Biasanya dalam 1–10 menit pada jam operasional, atau di-reconcile otomatis oleh cron pagi/siang/malam.</p>
+    <p class="pay-transfer-note">Setelah pembayaran kami terima dan diverifikasi, invoice ini akan ditandai <strong>lunas</strong>. Jika ada pertanyaan, silakan hubungi kami melalui WhatsApp.</p>
   `;
 
   const qrFallback = paymentLink
