@@ -427,6 +427,20 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
     }
     .pay-qr-expiry { font-size: 13px; color: var(--text-muted); margin: 8px 0 4px; }
     .pay-qr-hint { font-size: 12px; color: var(--text-faint); line-height: 1.6; margin: 8px 0 0; }
+    .pay-jpeg {
+      display: block; width: 100%; height: auto;
+      border-radius: 12px;
+      background: white;
+      box-shadow: var(--shadow);
+      margin: 0 0 8px;
+    }
+    .pay-jpeg-fallback {
+      font-size: 12px; color: var(--text-faint);
+      text-align: center; padding: 20px;
+      background: var(--bg-subtle);
+      border-radius: 10px;
+      margin: 0 0 8px;
+    }
     .pay-help {
       text-align: center; font-size: 12px; color: var(--text-faint); margin-top: 24px;
     }
@@ -448,6 +462,18 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
     </header>
 
     ${demoBanner}
+
+    <section class="pay-card pay-jpeg-card">
+      <img class="pay-jpeg"
+           src="/invoices/${escapeHtml(invoiceNo)}.jpg"
+           alt="Invoice ${escapeHtml(invoiceNo)} — ${escapeHtml(customerName || 'Hanniel')}"
+           loading="lazy"
+           width="1200" height="1500"
+           onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='block');" />
+      <div class="pay-jpeg-fallback" style="display:none;">
+        Invoice asli (JPEG) belum tersedia di server — mungkin invoice ini dibuat sebelum halaman pembayaran diaktifkan. Detail invoice di bawah ini sesuai dengan D1.
+      </div>
+    </section>
 
     <section class="pay-card" aria-labelledby="invoice-no">
       <div class="pay-meta">
