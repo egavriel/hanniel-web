@@ -207,7 +207,13 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
       <li>Pilih menu <em>Transfer</em>, lalu <em>Antar Rekening</em> atau <em>Ke Rekening ${escapeHtml(paymentAccount.bank)}</em>.</li>
       <li>Masukkan nomor rekening di atas, dan pastikan nama penerima yang tertera cocok dengan <strong>${escapeHtml(paymentAccount.name)}</strong>.</li>
       <li>Masukkan jumlah pembayaran sebesar <strong>${formatIdr(grandTotal)}</strong>.</li>
-      <li>Pada kolom berita, tuliskan nomor invoice <em>${escapeHtml(invoiceNo)}</em> untuk membantu kami memverifikasi pembayaran Anda.</li>
+      <li>Pada kolom berita, salin nomor invoice di bawah ini:
+        <div class="pay-invoice-no-copy" data-copy="${escapeHtml(invoiceNo)}">
+          <span class="pay-invoice-no-copy-text">${escapeHtml(invoiceNo)}</span>
+          <button type="button" class="pay-copy-btn pay-copy-btn--inline" aria-label="Salin nomor invoice">Salin</button>
+        </div>
+        Nomor ini membantu kami memverifikasi pembayaran Anda secara otomatis.
+      </li>
       <li>Konfirmasi transfer dan simpan bukti pembayaran Anda.</li>
     </ol>
     <p class="pay-transfer-note">Setelah pembayaran kami terima dan diverifikasi, invoice ini akan ditandai <strong>lunas</strong>. Jika ada pertanyaan, silakan hubungi kami melalui WhatsApp.</p>
@@ -356,8 +362,26 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
       font-size: 13px; color: var(--text-muted);
       line-height: 1.7;
     }
-    .pay-steps li { margin-bottom: 6px; }
+    .pay-steps li { margin-bottom: 10px; }
     .pay-steps strong { color: var(--text-strong); }
+    .pay-invoice-no-copy {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin: 8px 0 6px;
+      padding: 8px 10px 8px 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+    .pay-invoice-no-copy-text {
+      font-family: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text-strong);
+    }
+    .pay-copy-btn--inline {
+      padding: 4px 10px; font-size: 11px;
+    }
     .pay-transfer-note {
       font-size: 12px; color: var(--text-faint);
       background: var(--bg-subtle);
@@ -434,37 +458,49 @@ function renderPage({ invoice, paymentLink, invoiceNo, slug, hmac, demoMode, pay
   </main>
   <script>
     (function () {
-      var btn = document.querySelector('.pay-copy-btn');
-      var num = document.querySelector('.pay-transfer-number');
-      if (!btn || !num) return;
-      btn.addEventListener('click', function () {
-        var text = num.getAttribute('data-copy') || num.querySelector('.pay-transfer-number-text').textContent.trim();
-        var done = function () {
-          var orig = btn.textContent;
-          btn.textContent = 'Tersalin';
-          btn.classList.add('is-copied');
-          setTimeout(function () {
-            btn.textContent = orig;
-            btn.classList.remove('is-copied');
-          }, 1500);
-        };
+      // Wire every copy-button on the page. Each .pay-copy-btn is paired
+      // with the closest ancestor that has [data-copy]. Supports the BCA
+      // account number (full pill) and the invoice number pill in step 5.
+      var buttons = document.querySelectorAll('.pay-copy-btn');
+      if (!buttons.length) return;
+      function fallbackCopy(text) {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'absolute';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          return ok;
+        } catch (e) { return false; }
+      }
+      function flashCopied(btn, orig) {
+        btn.textContent = 'Tersalin';
+        btn.classList.add('is-copied');
+        setTimeout(function () {
+          btn.textContent = orig;
+          btn.classList.remove('is-copied');
+        }, 1500);
+      }
+      function copyText(text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(done, function () { done(); });
-        } else {
-          // Fallback for older browsers / non-HTTPS localhost
-          try {
-            var ta = document.createElement('textarea');
-            ta.value = text;
-            ta.setAttribute('readonly', '');
-            ta.style.position = 'absolute';
-            ta.style.left = '-9999px';
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            done();
-          } catch (e) { /* silent fail */ }
+          return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallbackCopy(text); });
         }
+        return Promise.resolve(fallbackCopy(text));
+      }
+      buttons.forEach(function (btn) {
+        var holder = btn.closest('[data-copy]');
+        if (!holder) return;
+        var orig = btn.textContent;
+        btn.addEventListener('click', function () {
+          var text = holder.getAttribute('data-copy')
+            || (holder.querySelector('span') ? holder.querySelector('span').textContent.trim() : '');
+          if (!text) return;
+          Promise.resolve(copyText(text)).then(function () { flashCopied(btn, orig); });
+        });
       });
     })();
   </script>
