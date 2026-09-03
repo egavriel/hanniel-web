@@ -540,12 +540,62 @@ function notFoundResponse(): Response {
 
 // ---- request handler ----
 
+// Rate limiter — per-instance sliding-window counter. Low-traffic
+// site (pay page), so the in-process map is sufficient. Workers
+// instances scale horizontally, so this is per-instance — which
+// means an attacker can effectively get `instances × LIMIT` requests
+// per window. For Hanniel's volume that's still far below the brute-
+// force space of 2^80 (slug+hmac) and provides adequate DoS protection.
+interface RateLimitOpts { limit: number; windowSec: number; }
+const _rlBuckets = new Map<string, number[]>();
+function checkRateLimit(key: string, opts: RateLimitOpts): { allowed: boolean; retryAfterSec: number; count: number } {
+  const now = Date.now();
+  const cutoff = now - opts.windowSec * 1000;
+  const arr = _rlBuckets.get(key) || [];
+  // Drop expired entries
+  let i = 0;
+  while (i < arr.length && arr[i] < cutoff) i++;
+  const recent = i < arr.length ? arr.slice(i).concat(now) : [now];
+  _rlBuckets.set(key, recent);
+  // Periodically GC stale buckets
+  if (_rlBuckets.size > 5000 && Math.random() < 0.01) {
+    for (const [k, v] of _rlBuckets) {
+      if (v.length === 0 || (v[v.length - 1] ?? 0) < cutoff) _rlBuckets.delete(k);
+    }
+  }
+  if (recent.length > opts.limit) {
+    return {
+      allowed: false,
+      retryAfterSec: opts.windowSec,
+      count: recent.length,
+    };
+  }
+  return { allowed: true, retryAfterSec: 0, count: recent.length };
+}
+
 export async function onRequestGet(context: { request: Request; params: { invoice_no: string }; env: PagesEnv }): Promise<Response> {
   const param = context.params.invoice_no || '';
   const url = new URL(context.request.url);
   const demoMode = url.searchParams.get('demo') === '1';
   const providedHmac = url.searchParams.get('k') || '';
   const salt = context.env[SALT_ENV];
+
+  // Rate limit (per CF-Connecting-IP). 30 req/min on the pay page.
+  // Above this, return 429 with Retry-After. Legitimate customers
+  // don't hit this; brute-force scrapers do.
+  const clientIp = context.request.headers.get('cf-connecting-ip')
+    || context.request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+    || 'unknown';
+  const rl = checkRateLimit(clientIp, { limit: 30, windowSec: 60 });
+  if (!rl.allowed) {
+    return new Response('Rate limited. Try again later.', {
+      status: 429,
+      headers: {
+        'content-type': 'text/plain',
+        'retry-after': String(rl.retryAfterSec),
+      },
+    });
+  }
 
   // CASE A: param is a slug (8 hex chars). Canonical hardened path.
   if (SLUG_RE.test(param)) {
