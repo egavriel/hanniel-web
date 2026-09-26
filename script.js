@@ -132,22 +132,32 @@
     });
   }
 
-  if ('IntersectionObserver' in window && reveals.length) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
-    reveals.forEach(function (el) { io.observe(el); });
+  function startReveals() {
+    if ('IntersectionObserver' in window && reveals.length) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+      reveals.forEach(function (el) { io.observe(el); });
 
-    requestAnimationFrame(revealInView);
-    window.addEventListener('load', revealInView);
-    setTimeout(revealAll, 900);
+      requestAnimationFrame(revealInView);
+      window.addEventListener('load', revealInView);
+      setTimeout(revealAll, 900);
+    } else {
+      revealAll();
+    }
+  }
+
+  // Hold the entrance while the splash preloader covers the page, so the hero
+  // fades up as the site is revealed instead of finishing unseen behind it.
+  if (document.documentElement.classList.contains('is-preloading')) {
+    document.addEventListener('preloader:done', startReveals, { once: true });
   } else {
-    revealAll();
+    startReveals();
   }
 
   /* ---- Content surface (Tier 2b) ----

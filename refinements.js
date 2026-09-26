@@ -113,6 +113,13 @@
      re-animate from y:40, opacity:0. */
   document.documentElement.classList.add('gsap-enabled');
 
+  // Hold every entrance tween while the splash preloader covers the page;
+  // they play from their start state as the site is revealed.
+  if (document.documentElement.classList.contains('is-preloading')) {
+    gsap.globalTimeline.pause();
+    document.addEventListener('preloader:done', function () { gsap.globalTimeline.resume(); }, { once: true });
+  }
+
   /* ---------- Section entrances (all buckets that reach here) ---------- */
   function animateIn(el) {
     if (!el || el.dataset.gsapDone) return;
