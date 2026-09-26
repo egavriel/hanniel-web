@@ -1316,6 +1316,8 @@ body {
     lh-pet-bob  3.2s ease-in-out 1.1s infinite;
   pointer-events: none;
 }
+/* wait for the splash preloader: the pet rises in after the site is revealed */
+html.is-preloading .lh-pet-stage { animation-play-state: paused; }
 @keyframes lh-pet-rise { to { opacity: 1; transform: translateY(0); } }
 @keyframes lh-pet-bob  { 0%,100% { translate: 0 0; } 50% { translate: 0 -4px; } }
 
