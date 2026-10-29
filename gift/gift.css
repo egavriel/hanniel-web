@@ -236,25 +236,33 @@ img { max-width: 100%; display: block; }
 /* ---------- the gift card ---------- */
 
 .card-stage { perspective: 1100px; margin: 4px auto 18px; max-width: 360px; }
+/* .gcard tilts, .gcard__inner flips, the two faces are real 3D planes.
+   Nothing above the faces may set overflow/opacity/filter/isolation, or 3D flattens. */
 .gcard {
   --c1: #FBF5EC; --c2: #EFE0C9; --ink: #2B2118; --sub: #8B6540; --dot: rgba(43, 33, 24, 0.14);
-  position: relative; aspect-ratio: 1.586; border-radius: 20px; padding: 18px 20px;
-  color: var(--ink); background: linear-gradient(140deg, var(--c1), var(--c2));
-  box-shadow: 0 22px 44px rgba(43, 33, 24, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  position: relative; aspect-ratio: 1.586; color: var(--ink); cursor: pointer;
   transform-style: preserve-3d; transition: transform 0.6s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.gcard__inner { position: absolute; inset: 0; transform-style: preserve-3d; }
+.gcard__face {
+  position: absolute; inset: 0; border-radius: 20px; padding: 18px 20px;
+  background: linear-gradient(140deg, var(--c1), var(--c2));
+  box-shadow: 0 22px 44px rgba(43, 33, 24, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   overflow: hidden; isolation: isolate;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .gcard[data-theme="sage"] { --c1: #EEF2E4; --c2: #A9B88A; --ink: #23301A; --sub: #4D5C35; --dot: rgba(35, 48, 26, 0.16); }
 .gcard[data-theme="cocoa"] { --c1: #4A3627; --c2: #21180F; --ink: #FBF3E6; --sub: #E9C072; --dot: rgba(251, 243, 230, 0.2); }
 .gcard[data-theme="berry"] { --c1: #FDEEF0; --c2: #EBA3AD; --ink: #4A1E25; --sub: #9C3B4A; --dot: rgba(74, 30, 37, 0.15); }
-.gcard::before { /* paper grain + soft pattern */
+.gcard__face::before { /* paper grain + soft pattern */
   content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0.5;
   background-image: radial-gradient(var(--dot) 1px, transparent 1.4px); background-size: 14px 14px;
   mask-image: linear-gradient(120deg, transparent 40%, #000);
   -webkit-mask-image: linear-gradient(120deg, transparent 40%, #000);
 }
-.gcard::after { /* foil sweep */
+.gcard__front::after { /* foil sweep */
   content: ''; position: absolute; inset: -40%; z-index: 2; pointer-events: none;
   background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.55) 50%, transparent 58%);
   transform: translateX(var(--sx, -60%)); transition: transform 0.2s linear;
@@ -278,19 +286,58 @@ img { max-width: 100%; display: block; }
   padding: 5px 44px; text-transform: uppercase; box-shadow: var(--shadow-sm);
 }
 .gcard__ribbon ~ .gcard__top .gcard__tag { margin-right: 46px; }
-.gcard.is-flip { transform: rotateY(180deg); }
 .gcard__back {
-  position: absolute; inset: 0; z-index: 4; padding: 22px; border-radius: inherit;
-  background: linear-gradient(140deg, var(--c2), var(--c1)); transform: rotateY(180deg);
-  display: flex; flex-direction: column; justify-content: center; text-align: center;
-  /* overflow:hidden on .gcard flattens 3D, so swap faces at the flip midpoint instead of backface culling */
-  opacity: 0; visibility: hidden; transition: opacity 0s 0.3s, visibility 0s 0.3s;
+  transform: rotateY(180deg); padding: 22px;
+  background: linear-gradient(140deg, var(--c2), var(--c1));
+  justify-content: center; align-items: center; text-align: center; gap: 2px;
 }
-.gcard.is-flip .gcard__back { opacity: 1; visibility: visible; }
-.gcard__front { display: contents; }
-.gcard.is-flip .gcard__front > * { visibility: hidden; transition: visibility 0s 0.3s; }
+.gcard__seal {
+  position: absolute; top: 14px; left: 50%; margin-left: -15px; width: 30px; height: 30px;
+  border-radius: 50%; display: grid; place-items: center; font-size: 13px; color: #3B2A0C;
+  background: radial-gradient(circle at 35% 30%, #F3D08A, var(--gold) 60%, #A87B2C);
+  box-shadow: 0 2px 6px rgba(43, 33, 24, 0.25), inset 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+.gcard__brand--back { position: absolute; bottom: 12px; left: 0; right: 0; font-size: 14px; opacity: 0.55; }
 .gcard__msg { font-family: var(--font-hand); font-size: 22px; line-height: 1.25; }
 .gcard__sig { margin-top: 10px; font-size: 13px; color: var(--sub); }
+
+/* The flip: lift off the table, spin with a slight wobble, overshoot, settle.
+   Always turns the same way (0 → 180 → 360) like flipping a real card. */
+.gcard.is-flip .gcard__inner { transform: rotateY(180deg); }
+.gcard.is-flipping-back .gcard__inner { animation: flipToBack 0.78s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
+.gcard.is-flipping-front .gcard__inner { animation: flipToFront 0.78s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
+@keyframes flipToBack {
+  0%   { transform: translateZ(0) rotateY(0) rotateZ(0) scale(1); }
+  18%  { transform: translateZ(40px) rotateY(-14deg) rotateZ(-2deg) scale(1.04); }
+  62%  { transform: translateZ(70px) rotateY(196deg) rotateZ(2deg) scale(1.08); }
+  82%  { transform: translateZ(20px) rotateY(174deg) rotateZ(-0.6deg) scale(1.01); }
+  100% { transform: translateZ(0) rotateY(180deg) rotateZ(0) scale(1); }
+}
+@keyframes flipToFront {
+  0%   { transform: translateZ(0) rotateY(180deg) rotateZ(0) scale(1); }
+  18%  { transform: translateZ(40px) rotateY(166deg) rotateZ(2deg) scale(1.04); }
+  62%  { transform: translateZ(70px) rotateY(376deg) rotateZ(-2deg) scale(1.08); }
+  82%  { transform: translateZ(20px) rotateY(354deg) rotateZ(0.6deg) scale(1.01); }
+  100% { transform: translateZ(0) rotateY(360deg) rotateZ(0) scale(1); }
+}
+/* Light catches the card as it turns, and its shadow stretches while it's in the air. */
+.gcard__shine {
+  position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.75) 48%, rgba(255, 240, 200, 0.4) 54%, transparent 70%);
+  background-size: 250% 100%; mix-blend-mode: soft-light;
+}
+.gcard.is-flipping-back .gcard__shine,
+.gcard.is-flipping-front .gcard__shine { animation: flipShine 0.78s ease-out; }
+@keyframes flipShine {
+  0% { opacity: 0; background-position: 100% 0; }
+  35% { opacity: 1; }
+  100% { opacity: 0; background-position: -60% 0; }
+}
+.gcard.is-flipping-back .gcard__face,
+.gcard.is-flipping-front .gcard__face { animation: flipShadow 0.78s ease-out; }
+@keyframes flipShadow {
+  50% { box-shadow: 0 46px 70px rgba(43, 33, 24, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.5); }
+}
 .card-hint { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: -8px; margin-bottom: 14px; }
 
 /* ---------- form fields ---------- */

@@ -109,7 +109,9 @@
     const sub = o.remaining != null ? `left of ${g.unitsTotal}` : (g.unitsBonus ? `${g.unitsPaid} + ${g.unitsBonus} free` : 'treats');
     return `
       <div class="gcard" data-theme="${esc(g.theme || 'cream')}">
-        <div class="gcard__front">
+       <div class="gcard__inner">
+        <div class="gcard__face gcard__front">
+          <span class="gcard__shine"></span>
           ${ribbon ? `<div class="gcard__ribbon">${esc(ribbon)}</div>` : ''}
           <div class="gcard__top">
             <div class="gcard__brand">Little Hanniel</div>
@@ -125,35 +127,53 @@
               ${g.code ? `<div class="gcard__code">GIFT-${esc(g.code)}</div>` : ''}</div>
           </div>
         </div>
-        <div class="gcard__back">
+        <div class="gcard__face gcard__back">
+          <span class="gcard__shine"></span>
+          <div class="gcard__seal" aria-hidden="true">♥</div>
           <div class="gcard__msg">${esc(g.message || 'Something sweet, just for you.')}</div>
           <div class="gcard__sig">— ${esc(g.senderName || 'you')}</div>
+          <div class="gcard__brand gcard__brand--back">Little Hanniel</div>
         </div>
+       </div>
       </div>`;
   }
 
-  /* Tilt toward the pointer, foil follows; tap flips to the message. */
+  /* Tilt toward the pointer (on .gcard); tap spins the inner card over to the
+     other face (on .gcard__inner), always turning the same way like a coin. */
   function mountCard(stage) {
     const card = $('.gcard', stage);
-    if (!card) return;
-    const reset = () => { card.style.transform = card.classList.contains('is-flip') ? 'rotateY(180deg)' : ''; };
+    const inner = card && $('.gcard__inner', card);
+    if (!inner) return;
     if (!reduced) {
       stage.addEventListener('pointermove', (e) => {
-        if (card.classList.contains('is-flip')) return;
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - 0.5;
         const y = (e.clientY - r.top) / r.height - 0.5;
         card.style.transition = 'transform 0.12s linear';
-        card.style.transform = `rotateY(${x * 16}deg) rotateX(${-y * 12}deg) translateZ(0)`;
+        card.style.transform = `rotateY(${x * 16}deg) rotateX(${-y * 12}deg)`;
         card.style.setProperty('--sx', `${x * 120}%`);
       });
-      stage.addEventListener('pointerleave', () => { card.style.transition = ''; reset(); });
+      stage.addEventListener('pointerleave', () => { card.style.transition = ''; card.style.transform = ''; });
     }
+    let busy = false;
     stage.addEventListener('click', () => {
-      card.style.transition = '';
-      card.classList.toggle('is-flip');
-      reset();
+      if (busy) return;
+      busy = true;
+      const toBack = !card.classList.contains('is-flip');
+      card.classList.add(toBack ? 'is-flipping-back' : 'is-flipping-front');
       haptic(8);
+      const land = setTimeout(() => haptic(14), reduced ? 0 : 620);
+      // the faces' shine/shadow animations bubble up too; only the spin itself counts
+      const onEnd = (e) => { if (e.target === inner) done(); };
+      const done = () => {
+        clearTimeout(fallback);
+        inner.removeEventListener('animationend', onEnd);
+        card.classList.remove('is-flipping-back', 'is-flipping-front');
+        card.classList.toggle('is-flip', toBack);
+        busy = false;
+      };
+      const fallback = setTimeout(() => { clearTimeout(land); done(); }, 1200);
+      inner.addEventListener('animationend', onEnd);
     });
   }
 
