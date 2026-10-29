@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Send an e-Gift · Little Hanniel</title>
+  <meta name="description" content="Gift a friend fresh overnight oats or cookies from Little Hanniel. Every 5 you gift, we add 1 more free. Sent in seconds on WhatsApp.">
+  <meta name="theme-color" content="#FDFAF6">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Gift 5, they get 6 — Little Hanniel e-Gift 🎁">
+  <meta property="og:description" content="Send fresh overnight oats or cookies to someone you love, straight to their WhatsApp.">
+  <meta property="og:image" content="https://little.hanniel.co/assets/og-default.png?v=2">
+  <link rel="icon" href="/assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/gift/gift.css">
+</head>
+<body>
+  <header class="gx-top">
+    <a class="gx-brand" href="/" aria-label="Little Hanniel home">
+      <img src="/assets/logo-footer.png" alt="Little Hanniel" width="92" height="34">
+      <span>e-Gift</span>
+    </a>
+    <a class="btn btn--ghost btn--sm" href="#me" id="meBtn">My gifts</a>
+  </header>
+
+  <main class="gx-wrap" id="app" aria-live="polite">
+    <p class="muted" style="padding:40px 0;text-align:center">Loading…</p>
+  </main>
+
+  <div class="dock" id="dock" hidden><div class="dock__inner" id="dockInner"></div></div>
+
+  <script src="/gift/common.js" defer></script>
+  <script src="/gift/buy.js" defer></script>
+</body>
+</html>
