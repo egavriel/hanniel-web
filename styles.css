@@ -1371,3 +1371,17 @@ html.is-preloading .lh-pet-stage { animation-play-state: paused; }
   .lh-pet-stage { animation: none; opacity: 1; transform: none; }
   .lh-pet-sprite { animation: none; }
 }
+
+/* Text price list and legal links (payment-provider review needs both as real text) */
+.pricelist { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px 40px; max-width: 860px; margin: 32px auto; text-align: left; }
+.pricelist__group h3 { font-size: 1.15rem; margin: 0; }
+.pricelist__group p { font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 8px; }
+.pricelist__group ul { list-style: none; margin: 0; padding: 0; }
+.pricelist__group li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 0.95rem; }
+.pricelist__group b { color: var(--accent); font-weight: 600; white-space: nowrap; }
+.pricelist__note { grid-column: 1 / -1; font-size: 0.8rem; color: var(--text-muted); text-align: center; margin: 0; }
+.menu__order-gift { margin: 14px 0 0; font-size: 0.9rem; }
+.menu__order-gift a, .contact__details a { color: var(--accent); text-decoration: underline; }
+.contact__details { font-size: 0.95rem; margin-bottom: 18px; }
+.footer__legal { display: flex; flex-wrap: wrap; gap: 8px 20px; font-family: var(--font-sans); font-size: 0.74rem; }
+.footer__legal a { color: var(--text-muted); text-decoration: underline; }

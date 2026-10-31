@@ -559,3 +559,22 @@ textarea.input { min-height: 88px; resize: none; font-family: var(--font-body); 
 }
 @keyframes flipPlainBack { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
 @keyframes flipPlainFront { from { transform: rotateY(180deg); } to { transform: rotateY(360deg); } }
+
+/* ---------- legal pages and page footers ---------- */
+
+.legal-foot { max-width: 520px; margin: 0 auto; padding: 8px 16px 170px; text-align: center; font-size: 12px; color: var(--text-secondary); }
+.legal-foot p { margin: 4px 0; }
+.legal-foot a, .legal-note a, .legal a { color: var(--accent-hover); text-decoration: underline; }
+.legal-note { text-align: center; font-size: 12px; color: var(--text-secondary); margin: 14px 0 0; }
+.gift-about { max-width: 520px; margin: -130px auto 24px; padding: 0 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.gift-about h2 { font-family: var(--font-display); font-weight: 400; font-size: 18px; color: var(--text-strong); margin: 0 0 6px; }
+.gift-about ul { list-style: none; margin: 10px 0; padding: 0; }
+.gift-about li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--border); }
+.gift-about b { color: var(--text-strong); white-space: nowrap; }
+.legal { padding-bottom: 24px; color: var(--text-body); font-size: 15px; line-height: 1.6; }
+.legal h2 { font-family: var(--font-display); font-weight: 400; font-size: 19px; color: var(--text-strong); margin: 24px 0 6px; }
+.legal p { margin: 0 0 10px; }
+.legal ul { margin: 0 0 10px; padding-left: 20px; }
+.legal li { margin-bottom: 6px; }
+.legal hr { border: 0; border-top: 1px solid var(--border); margin: 36px 0; }
+.legal + .legal-foot { padding-bottom: 32px; }
