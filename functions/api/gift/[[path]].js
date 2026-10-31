@@ -14,21 +14,32 @@
     POST /api/gift/claim    {code}
     POST /api/gift/redeem   {code, flavor, qty}   → reserves units, returns WA link
     POST /api/gift/thanks   {code, emoji, note?}
+    POST /api/gift/pay/start  {code, method: qris|bca_va}   → QR or VA from the gateway
+    GET  /api/gift/pay/status/<code>       polled by the payment screen
+    GET  /api/gift/pay/qr/<code>?o=<order> QR image, same-origin so it can be saved
+
+  Gateway
+    POST /api/gift/pay/notify              Midtrans notification (signature checked)
 
   Admin (Authorization: Bearer GIFT_ADMIN_TOKEN)
     GET  /api/gift/admin/list
     POST /api/gift/admin/paid    {code}
+    POST /api/gift/admin/reconcile         re-ask the gateway about pending payments
     POST /api/gift/admin/fulfil  {redemption_id}
 
-  Persistence: D1 binding GIFT_DB (migrations/0001_gift.sql).
+  Persistence: D1 binding GIFT_DB (migrations/).
 */
 
 import {
-  CATALOG, THEMES, MIN_UNITS, MAX_UNITS, EXPIRY_MS,
+  CATALOG, THEMES, MIN_UNITS, MAX_UNITS,
   priceFor, json, bad, readJson, normalizePhone, maskPhone, hmacHex, safeEqual,
   secretOf, newGiftCode, newOtp, sessionCookie, clearCookie, currentUser,
   sendOtp, loadGift, giftView, shopWa,
 } from '../../_lib/gift.js';
+import {
+  gatewayOn, isPayMethod, markGiftPaid, paymentView, startPayment, applyStatus,
+  validNotification, refreshGift, reconcile, fetchQr,
+} from '../../_lib/gift-pay.js';
 
 const OTP_TTL_MS = 5 * 60 * 1000;
 const OTP_WINDOW_MS = 15 * 60 * 1000;
@@ -41,6 +52,18 @@ const clean = (s, max) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, m
 
 async function otpHash(env, phone, code) {
   return hmacHex(secretOf(env), `otp|${phone}|${code}`);
+}
+
+// With the gateway on, the browser asks for a QR or VA; otherwise it shows the bank details.
+function paymentInfo(env, gift) {
+  if (gatewayOn(env)) return { auto: true, amount: gift.price_idr };
+  return {
+    bank: env.PAYMENT_BANK_NAME || 'BCA',
+    accountName: env.PAYMENT_ACCOUNT_NAME || '',
+    accountNumber: env.PAYMENT_ACCOUNT_NUMBER || '',
+    amount: gift.price_idr,
+    note: `GIFT-${gift.code}`,
+  };
 }
 
 // ---- handlers ----
@@ -153,20 +176,19 @@ async function create({ env, user, body }) {
   const gift = await loadGift(env, code);
   return json({
     gift: await giftView(env, gift, user),
-    payment: {
-      bank: env.PAYMENT_BANK_NAME || 'BCA',
-      accountName: env.PAYMENT_ACCOUNT_NAME || '',
-      accountNumber: env.PAYMENT_ACCOUNT_NUMBER || '',
-      amount: quote.price,
-      note: `GIFT-${code}`,
-    },
+    payment: paymentInfo(env, gift),
   }, 201);
 }
 
 async function card({ env, user, code }) {
   const gift = await loadGift(env, code);
   if (!gift || gift.status === 'cancelled') return bad('We couldn’t find that gift.', 404);
-  return json({ gift: await giftView(env, gift, user), signedIn: !!user, me: user ? { name: user.name } : null });
+  return json({
+    gift: await giftView(env, gift, user),
+    signedIn: !!user,
+    me: user ? { name: user.name } : null,
+    ...(user && user.id === gift.sender_id ? { payment: paymentInfo(env, gift) } : {}),
+  });
 }
 
 async function claim({ env, user, body }) {
@@ -226,6 +248,54 @@ async function thanks({ env, user, body }) {
   return json({ gift: await giftView(env, await loadGift(env, gift.code), user) });
 }
 
+// ---- payments ----
+
+async function senderGift(env, user, code) {
+  const gift = await loadGift(env, String(code || '').toUpperCase());
+  return gift && gift.sender_id === user.id && gift.status !== 'cancelled' ? gift : null;
+}
+
+async function payStart({ env, user, body }) {
+  if (!gatewayOn(env)) return bad('Online payment isn’t available right now.', 409);
+  const gift = await senderGift(env, user, body.code);
+  if (!gift) return bad('We couldn’t find that gift.', 404);
+  if (gift.status !== 'pending_payment') return json({ paid: true, gift: await giftView(env, gift, user) });
+  if (!isPayMethod(body.method)) return bad('Choose how you’d like to pay.');
+  let row;
+  try { row = await startPayment(env, gift, body.method); } catch (e) {
+    console.error('gift payment start', gift.code, e);
+    return bad('We couldn’t start the payment. Please try again.', 502);
+  }
+  return json({ paid: false, payment: paymentView(gift, row) });
+}
+
+async function payStatus({ env, user, code }) {
+  let gift = await senderGift(env, user, code);
+  if (!gift) return bad('We couldn’t find that gift.', 404);
+  if (gift.status === 'pending_payment' && gatewayOn(env) && await refreshGift(env, gift)) gift = await loadGift(env, gift.code);
+  return json({ paid: gift.status !== 'pending_payment', gift: await giftView(env, gift, user) });
+}
+
+async function payQr({ env, user, code, orderId }) {
+  const gift = await senderGift(env, user, code);
+  if (!gift) return bad('We couldn’t find that gift.', 404);
+  const row = await env.GIFT_DB.prepare(
+    "SELECT * FROM gift_payments WHERE gift_id = ? AND order_id = ? AND method = 'qris'",
+  ).bind(gift.id, orderId).first();
+  if (!row || !row.qr_url) return bad('not found', 404);
+  const r = await fetchQr(env, row);
+  if (!r.ok) return bad('We couldn’t load the QR code.', 502);
+  return new Response(r.body, { headers: { 'content-type': 'image/png', 'cache-control': 'private, max-age=900' } });
+}
+
+async function payNotify({ env, body }) {
+  if (!await validNotification(env, body)) return bad('invalid signature', 401);
+  const res = await applyStatus(env, body);
+  if (res.mismatch) console.error('gift payment amount mismatch', body.order_id, body.gross_amount);
+  // 200 for orders we don't know too: the dashboard's test button uses made-up ids.
+  return json({ ok: true });
+}
+
 // ---- admin ----
 
 function isAdmin(request, env) {
@@ -250,12 +320,12 @@ async function admin({ env, request, body, rest }) {
   }
   if (rest === 'paid' && request.method === 'POST') {
     const code = String(body.code || '').replace(/^GIFT-/i, '').toUpperCase();
-    const now = Date.now();
-    const r = await env.GIFT_DB.prepare(
-      `UPDATE gifts SET status = 'active', paid_at = ?, expires_at = ?
-       WHERE code = ? AND status = 'pending_payment'`,
-    ).bind(now, now + EXPIRY_MS, code).run();
-    return json({ ok: r.meta.changes === 1, code });
+    const gift = await env.GIFT_DB.prepare('SELECT id FROM gifts WHERE code = ?').bind(code).first();
+    return json({ ok: !!gift && await markGiftPaid(env, gift.id), code });
+  }
+  if (rest === 'reconcile' && request.method === 'POST') {
+    if (!gatewayOn(env)) return bad('gateway is off', 409);
+    return json(await reconcile(env, 48 * 60 * 60 * 1000));
   }
   if (rest === 'fulfil' && request.method === 'POST') {
     const r = await env.GIFT_DB.prepare(
@@ -282,12 +352,23 @@ export async function onRequest(context) {
     if (route === 'catalog' && method === 'GET') return catalog();
     if (route === 'otp/send' && method === 'POST') return await otpSend({ env, body });
     if (route === 'otp/verify' && method === 'POST') return await otpVerify({ env, request, body });
+    if (route === 'pay/notify' && method === 'POST') return await payNotify({ env, body });
     if (parts[0] === 'admin') return await admin({ env, request, body, rest: parts.slice(1).join('/') });
     if (route === 'logout' && method === 'POST') return json({ ok: true }, 200, { 'set-cookie': clearCookie(request) });
 
     const user = await currentUser(request, env);
     if (parts[0] === 'card' && parts.length === 2 && method === 'GET') {
       return await card({ env, user, code: parts[1].toUpperCase() });
+    }
+
+    if (parts[0] === 'pay') {
+      if (!user) return bad('Verify your WhatsApp first.', 401, { needsAuth: true });
+      if (route === 'pay/start' && method === 'POST') return await payStart({ env, user, body });
+      if (parts[1] === 'status' && parts.length === 3 && method === 'GET') return await payStatus({ env, user, code: parts[2] });
+      if (parts[1] === 'qr' && parts.length === 3 && method === 'GET') {
+        return await payQr({ env, user, code: parts[2], orderId: new URL(request.url).searchParams.get('o') || '' });
+      }
+      return bad('not found', 404);
     }
 
     const handler = SIGNED_IN[route];

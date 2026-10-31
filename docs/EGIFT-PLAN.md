@@ -156,12 +156,49 @@ curl -H "authorization: Bearer local-admin" -H "content-type: application/json" 
    database, and add a `GIFT_DB` binding to the Pages project.
 2. Set `GIFT_SESSION_SECRET`, `GIFT_ADMIN_TOKEN`, `WA_OTP_PROVIDER=fonnte` and
    `FONNTE_TOKEN` in the Pages env. **Don't** set `GIFT_DEV_OTP` in production.
-3. Hook the bank-statement cron up to `/api/gift/admin/paid` for `GIFT-` notes.
+3. Turn on automatic payments (§11).
 4. Add a "Gift a friend" link from the homepage menu to `/gift`.
 
-## 11. Next phases
+## 11. Automatic payments (Midtrans)
 
-- Phase 2: QRIS via the BCA Worker, so payment auto-confirms in seconds.
+Off until `MIDTRANS_SERVER_KEY` is set. Without it the flow stays manual BCA
+transfer, as in §3.
+
+**Why Midtrans:** QRIS 0.7%, BCA virtual account Rp 4,000, no setup or monthly
+fee (midtrans.com/pricing, checked 2026-10-31; confirm in the contract).
+
+**Flow:** buyer personalises the card → QRIS or BCA VA screen → Midtrans notifies
+`POST /api/gift/pay/notify` → gift activates → the page moves to "Paid! Now send
+it" by itself. The share button only appears once paid.
+
+The VA is there because a buyer on a phone can't scan their own screen. They can
+also save the QR and pick it from the gallery in their bank app.
+
+**Safeguards**
+- The signature on each notification is checked, and the amount must match ours.
+- Repeats are harmless: only `pending_payment` gifts can become paid.
+- Paying an older attempt still activates the gift.
+- Lost notification: Midtrans retries for a few hours, the waiting screen asks
+  Midtrans every 15 s, and `POST /api/gift/admin/reconcile` re-checks the last
+  48 h. Nothing runs that route on a schedule yet (Pages has no cron).
+
+**Setup**
+1. Apply `migrations/0002_gift_payments.sql` to `hanniel_gift`.
+2. In Midtrans, set the Payment Notification URL to
+   `https://<host>/api/gift/pay/notify`, and enable QRIS and BCA VA.
+3. Set env vars per environment:
+
+| Var | Value |
+|---|---|
+| `MIDTRANS_SERVER_KEY` | Sandbox key on Preview, production key on Production. Encrypted. |
+| `MIDTRANS_ENV` | `production` on Production only. Anything else uses the sandbox. |
+| `MIDTRANS_API_URL` | Local tests against a mock only. Never set on Cloudflare. |
+
+**Bookkeeping:** money reaches BCA in batches, after fees. `hanniel-finance` needs
+a rule for those deposits.
+
+## 12. Next phases
+
 - Phase 2: a card image (OG PNG) per gift for richer WhatsApp previews.
 - Phase 3: mixed bundles (oats + cookies) via credits instead of units.
 - Phase 3: scheduled delivery ("send on her birthday at 8am").
