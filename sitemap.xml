@@ -20,4 +20,20 @@
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://little.hanniel.co/gift/</loc>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
+    <loc>https://little.hanniel.co/terms/</loc>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
+    <loc>https://little.hanniel.co/refund/</loc>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
+    <loc>https://little.hanniel.co/privacy/</loc>
+    <changefreq>yearly</changefreq>
+  </url>
 </urlset>

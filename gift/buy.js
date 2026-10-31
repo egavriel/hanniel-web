@@ -192,6 +192,8 @@
         </div>
       </section>`;
 
+    app.querySelector('.view').insertAdjacentHTML('beforeend',
+      '<p class="legal-note">By continuing you agree to our <a href="/terms/" target="_blank">Terms</a> and <a href="/refund/" target="_blank">Refund Policy</a>.</p>');
     const stage = $('#stage');
     const refresh = (flip) => {
       const wasFlipped = $('.gcard', stage).classList.contains('is-flip');
