@@ -2,7 +2,7 @@
    Senders opening their own link get a status view instead. Depends on gift/common.js. */
 (function () {
   'use strict';
-  const { esc, $, api, store, haptic, toast, countUp, confetti, cardHTML, mountCard, verifyWhatsApp, copyText } = window.LHG;
+  const { esc, $, api, store, haptic, toast, countUp, confetti, cardHTML, mountCard, verifyWhatsApp, copyText, sfx } = window.LHG;
 
   const app = $('#app');
   const code = (location.pathname.split('/')[2] || new URLSearchParams(location.search).get('code') || '').toUpperCase();
@@ -42,8 +42,9 @@
       box.classList.remove('is-idle');
       box.classList.add('is-shake');
       haptic([20, 40, 20, 40, 30]);
-      setTimeout(() => { box.classList.add('is-open'); haptic(40); }, 600);
-      setTimeout(() => confetti({ y: 0.42, count: 180 }), 850);
+      sfx.play('rattle');
+      setTimeout(() => { box.classList.add('is-open'); haptic(40); sfx.play('open'); }, 600);
+      setTimeout(() => { confetti({ y: 0.42, count: 180 }); sfx.play('reveal'); }, 850);
       setTimeout(viewReveal, 1150);
     }, { once: true });
   }
@@ -88,6 +89,7 @@
         const r = await api('claim', { code });
         gift = r.gift;
         haptic([10, 50, 10]);
+        sfx.play('unlock');
         confetti({ y: 0.3, count: 90 });
         viewWallet();
       } catch (e) {
@@ -208,14 +210,14 @@
 
   function bindWallet() {
     app.querySelectorAll('[data-f]').forEach((b) => b.addEventListener('click', () => {
-      pick.flavor = b.dataset.f; haptic(8);
+      pick.flavor = b.dataset.f; haptic(8); sfx.play('tick', 4);
       app.querySelectorAll('[data-f]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
       goLabel();
     }));
     app.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click', () => {
       const n = Math.min(left(), Math.max(1, pick.qty + Number(b.dataset.q)));
-      if (n === pick.qty) { haptic(30); return; }
-      pick.qty = n; haptic(8);
+      if (n === pick.qty) { haptic(30); sfx.play('bump'); return; }
+      pick.qty = n; haptic(8); sfx.play('tick', n * 2);
       const q = $('#q'); q.textContent = n; q.classList.remove('bump'); void q.offsetWidth; q.classList.add('bump');
       goLabel();
     }));
@@ -230,6 +232,7 @@
         gift = r.gift;
         pick.qty = 1;
         haptic([12, 40, 12]);
+        sfx.play(gift.status === 'completed' ? 'fanfare' : 'redeem');
         viewWallet(prev);
         setTimeout(() => confetti({ count: gift.status === 'completed' ? 220 : 80, y: 0.35 }), 250);
       } catch (e) {
@@ -250,6 +253,7 @@
     };
     app.querySelectorAll('[data-e]').forEach((b) => b.addEventListener('click', () => {
       haptic(10);
+      sfx.play('pop');
       const r = b.getBoundingClientRect();
       confetti({ count: 30, x: (r.left + r.width / 2) / innerWidth, y: r.top / innerHeight, spread: 0.4 });
       sendThanks(b.dataset.e).then(() => toast(`${gift.senderName} will see your ${b.dataset.e}`));

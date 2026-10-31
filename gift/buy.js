@@ -2,7 +2,7 @@
    plus the sender dashboard at /gift#me. Depends on gift/common.js. */
 (function () {
   'use strict';
-  const { esc, rupiah, $, api, store, haptic, toast, countUp, confetti, cardHTML, mountCard, levelFor, verifyWhatsApp, copyText } = window.LHG;
+  const { esc, rupiah, $, api, store, haptic, toast, countUp, confetti, cardHTML, mountCard, levelFor, verifyWhatsApp, copyText, sfx } = window.LHG;
 
   const app = $('#app');
   const dock = $('#dock');
@@ -84,7 +84,7 @@
       </section>`;
 
     app.querySelectorAll('[data-line]').forEach((b) => b.addEventListener('click', () => {
-      draft.line = b.dataset.line; saveDraft(); haptic(8);
+      draft.line = b.dataset.line; saveDraft(); haptic(8); sfx.play('tick');
       app.querySelectorAll('[data-line]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
       lastStamps = 0; updatePick();
     }));
@@ -100,8 +100,10 @@
 
   function setQty(n) {
     const clamped = Math.max(catalog.minUnits, Math.min(catalog.maxUnits, n));
-    if (clamped === draft.qty) { haptic(30); return; }
+    if (clamped === draft.qty) { haptic(30); sfx.play('bump'); return; }
     draft.qty = clamped; saveDraft(); haptic(8);
+    const line = catalog.lines.find((x) => x.id === draft.line);
+    sfx.play('tick', (clamped % line.bonusEvery) * 2);   // climbs toward the next free one
     const num = $('#qty');
     num.textContent = clamped;
     num.classList.remove('bump'); void num.offsetWidth; num.classList.add('bump');
@@ -152,11 +154,11 @@
     $('#dSave').textContent = q.saved ? `You save ${rupiah(q.saved)}` : '';
     app.querySelectorAll('[data-preset]').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.preset) === q.paid)));
 
-    if (lastBonus >= 0 && q.bonus > lastBonus) celebrateUnlock(l);
+    if (lastBonus >= 0 && q.bonus > lastBonus) celebrateUnlock(l, q.bonus);
     lastBonus = q.bonus;
   }
 
-  function celebrateUnlock(l) {
+  function celebrateUnlock(l, bonus) {
     const u = document.createElement('div');
     u.className = 'unlock';
     u.textContent = `+1 FREE ${l.name.replace(/s$/, '')} unlocked!`;
@@ -165,6 +167,7 @@
     const r = $('#stamps').getBoundingClientRect();
     confetti({ count: 70, x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight, spread: 0.7 });
     haptic([12, 50, 20]);
+    sfx.play('unlock', bonus);
   }
 
   /* ---------------- step 2: personalise ---------------- */
@@ -202,10 +205,10 @@
     $('#to').addEventListener('input', (e) => { draft.recipientName = e.target.value; saveDraft(); refresh(false); validate(); });
     $('#msg').addEventListener('input', (e) => { draft.message = e.target.value; saveDraft(); refresh(true); });
     app.querySelectorAll('[data-msg]').forEach((b) => b.addEventListener('click', () => {
-      draft.message = b.dataset.msg; $('#msg').value = draft.message; saveDraft(); refresh(true); haptic(8);
+      draft.message = b.dataset.msg; $('#msg').value = draft.message; saveDraft(); refresh(true); haptic(8); sfx.play('tick', 4);
     }));
     app.querySelectorAll('.swatch').forEach((b) => b.addEventListener('click', () => {
-      draft.theme = b.dataset.v; saveDraft(); haptic(8);
+      draft.theme = b.dataset.v; saveDraft(); haptic(8); sfx.play('tick', 4);
       app.querySelectorAll('.swatch').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
       refresh();
     }));
@@ -283,10 +286,10 @@
     setDock('');
     $('#copyLink').onclick = (e) => copyText(e.currentTarget, link);
     app.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', () => copyText(b, b.dataset.copy)));
-    $('#share').addEventListener('click', () => { haptic(10); });
+    $('#share').addEventListener('click', () => { haptic(10); sfx.play('pop'); });
     if (!store.get(`celebrated:${code}`)) {
       store.set(`celebrated:${code}`, 1);
-      setTimeout(() => confetti({ y: 0.35 }), 350);
+      setTimeout(() => { confetti({ y: 0.35 }); sfx.play('fanfare'); }, 350);
       haptic([10, 60, 20]);
     }
   }
@@ -423,7 +426,7 @@
     renderList(tab);
     app.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => {
       app.querySelectorAll('[data-tab]').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
-      store.set('tab', b.dataset.tab); renderList(b.dataset.tab); haptic(6);
+      store.set('tab', b.dataset.tab); renderList(b.dataset.tab); haptic(6); sfx.play('tick');
     }));
     $('#logout').onclick = async () => { await api('logout', {}).catch(() => {}); user = null; updateMeBtn(); location.hash = ''; };
 
@@ -433,7 +436,7 @@
       const ring = $('.ring__val'); ring.style.strokeDashoffset = ring.dataset.off;
       app.querySelectorAll('[data-count]').forEach((el) => countUp(el, Number(el.dataset.count), 1100));
     }));
-    if (fresh.length && seen.length) { setTimeout(() => confetti({ y: 0.5 }), 500); toast(`New badge: ${BADGES.find((b) => b.id === fresh[0]).t}!`); }
+    if (fresh.length && seen.length) { setTimeout(() => { confetti({ y: 0.5 }); sfx.play('unlock'); }, 500); toast(`New badge: ${BADGES.find((b) => b.id === fresh[0]).t}!`); }
   }
 
   /* ---------------- routing ---------------- */

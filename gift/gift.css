@@ -72,6 +72,12 @@ img { max-width: 100%; display: block; }
   backdrop-filter: saturate(1.4) blur(12px);
   -webkit-backdrop-filter: saturate(1.4) blur(12px);
 }
+.gx-sound {
+  margin-left: auto; width: 36px; height: 36px; flex: none; padding: 0; cursor: pointer;
+  display: grid; place-items: center; font-size: 15px; line-height: 1;
+  background: transparent; border: 0; border-radius: 50%;
+}
+.gx-sound:hover { background: rgba(43, 33, 24, 0.06); }
 .gx-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-strong); }
 .gx-brand img { height: 34px; width: auto; }
 .gx-brand span { font-family: var(--font-sans); font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
@@ -543,3 +549,13 @@ textarea.input { min-height: 88px; resize: none; font-family: var(--font-body); 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* Windows' "animate controls" setting off also reports reduced motion, for many people
+   who never chose it. A tap should still visibly turn the card, so keep a short, plain
+   turn here: no lift, wobble or overshoot. This must stay after the rule above. */
+@media (prefers-reduced-motion: reduce) {
+  .gcard.is-flipping-back .gcard__inner { animation: flipPlainBack 0.45s ease-in-out both !important; }
+  .gcard.is-flipping-front .gcard__inner { animation: flipPlainFront 0.45s ease-in-out both !important; }
+}
+@keyframes flipPlainBack { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
+@keyframes flipPlainFront { from { transform: rotateY(180deg); } to { transform: rotateY(360deg); } }

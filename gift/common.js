@@ -31,6 +31,132 @@
 
   function haptic(ms) { try { if (navigator.vibrate) navigator.vibrate(ms || 12); } catch (e) { /* noop */ } }
 
+  /* ---- sound effects: synthesised with Web Audio, so there are no files to load ---- */
+  const sfx = (function () {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    let ctx, out, noiseBuf;
+    let muted = !!store.get('muted');
+
+    function unlock() {
+      if (!AC) return;
+      if (!ctx) {
+        ctx = new AC();
+        out = ctx.createGain();
+        out.gain.value = 0.6;
+        out.connect(ctx.destination);
+        noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+        const d = noiseBuf.getChannelData(0);
+        for (let i = 0; i < d.length; i += 1) d[i] = Math.random() * 2 - 1;
+      }
+      if (ctx.state === 'suspended') ctx.resume();
+    }
+    // Browsers only allow audio after a gesture; iOS only counts touchend/click.
+    ['pointerdown', 'touchend', 'click', 'keydown'].forEach((ev) => window.addEventListener(ev, unlock, { capture: true, passive: true }));
+
+    function tone(at, freq, dur, vol, o) {
+      const p = o || {};
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = p.type || 'sine';
+      osc.frequency.setValueAtTime(freq, at);
+      if (p.to) osc.frequency.exponentialRampToValueAtTime(p.to, at + dur);
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.exponentialRampToValueAtTime(vol, at + Math.min(0.012, dur / 3));
+      g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+      osc.connect(g); g.connect(out);
+      osc.start(at); osc.stop(at + dur + 0.02);
+    }
+
+    function noise(at, dur, vol, from, to, q) {
+      const src = ctx.createBufferSource();
+      const f = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      src.buffer = noiseBuf;
+      f.type = 'bandpass'; f.Q.value = q || 1;
+      f.frequency.setValueAtTime(from, at);
+      f.frequency.exponentialRampToValueAtTime(to, at + dur);
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.exponentialRampToValueAtTime(vol, at + dur * 0.35);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+      src.connect(f); f.connect(g); g.connect(out);
+      src.start(at, Math.random() * 0.5, dur + 0.02);
+    }
+
+    const semi = (hz, n) => hz * Math.pow(2, n / 12);
+    const sparkle = (t, vol) => [3136, 4186, 3520, 5274, 4699].forEach((hz, i) => tone(t + i * 0.055, hz, 0.22, vol));
+    const arp = (t, notes, gap, vol) => notes.forEach((hz, i) => {
+      tone(t + i * gap, hz, 0.34, vol, { type: 'triangle' });
+      tone(t + i * gap, hz * 2, 0.2, vol * 0.3);
+    });
+    const C = [523.25, 659.25, 783.99, 1046.5];
+
+    const recipes = {
+      // arg: semitones, so the stepper climbs in pitch toward the next free treat
+      tick: (t, n) => tone(t, semi(740, n || 0), 0.05, 0.14, { type: 'triangle' }),
+      bump: (t) => tone(t, 150, 0.12, 0.28, { to: 90 }),
+      pop: (t) => tone(t, 420, 0.09, 0.26, { to: 940 }),
+      flip: (t) => {
+        noise(t, 0.03, 0.12, 3500, 2500, 1);          // the card leaves the table
+        noise(t + 0.03, 0.34, 0.3, 500, 3200, 0.8);   // the air as it spins
+        const land = t + (reduced ? 0.42 : 0.6);
+        noise(land, 0.05, 0.22, 1800, 700, 0.9);      // and lands
+        tone(land, 190, 0.08, 0.26, { to: 110 });
+      },
+      // arg: how many free treats so far; each unlock rings a little higher
+      unlock: (t, n) => {
+        const up = Math.min(Math.max((n || 1) - 1, 0), 7);
+        arp(t, C.map((hz) => semi(hz, up)), 0.075, 0.2);
+        sparkle(t + 0.3, 0.035);
+      },
+      success: (t) => arp(t, [783.99, 1046.5], 0.09, 0.18),
+      rattle: (t) => [0, 0.11, 0.2, 0.32, 0.41, 0.52].forEach((d, i) => noise(t + d, 0.06, 0.8, i % 2 ? 900 : 1300, 600, 2)),
+      open: (t) => { noise(t, 0.28, 0.26, 700, 5000, 0.7); tone(t, 300, 0.14, 0.26, { to: 800 }); },
+      reveal: (t) => {
+        C.forEach((hz, i) => tone(t + i * 0.035, hz, 0.9, 0.11, { type: 'triangle' }));
+        sparkle(t + 0.12, 0.045);
+      },
+      redeem: (t) => {
+        [2093, 3322].forEach((hz) => tone(t, hz, 0.28, 0.09));   // spoon on a jar
+        arp(t + 0.14, [659.25, 987.77], 0.09, 0.16);
+      },
+      fanfare: (t) => {
+        arp(t, C, 0.1, 0.2);
+        C.forEach((hz) => tone(t + 0.42, hz, 1.1, 0.09, { type: 'triangle' }));
+        sparkle(t + 0.5, 0.05);
+      },
+    };
+
+    function play(name, arg) {
+      if (muted || !ctx || !recipes[name]) return;
+      const go = () => { try { recipes[name](ctx.currentTime + 0.005, arg); } catch (e) { /* never break the page for a sound */ } };
+      if (ctx.state === 'running') { go(); return; }
+      const asked = Date.now();
+      ctx.resume().then(() => { if (Date.now() - asked < 300) go(); }).catch(() => {});
+    }
+
+    function setMuted(v) { muted = !!v; store.set('muted', muted); }
+
+    return { play, setMuted, isMuted: () => muted, supported: !!AC };
+  })();
+
+  /* The sound on/off button in the page header. */
+  function mountSoundToggle() {
+    const top = $('.gx-top');
+    if (!top || !sfx.supported) return;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'gx-sound';
+    const paint = () => {
+      b.textContent = sfx.isMuted() ? '🔇' : '🔊';
+      b.setAttribute('aria-label', sfx.isMuted() ? 'Turn sound on' : 'Turn sound off');
+      b.title = b.getAttribute('aria-label');
+    };
+    paint();
+    b.addEventListener('click', () => { sfx.setMuted(!sfx.isMuted()); paint(); sfx.play('pop'); });
+    top.insertBefore(b, top.lastElementChild);
+  }
+  mountSoundToggle();
+
   function toast(text) {
     const t = document.createElement('div');
     t.className = 'toast';
@@ -162,7 +288,8 @@
       const toBack = !card.classList.contains('is-flip');
       card.classList.add(toBack ? 'is-flipping-back' : 'is-flipping-front');
       haptic(8);
-      const land = setTimeout(() => haptic(14), reduced ? 0 : 620);
+      sfx.play('flip');
+      const land = setTimeout(() => haptic(14), reduced ? 420 : 620);
       // the faces' shine/shadow animations bubble up too; only the spin itself counts
       const onEnd = (e) => { if (e.target === inner) done(); };
       const done = () => {
@@ -210,6 +337,7 @@
         clearInterval(timer);
         sh.classList.add('is-closing'); bg.classList.add('is-closing');
         setTimeout(() => { sh.remove(); bg.remove(); document.body.style.overflow = ''; }, 300);
+        if (user) sfx.play('success');
         resolve(user || null);
       }
       bg.addEventListener('click', () => close(null));
@@ -316,6 +444,7 @@
   }
 
   async function copyText(btn, text) {
+    sfx.play('tick', 7);
     try { await navigator.clipboard.writeText(text); } catch (e) {
       const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
       try { document.execCommand('copy'); } catch (er) { /* noop */ } t.remove();
@@ -325,5 +454,5 @@
     setTimeout(() => { btn.classList.remove('is-done'); btn.textContent = old; }, 1600);
   }
 
-  window.LHG = { esc, rupiah, $, api, store, haptic, toast, countUp, confetti, cardHTML, mountCard, levelFor, LEVELS, verifyWhatsApp, copyText, reduced };
+  window.LHG = { esc, rupiah, $, api, store, haptic, toast, countUp, confetti, cardHTML, mountCard, levelFor, LEVELS, verifyWhatsApp, copyText, reduced, sfx };
 })();
