@@ -559,3 +559,22 @@ textarea.input { min-height: 88px; resize: none; font-family: var(--font-body); 
 }
 @keyframes flipPlainBack { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
 @keyframes flipPlainFront { from { transform: rotateY(180deg); } to { transform: rotateY(360deg); } }
+
+/* ---------- online payment ---------- */
+
+.ptabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.ptab {
+  padding: 10px 8px; border-radius: var(--radius-lg); border: 1.5px solid var(--border); background: var(--surface);
+  font-weight: 700; font-size: 14px; color: var(--text-strong); cursor: pointer; transition: border-color 0.2s, background 0.2s;
+}
+.ptab small { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+.ptab[aria-pressed="true"] { border-color: var(--gold); background: #FBF3E2; }
+.paybox { min-height: 160px; }
+.qr { display: grid; place-items: center; }
+.qr img { display: block; width: min(240px, 100%); height: auto; border-radius: 12px; background: #fff; padding: 8px; border: 1px solid var(--border); }
+.pay-left { text-align: center; font-size: 13px; color: var(--text-secondary); margin: 12px 0; }
+.pay-left b { font-variant-numeric: tabular-nums; color: var(--text-strong); }
+.pay-expired { text-align: center; color: var(--text-strong); margin: 16px 0; }
+.pay-wait { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: var(--text-secondary); margin: 14px 0 0; text-align: center; }
+.pay-wait i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: payPulse 1.4s ease-in-out infinite; }
+@keyframes payPulse { 50% { transform: scale(1.6); opacity: 0.45; } }

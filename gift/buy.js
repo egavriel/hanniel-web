@@ -253,22 +253,34 @@
 
   function viewSent(code) {
     const o = order && order.gift.code === code ? order : store.get('lastOrder');
-    if (!o || o.gift.code !== code) { location.hash = '#me'; return; }
+    if (!o || o.gift.code !== code) {
+      // Opened from "My gifts" or another device: the server knows this gift.
+      api(`card/${code}`).then((r) => {
+        if (!r.gift.isSender) { location.hash = '#me'; return; }
+        order = { gift: r.gift, payment: r.payment };
+        viewSent(code);
+      }).catch(() => { location.hash = '#me'; });
+      return;
+    }
     const g = o.gift;
-    const p = o.payment;
+    const p = o.payment || {};
+    if (p.auto && g.status === 'pending_payment') { viewPay(o); return; }
+    const waiting = g.status === 'pending_payment';
     const link = `${location.origin}/g/${g.code}`;
     app.innerHTML = `
       <section class="view">
         ${steps(3)}
         <p class="eyebrow">Step 3 of 3 · Send it</p>
-        <h1 class="gx-h1">Your gift is wrapped 🎀</h1>
-        <p class="gx-lead">Send it to ${esc(g.recipientName)} now. They can unwrap it straight away and start redeeming once your transfer is confirmed.</p>
+        <h1 class="gx-h1">${waiting ? 'Your gift is wrapped 🎀' : 'Paid! Now send it 🎀'}</h1>
+        <p class="gx-lead">${waiting
+          ? `Send it to ${esc(g.recipientName)} now. They can unwrap it straight away and start redeeming once your transfer is confirmed.`
+          : `It’s ready to enjoy. Send it to ${esc(g.recipientName)} and they can unwrap it straight away.`}</p>
         <div class="card-stage reveal-card" id="stage">${cardHTML(g)}</div>
         <div class="stack">
           <a class="btn btn--wa" id="share" href="https://wa.me/?text=${encodeURIComponent(shareText(g))}" target="_blank" rel="noopener">Send to ${esc(g.recipientName)} on WhatsApp</a>
           <button class="btn btn--ghost" type="button" id="copyLink">Copy gift link</button>
         </div>
-        <div class="panel" style="margin-top:18px">
+        ${waiting ? `<div class="panel" style="margin-top:18px">
           <p class="eyebrow">Finish the wrapping</p>
           <h2 class="gx-h2">Transfer ${rupiah(p.amount)}</h2>
           ${p.accountNumber ? `
@@ -279,7 +291,7 @@
             <div class="pay__row"><span>Transfer note</span><b class="mono">${esc(p.note)}<button class="copy" type="button" data-copy="${esc(p.note)}">Copy</button></b></div>
             <p class="muted" style="margin:10px 0 0">Put <b>${esc(p.note)}</b> in the transfer note so we can match it. We confirm within a few hours and let you know on WhatsApp.</p>`
           : '<p class="muted">We’ll send payment details to your WhatsApp shortly.</p>'}
-        </div>
+        </div>` : ''}
         <a class="btn btn--ghost" href="#me" style="margin-top:14px">See my gifts</a>
       </section>`;
     mountCard($('#stage'));
@@ -292,6 +304,125 @@
       setTimeout(() => { confetti({ y: 0.35 }); sfx.play('fanfare'); }, 350);
       haptic([10, 60, 20]);
     }
+  }
+
+  /* ---------------- step 3a: pay online, then share ---------------- */
+
+  const PAY_POLL_MS = 3000;
+
+  function viewPay(o) {
+    const g = o.gift;
+    const here = `#sent/${g.code}`;
+    let method = store.get('payMethod') === 'bca_va' ? 'bca_va' : 'qris';
+    let tick = 0;
+    let poll = 0;
+    let checking = false;
+    const stop = () => { clearInterval(tick); clearInterval(poll); document.removeEventListener('visibilitychange', check); };
+
+    app.innerHTML = `
+      <section class="view">
+        ${steps(3)}
+        <p class="eyebrow">Step 3 of 3 · Pay</p>
+        <h1 class="gx-h1">Pay ${rupiah(o.payment.amount)} to finish wrapping 🎀</h1>
+        <p class="gx-lead">${g.unitsTotal} ${esc(g.lineName)} for ${esc(g.recipientName)}. As soon as it’s paid, you can send it on WhatsApp.</p>
+        <div class="ptabs" role="group" aria-label="How to pay">
+          <button class="ptab" type="button" data-m="qris">QRIS<small>Any bank or e-wallet</small></button>
+          <button class="ptab" type="button" data-m="bca_va">BCA Virtual Account<small>Transfer in BCA mobile</small></button>
+        </div>
+        <div class="panel paybox" id="payBox"></div>
+        <p class="pay-wait"><i></i>Waiting for your payment. This page updates by itself.</p>
+        <a class="btn btn--ghost" href="#me" style="margin-top:14px">Pay later</a>
+      </section>`;
+    setDock('');
+
+    const box = $('#payBox');
+
+    function paid(r) {
+      stop();
+      order = { gift: r.gift, payment: { auto: true } };
+      store.set('lastOrder', order);
+      haptic([10, 60, 20]);
+      if (location.hash === here) viewSent(g.code);
+    }
+
+    async function check() {
+      if (location.hash !== here) { stop(); return; }
+      if (checking || document.hidden) return;
+      checking = true;
+      try {
+        const r = await api(`pay/status/${g.code}`);
+        if (r.paid) paid(r);
+      } catch (e) { /* keep waiting; the next check may work */ } finally { checking = false; }
+    }
+
+    function countdown(p) {
+      clearInterval(tick);
+      const el = $('#payLeft');
+      const draw = () => {
+        const left = p.expiresAt - Date.now();
+        if (left <= 0) {
+          clearInterval(tick);
+          box.innerHTML = `
+            <p class="pay-expired">This ${p.method === 'qris' ? 'QR code' : 'account number'} has expired.</p>
+            <button class="btn" type="button" id="payNew">Get a new one</button>`;
+          $('#payNew').onclick = () => load();
+          return;
+        }
+        const h = Math.floor(left / 3600000);
+        const m = Math.floor((left % 3600000) / 60000);
+        const s = Math.floor((left % 60000) / 1000);
+        el.textContent = h ? `${h}h ${m}m` : `${m}:${String(s).padStart(2, '0')}`;
+      };
+      draw();
+      tick = setInterval(draw, 1000);
+    }
+
+    function paint(p) {
+      box.innerHTML = p.method === 'qris' ? `
+        <div class="qr"><img src="${esc(p.qrUrl)}" alt="QRIS code to pay ${rupiah(p.amount)}" width="240" height="240"></div>
+        <p class="pay-left">Expires in <b id="payLeft"></b></p>
+        <a class="btn btn--ghost" href="${esc(p.qrUrl)}" download="little-hanniel-qris.png">Save QR image</a>
+        <p class="muted" style="margin:10px 0 0">Paying on this phone? Save the image, then choose it from your gallery in your bank or e-wallet app’s scanner.</p>` : `
+        <div class="pay__row"><span>Bank</span><b>${esc(p.bank)}</b></div>
+        <div class="pay__row"><span>Virtual account</span><b class="mono">${esc(p.vaNumber)}<button class="copy" type="button" data-copy="${esc(p.vaNumber)}">Copy</button></b></div>
+        <div class="pay__row"><span>Amount</span><b>${rupiah(p.amount)}</b></div>
+        <p class="pay-left">Expires in <b id="payLeft"></b></p>
+        <p class="muted" style="margin:10px 0 0">In BCA mobile choose <b>m-Transfer → BCA Virtual Account</b>, paste the number and confirm.</p>`;
+      box.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', () => copyText(b, b.dataset.copy)));
+      countdown(p);
+    }
+
+    async function load() {
+      clearInterval(tick);
+      app.querySelectorAll('.ptab').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === method)));
+      box.innerHTML = '<p class="muted" style="text-align:center;padding:40px 0">Getting it ready…</p>';
+      const asked = method;
+      try {
+        const r = await api('pay/start', { code: g.code, method });
+        if (asked !== method || location.hash !== here) return;
+        if (r.paid) { paid(r); return; }
+        paint(r.payment);
+      } catch (e) {
+        if (asked !== method) return;
+        box.innerHTML = `
+          <p class="pay-expired">${esc(e.message)}</p>
+          <button class="btn" type="button" id="payNew">Try again</button>`;
+        $('#payNew').onclick = () => load();
+      }
+    }
+
+    app.querySelectorAll('.ptab').forEach((b) => b.addEventListener('click', () => {
+      if (b.dataset.m === method) return;
+      method = b.dataset.m;
+      store.set('payMethod', method);
+      haptic(8); sfx.play('tick', 4);
+      load();
+    }));
+    // Back from the bank app: check right away instead of waiting for the next poll.
+    document.addEventListener('visibilitychange', check);
+    poll = setInterval(check, PAY_POLL_MS);
+    check();
+    load();
   }
 
   /* ---------------- dashboard ---------------- */
@@ -308,7 +439,7 @@
   ];
 
   function statusPill(g) {
-    if (g.status === 'pending_payment') return '<span class="pill pill--wait">Awaiting transfer</span>';
+    if (g.status === 'pending_payment') return '<span class="pill pill--wait">Awaiting payment</span>';
     if (g.status === 'completed') return '<span class="pill pill--done">All enjoyed</span>';
     return g.claimed ? '<span class="pill pill--live">Being enjoyed</span>' : '<span class="pill">Not opened yet</span>';
   }
@@ -317,7 +448,7 @@
     const pct = g.unitsTotal ? g.unitsRedeemed / g.unitsTotal : 0;
     const title = mine ? `To ${g.recipientName}` : `From ${g.senderName}`;
     return `
-      <a class="gitem" href="/g/${g.code}">
+      <a class="gitem" href="${mine && g.status === 'pending_payment' ? `#sent/${g.code}` : `/g/${g.code}`}">
         <div class="gitem__ic">${g.emoji}</div>
         <div class="gitem__main">
           <div class="gitem__t">${esc(title)} · ${g.unitsTotal} ${esc(g.lineName)}</div>

@@ -270,7 +270,7 @@
     const pct = gift.unitsRedeemed / gift.unitsTotal;
     const link = `${location.origin}/g/${code}`;
     const text = `🎁 ${gift.recipientName}, I sent you a Little Hanniel e-Gift — ${gift.unitsTotal} ${gift.lineName}! Unwrap it here: ${link}`;
-    const state = gift.status === 'pending_payment' ? 'Waiting for your transfer'
+    const state = gift.status === 'pending_payment' ? 'Waiting for your payment'
       : !gift.claimed ? `Not opened by ${gift.recipientName} yet`
         : gift.status === 'completed' ? `${gift.recipientName} enjoyed every single one 🎉` : `${gift.recipientName} is enjoying it`;
     app.innerHTML = wrap(`
